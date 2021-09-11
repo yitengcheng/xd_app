@@ -1,0 +1,47 @@
+<template>
+	<uni-forms-item :label="label" :required="required" :name="name">
+		<uni-data-checkbox v-model="formData[name]" v-bind="$attrs" :localdata="localdata"></uni-data-checkbox>
+	</uni-forms-item>
+</template>
+
+<script>
+export default {
+	props: {
+		label: {
+			type: String,
+			default: ''
+		},
+		required: {
+			type: Boolean,
+			default: true
+		},
+		name: {
+			type: String,
+			default: ''
+		},
+		localdata: {
+			type: Array,
+			default(){
+				return []
+			}
+		},
+		disabled: {
+			type: Boolean,
+			default: false
+		},
+		formData: {
+			type: Object,
+			default() {
+				return {};
+			}
+		}
+	},
+	mounted() {
+		this.disabled && this.localdata.forEach((item)=>{
+			item.disabled = true
+		})
+	}
+};
+</script>
+
+<style lang="scss"></style>

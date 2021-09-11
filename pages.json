@@ -1,0 +1,137 @@
+{
+	"easycom": {
+		"autoscan": true,
+		"custom": { 
+			"uni-(.*)": "@/components/uni-$1/uni-$1.vue"
+		}
+	},
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/model/login/Login",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"enablePullDownRefresh": false,
+				"app-plus": {
+					"titleNView": {
+						"buttons": [{
+							"text": "注册",
+							"fontSize": "16"
+						}]
+					}
+				}
+			}
+
+		},
+		{
+			"path": "pages/model/InCar/index",
+			"style": {
+				"navigationBarTitleText": "待交车辆",
+				"enablePullDownRefresh": true,
+				"onReachBottomDistance": 50
+			}
+
+		}, {
+			"path": "pages/model/my/My",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/model/InCar/InCarDetail",
+			"style": {
+				"navigationBarTitleText": "详情",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/model/InCar/Step",
+			"style": {
+				"navigationBarTitleText": "审核进度",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/model/InCar/Pact",
+			"style": {
+				"navigationBarTitleText": "电子合同",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/model/InCar/Signature",
+			"style": {
+				"navigationBarTitleText": "签名",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/model/InCar/Finish",
+			"style": {
+				"navigationBarTitleText": "完成",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/model/car/Car",
+			"style": {
+				"navigationBarTitleText": "车辆",
+				"enablePullDownRefresh": true
+			}
+
+		}, {
+			"path": "pages/model/car/CarDetail",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/model/login/Register",
+			"style": {
+				"navigationBarTitleText": "注册",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/model/login/ForgetPassword",
+			"style": {
+				"navigationBarTitleText": "忘记密码",
+				"enablePullDownRefresh": false
+			}
+
+		}
+	],
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#1296db",
+		"borderStyle": "black",
+		"backgroundColor": "#F8F8F8",
+		"list": [{
+				"pagePath": "pages/model/InCar/index",
+				"iconPath": "static/img/incar.png",
+				"selectedIconPath": "static/img/incar_active.png",
+				"text": "交车"
+			}, {
+				"pagePath": "pages/model/car/Car",
+				"iconPath": "static/img/car.png",
+				"selectedIconPath": "static/img/car_active.png",
+				"text": "车辆"
+			},
+			{
+				"pagePath": "pages/model/My",
+				"iconPath": "static/img/my.png",
+				"selectedIconPath": "static/img/my_active.png",
+				"text": "我的"
+			}
+		]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	}
+	
+
+}

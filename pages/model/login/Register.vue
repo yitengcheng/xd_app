@@ -1,0 +1,216 @@
+<template>
+	<view>
+		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="280" :rules="rules">
+			<FormUpload :formData="formData" name="photoComplanyCode" label="营业执照" :limit="1" @getOcrData="getComplantInfo" url="/tool/ocr/complany" />
+			<FormUpload :formData="formData" name="idcardFront" label="法人身份证正面" :limit="1" @getOcrData="getIdcardFront" url="/tool/ocr/idcard?type=2" />
+			<FormUpload :formData="formData" name="idcardBack" label="法人身份证背面" :limit="1" @getOcrData="getIdcardBack" url="/tool/ocr/idcard?type=3" />
+			<FormInput v-show="flag === 3" :formData="formData" name="complanyName" label="公司名称" />
+			<FormInput v-show="flag === 3" :formData="formData" name="creditCode" label="社会信用代码" />
+			<FormInput v-show="flag === 3" :formData="formData" name="complanyCode" label="营业执照编号" />
+			<FormInput v-show="flag === 3" :formData="formData" name="complanyYxq" label="营业执照有效期" />
+			<FormInput v-show="flag === 3" :formData="formData" name="complanyAddress" label="注册地址" />
+			<FormInput v-show="flag === 3" :formData="formData" name="juridiclName" label="法人姓名" />
+			<FormInput v-show="flag === 3" :formData="formData" name="juridicalZjhm" label="法人身份证号" />
+			<FormInput v-show="flag === 3" :formData="formData" name="capital" label="注册资本" />
+			<FormInput v-show="flag === 3" :formData="formData" name="reallyCapital" label="实收资本" :required="false" />
+			<FormInput v-show="flag === 3" :formData="formData" name="complanyType" label="公司类型" />
+			<FormInput v-show="flag === 3" :formData="formData" name="establishTime" label="成立日期(yyyy年mm月dd日)" />
+			<FormInput v-show="flag === 3" :formData="formData" name="componentType" label="组成类型" :required="false" />
+			<FormInput v-show="flag === 3" :formData="formData" name="taxRegistration" label="税务登记号" :required="false" />
+			<FormPickAddress v-show="flag === 3" :formData="formData" name="complanyAddressId" label="所属地区" @change="onChange" />
+			<FormInput v-show="flag === 3" :formData="formData" name="phoneNumber" label="法人电话" />
+			<FormInput v-show="flag === 3" :formData="formData" name="nature" label="经营范围" type="textarea" autoHeight />
+			<button v-show="flag === 3" @click="submit" type="primary" class="submitBtn">注册</button>
+			<button v-show="flag === 3" @click="reset" type="warn">重置</button>
+		</uni-forms>
+	</view>
+</template>
+
+<script>
+import FormInput from '../../../components/form/FormInput.vue';
+import FormUpload from '../../../components/form/FormUpload.vue';
+import FormPickAddress from '../../../components/form/FormPickAddress.vue';
+import { dateFormatCHRegex, phoneRegex, card15, card18 } from '../../../common/regex.js';
+import api from '../../../api/index.js';
+export default {
+	components: {
+		FormInput,
+		FormUpload,
+		FormPickAddress
+	},
+	data() {
+		return {
+			formData: {
+				photoComplanyCode: [],
+				idcardFront: [],
+				idcardBack: [],
+				complanyName: '',
+				creditCode: '',
+				complanyCode: '',
+				complanyYxq: '',
+				complanyAddress: '',
+				complanyAddressId: '',
+				juridiclName: '',
+				juridicalZjhm: '',
+				capital: '',
+				reallyCapital: '',
+				complanyType: '',
+				establishTime: '',
+				componentType: '',
+				taxRegistration: '',
+				phoneNumber: '',
+				nature: '',
+				wxminiLogin: ''
+			},
+			rules: {
+				complanyName: { rules: [{ required: true, errorMessage: '请填写公司名称' }] },
+				creditCode: { rules: [{ required: true, errorMessage: '请填写社会信用代码' }] },
+				complanyCode: { rules: [{ required: true, errorMessage: '请填写营业执照编号' }] },
+				complanyYxq: { rules: [{ required: true, errorMessage: '请填写营业执照有效期' }] },
+				complanyAddress: { rules: [{ required: true, errorMessage: '请填写注册地址' }] },
+				complanyAddressId: { rules: [{ required: true, errorMessage: '请选择所属地区' }] },
+				juridiclName: { rules: [{ required: true, errorMessage: '请填写法人姓名' }] },
+				juridicalZjhm: {
+					rules: [
+						{ required: true, errorMessage: '请填写法人身份证号' },
+						{
+							validateFunction: (rule, value, data, callback) => {
+								if (value.length !== 15 || value.length !== 18) {
+									callback('身份证长度有误');
+								}
+								if (value.length === 15 && !card15.test(value)) {
+									callback('请输入正确的身份证');
+								} else if (value.length === 18 && !card18.test(value)) {
+									callback('请输入正确的身份证');
+								}
+								return true;
+							}
+						}
+					]
+				},
+				capital: { rules: [{ required: true, errorMessage: '请填写注册资本' }] },
+				complanyType: { rules: [{ required: true, errorMessage: '请填写公司类型' }] },
+				establishTime: { rules: [{ required: true, errorMessage: '请填写成立日期' }, { pattern: dateFormatCHRegex, errorMessage: '请输入正确的成立日期' }] },
+				phoneNumber: { rules: [{ required: true, errorMessage: '请填写法人电话' }, { pattern: phoneRegex, errorMessage: '请输入正确的法人电话号码' }] },
+				nature: { rules: [{ required: true, errorMessage: '请填写经营范围' }] }
+			},
+			idCard: {},
+			photoComplanyCode: '',
+			idcardFront: '',
+			idcardBack: '',
+			flag: 1
+		};
+	},
+
+	methods: {
+		changeFlag() {
+			if (this.photoComplanyCode && this.idcardFront && this.idcardBack) {
+				this.flag = 3;
+				uni.showToast({
+					title: '请认真核对信息',
+					icon: 'none'
+				});
+			}
+		},
+		getComplantInfo(e = {}) {
+			let { url } = e;
+			let { words_result } = e.ocr || {};
+			if (url && words_result) {
+				this.photoComplanyCode = url;
+				this.$refs.form.setValue('complanyName', words_result.单位名称.words);
+				this.$refs.form.setValue('creditCode', words_result.社会信用代码.words);
+				this.$refs.form.setValue('complanyCode', words_result.证件编号.words);
+				this.$refs.form.setValue('nature', words_result.经营范围.words);
+				this.$refs.form.setValue('complanyYxq', words_result.有效期.words);
+				this.$refs.form.setValue('complanyAddress', words_result.地址.words);
+				this.$refs.form.setValue('juridiclName', words_result.法人.words);
+				this.$refs.form.setValue('complanyType', words_result.类型.words);
+				this.$refs.form.setValue('capital', words_result.注册资本.words);
+				this.$refs.form.setValue('reallyCapital', words_result.实收资本.words);
+				this.$refs.form.setValue('establishTime', words_result.成立日期.words);
+				this.$refs.form.setValue('componentType', words_result.组成形式.words);
+				this.$refs.form.setValue('taxRegistration', words_result.税务登记号.words);
+			}
+			this.$nextTick(() => {
+				this.changeFlag();
+			});
+		},
+		getIdcardFront(e = {}) {
+			let { url } = e;
+			let { words_result } = e.ocr || {};
+			if (url && words_result) {
+				this.idcardFront = url;
+				this.$refs.form.setValue('juridicalZjhm', words_result.公民身份号码.words);
+				this.idCard = {
+					address: words_result.住址.words,
+					idcard: words_result.公民身份号码.words,
+					name: words_result.姓名.words,
+					sex: words_result.性别.words === '男' ? 0 : 1,
+					nation: words_result.民族.words,
+					...this.idCard
+				};
+			}
+			this.$nextTick(() => {
+				this.changeFlag();
+			});
+		},
+		getIdcardBack(e = {}) {
+			let { url } = e;
+			let { words_result } = e.ocr || {};
+			if (url && words_result) {
+				this.idcardBack = url;
+				this.idCard = {
+					lssueOffice: words_result.签发机关.words,
+					lssueTime: words_result.签发日期.words,
+					invalidTime: words_result.失效日期.words,
+					...this.idCard
+				};
+			}
+			this.$nextTick(() => {
+				this.changeFlag();
+			});
+		},
+		onChange(e) {
+			this.$refs.form.setValue('complanyAddressId', e[e.length - 1].value);
+		},
+		submit() {
+			this.$refs.form.validate().then(res => {
+				if (res.juridiclName === this.idCard.name) {
+					delete res.photoComplanyCode;
+					delete res.idcardFront;
+					delete res.idcardBack;
+					api.register({
+						photoComplanyCode: this.photoComplanyCode,
+						idcardFront: this.idcardFront,
+						idcardBack: this.idcardBack,
+						...this.idCard,
+						...res
+					}).then(() => {
+						uni.showToast({
+							title: '账号密码均为身份证后6位',
+							icon: 'success'
+						});
+						uni.redirectTo({
+							url: '/pages/model/login/Login'
+						});
+					});
+				} else {
+					uni.showToast({
+						title: '上传身份证与法人不符',
+						icon: 'error'
+					});
+				}
+			});
+		},
+		reset() {
+			this.$refs.form.resetFields();
+		}
+	}
+};
+</script>
+
+<style lang="scss">
+.submitBtn {
+	margin-bottom: 20rpx;
+}
+</style>
