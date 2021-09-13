@@ -1,7 +1,7 @@
 let API_URL = ""
 let IMG_URL = ""
 //默认路径应与 manifest.json 一致，同时修改
-let DEFAULT_API_URL = "http://192.168.0.63:8080";
+let DEFAULT_API_URL = "http://192.168.0.45:8080";
 let DEFAULT_IMG_URL = 'http://116.62.54.239:9000';
 
 if (process.env.NODE_ENV === 'development') {

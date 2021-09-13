@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<image src="../../../static/img/finish.png"></image>
-		<view @click="toIndex">请将贵AXXXXX车辆交于客户</view>
+		<view @click="toIndex">请将{{plateNo}}车辆交于客户</view>
 	</view>
 </template>
 
@@ -9,15 +9,21 @@
 	export default {
 		data() {
 			return {
-				
+				plateNo: ''
 			};
+		},
+		onBackPress(){
+			this.toIndex();
+		},
+		onBackPress() {
+		    this.toIndex();
 		},
 		methods:{
 			toIndex(){
-				uni.navigateTo({
-					url: '/pages/index/index'
-				})
-			}
+				uni.switchTab({
+					url: '/pages/model/InCar/index'
+				});
+			},
 		}
 	}
 </script>

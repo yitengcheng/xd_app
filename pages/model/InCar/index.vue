@@ -1,6 +1,6 @@
 <template>
 	<scroll-view>
-		<uni-easyinput v-model="keyword" placeholder="请输入关键字搜索" suffixIcon="search" />
+		<uni-easyinput v-model="keyword" placeholder="请输入关键字搜索" suffixIcon="search" @iconClick="getData(1)"/>
 		<uni-list :border="false">
 			<uni-list-item
 				v-for="(item, index) in data"
@@ -48,6 +48,7 @@ export default {
 				pageNum,
 				pageSize: 10,
 				status: 0,
+				keyword: this.keyword,
 				complanyIds: this._.map(user.complany, 'id'),
 			}).then((res={}) =>{
 				if(pageNum === 1){

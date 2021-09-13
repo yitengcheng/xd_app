@@ -136,7 +136,6 @@ export default {
 						o.value === item && checks.push(o.text);
 					});
 				});
-				console.log(checks);
 				uni.navigateTo({
 					url: `/pages/model/InCar/Step?checks=${checks}`
 				});

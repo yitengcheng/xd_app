@@ -119,7 +119,7 @@
 				"text": "车辆"
 			},
 			{
-				"pagePath": "pages/model/My",
+				"pagePath": "pages/model/my/My",
 				"iconPath": "static/img/my.png",
 				"selectedIconPath": "static/img/my_active.png",
 				"text": "我的"
