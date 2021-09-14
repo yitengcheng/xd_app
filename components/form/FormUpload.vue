@@ -57,7 +57,8 @@ export default {
 				let item = e.tempFiles[i]
 				uni.uploadFile({
 					url:`${config.API_URL}${this.url}`,
-					file: item.file,
+					filePath: item.filePath,
+					name:'file',
 					header:{Authorization: 'Bearer ' + token},
 					formData: {...this.otherData},
 					success:(res) =>{

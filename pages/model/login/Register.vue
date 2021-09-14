@@ -115,7 +115,7 @@ export default {
 		getComplantInfo(e = {}) {
 			let { url } = e;
 			let { words_result } = e.ocr || {};
-			if (url && words_result) {
+			if (url && !!words_result) {
 				this.photoComplanyCode = url;
 				this.$refs.form.setValue('complanyName', words_result.单位名称.words);
 				this.$refs.form.setValue('creditCode', words_result.社会信用代码.words);
@@ -138,7 +138,7 @@ export default {
 		getIdcardFront(e = {}) {
 			let { url } = e;
 			let { words_result } = e.ocr || {};
-			if (url && words_result) {
+			if (url && !!words_result) {
 				this.idcardFront = url;
 				this.$refs.form.setValue('juridicalZjhm', words_result.公民身份号码.words);
 				this.idCard = {
@@ -157,7 +157,7 @@ export default {
 		getIdcardBack(e = {}) {
 			let { url } = e;
 			let { words_result } = e.ocr || {};
-			if (url && words_result) {
+			if (url && !!words_result) {
 				this.idcardBack = url;
 				this.idCard = {
 					lssueOffice: words_result.签发机关.words,

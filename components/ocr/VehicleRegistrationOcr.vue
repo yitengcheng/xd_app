@@ -11,10 +11,10 @@ export default {
 			uni.chooseImage({
 				count: 1,
 				success:(res) =>{
-					console.log('file:',res);
 					uni.uploadFile({
 						url: `${config.API_URL}/tool/ocr/registration`,
-						file: res.tempFiles[0],
+						filePath: res.tempFilePaths[0],
+						name:'file',
 						header:{Authorization: 'Bearer ' + token},
 						success:(res) => {
 							let result = JSON.parse(res.data);

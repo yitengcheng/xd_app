@@ -401,7 +401,7 @@ export default {
 		getRegistration(e = {}) {
 			let { url } = e;
 			let { words_result } = e.ocr;
-			if (url && words_result) {
+			if (url && !!words_result) {
 				let n_i_n = words_result.name_idcard_no.words;
 				let name = n_i_n.substring(0, n_i_n.indexOf('/'));
 				let idcard = n_i_n.substring(n_i_n.lastIndexOf('/') + 1);
@@ -421,7 +421,7 @@ export default {
 		getLicenseFront(e = {}) {
 			let { url } = e;
 			let { words_result } = e.ocr;
-			if (url && words_result) {
+			if (url && !!words_result) {
 				this.licenseFrontUrl = url;
 				this.$refs.form.setValue('engineNum', words_result.发动机号码.words);
 				this.$refs.form.setValue('carNum', words_result.号牌号码.words);
@@ -433,7 +433,7 @@ export default {
 		getLicenseBack(e = {}) {
 			let { url } = e;
 			let { words_result } = e.ocr;
-			if (url && words_result) {
+			if (url && !!words_result) {
 				this.licenseBackUrl = url;
 				this.$refs.form.setValue('maxManned', words_result.核定载人数.words);
 				this.$refs.form.setValue('fuelType', words_result.燃油类型.words);

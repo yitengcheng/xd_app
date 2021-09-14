@@ -123,7 +123,7 @@ export default {
 		getIdCard(e = {}) {
 			let { url } = e;
 			let { words_result } = e.ocr;
-			if (url && words_result) {
+			if (url && !!words_result) {
 				this.$refs.form.setValue('name', words_result.姓名.words);
 				this.$refs.form.setValue('idCard', words_result.公民身份号码.words);
 			}

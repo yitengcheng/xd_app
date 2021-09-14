@@ -12,8 +12,8 @@ export default {
 				success(res) {
 					uni.uploadFile({
 						url: `${config.API_URL}/tool/orc/complany`,
-						file: res.tempFiles[0],
-						name: 'file',
+						filePath: res.tempFilePaths[0],
+						name:'file',
 						success(res) {
 							let result = JSON.parse(res.data);
 							this.$emit('click', result);

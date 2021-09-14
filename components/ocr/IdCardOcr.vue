@@ -17,8 +17,8 @@ export default {
 					})
 					uni.uploadFile({
 						url: `${config.API_URL}/tool/ocr/idcard?type=2`,
-						file: res.tempFiles[0],
-						name: 'file',
+						filePath: res.tempFilePaths[0],
+						name:'file',
 						header:{Authorization: 'Bearer ' + token},
 						success:(data) => {
 							let result = JSON.parse(data.data);
@@ -28,6 +28,9 @@ export default {
 						fail:(error) => {
 							uni.hideLoading();
 							console.log(error);
+						},
+						complete: (msg) => {
+							console.log(msg);
 						}
 					});
 				}

@@ -83,12 +83,22 @@
             "port" : "8080",
             "disableHostCheck" : true,
             "proxy" : {
-                "/" : {
-                    "target" : "https://192.168.0.45",
+                "/system" : {
+                    "ws" : false,
+                    "target" : "http://192.168.0.45:8080",
                     "changeOrigin" : true,
                     "secure" : true,
                     "pathRewrite" : {
-                        "^/" : ""
+                        "^/system" : ""
+                    }
+                },
+                "/tool" : {
+                    "ws" : false,
+                    "target" : "http://192.168.0.45:8080",
+                    "changeOrigin" : true,
+                    "secure" : true,
+                    "pathRewrite" : {
+                        "^/tool" : ""
                     }
                 }
             }
