@@ -101,7 +101,16 @@
 			}
 
 		}
-	],
+	    ,{
+            "path" : "pages/model/login/ResetPassword",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "修改密码",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
 	"tabBar": {
 		"color": "#7A7E83",
 		"selectedColor": "#1296db",

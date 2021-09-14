@@ -137,7 +137,7 @@ export default {
 					});
 				});
 				uni.navigateTo({
-					url: `/pages/model/InCar/Step?checks=${checks}`
+					url: `/pages/model/InCar/Step?checks=${checks}&idCard=${data.idcard}&name=${data.name}`
 				});
 			});
 		},

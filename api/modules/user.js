@@ -9,6 +9,9 @@ const user = {
 	},
 	register: (data)=>{
 		return request.globalRequest('/system/complany/insert', 'post', data);
+	},
+	resetPassword: (data) => {
+		return request.globalRequest('/system/user/resetPwd', 'put', data);
 	}
 }
 

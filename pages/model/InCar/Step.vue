@@ -8,16 +8,21 @@
 </template>
 
 <script>
+	import api from '../../../api/index.js';
 	export default {
 		data() {
 			return {
 				active: -1,
 				options: [],
 				pactFlag: false,
+				idcard: '',
+				name: '',
 			};
 		},
 		onLoad(option) {
 			let checks = option.checks.split(',');
+			this.idcard = option.idcard;
+			this.name = option.name;
 			checks.forEach(o => {
 				this.options.push({
 					title: o
@@ -48,7 +53,19 @@
 							}
 						});
 						break;
+					case '重点人员查询':
+						// api.checkZtryService({idcard: this.idcard}).then(res => {
+							
+						// });
+						this.active = this.active + 1;
+						this.$nextTick(() => {
+							if (this.active === this.options.length - 1) {
+								this.pactFlag = true;
+							}
+						});
+						break;
 					case '驾照存分查询':
+						
 						this.active = this.active + 1;
 						this.$nextTick(() => {
 							if (this.active === this.options.length - 1) {

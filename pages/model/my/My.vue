@@ -2,7 +2,7 @@
 	<view class="content">
 		<image src="../../../static/img/default_head.png" class="head" mode="aspectFill"></image>
 		<text class="name">admin</text>
-		<view v-for="(item,index) in Data" :key="index">
+		<view v-for="(item,index) in Data" :key="index" @click="toPage(item)">
 			<view class="item">
 				<image class="item_icon" :src="item.icon"></image>
 				<text>{{item.title}}</text>
@@ -18,11 +18,16 @@
 				Data: [
 					{title: '使用说明', icon: '../../../static/img/explain.png', path: ''},
 					{title: '关于我们', icon: '../../../static/img/aboutus.png', path: ''},
+					{title: '修改密码', icon: '../../../static/img/resetPassword.png', path: '/pages/model/login/ResetPassword'},
 				]
 			}
 		},
 		methods: {
-			
+			toPage(e){
+				uni.navigateTo({
+					url: e.path,
+				})
+			}
 		}
 	}
 </script>

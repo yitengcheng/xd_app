@@ -46,12 +46,12 @@ request.globalRequest = (url, method, data) => {
 			}
 		}
 	}).catch(params => {
-		console.log('error:',params);
+		uni.showToast({
+			title: params.msg,
+			icon: 'none'
+		});
 		if(params.msg === '登录状态已过期'){
-			uni.showToast({
-				title: params.msg,
-				icon: 'none'
-			});
+			
 			uni.redirectTo({
 				url: '/pages/model/login/Login',
 			});
