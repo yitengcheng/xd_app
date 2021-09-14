@@ -2197,6 +2197,11 @@ var render = function() {
     [
       _c("uni-easyinput", {
         attrs: { _i: 1 },
+        on: {
+          iconClick: function($event) {
+            return _vm.$handleViewEvent($event)
+          }
+        },
         model: {
           value: _vm._$g(1, "v-model"),
           callback: function() {},
@@ -4598,12 +4603,36 @@ var render = function() {
     { staticClass: _vm._$g(0, "sc"), attrs: { _i: 0 } },
     [
       _c("uni-steps", { attrs: { _i: 1 } }),
-      _vm._$g(2, "i")
+      _vm._l(_vm._$g(2, "f"), function(item, index, $20, $30) {
+        return _c(
+          "v-uni-button",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm._$g("2-" + $30, "v-show"),
+                expression: "_$g((\"2-\"+$30),'v-show')"
+              }
+            ],
+            key: item,
+            staticClass: _vm._$g("2-" + $30, "sc"),
+            attrs: { type: "primary", _i: "2-" + $30 },
+            on: {
+              click: function($event) {
+                return _vm.$handleViewEvent($event)
+              }
+            }
+          },
+          [_vm._v(_vm._$g("2-" + $30, "t0-0"))]
+        )
+      }),
+      _vm._$g(3, "i")
         ? _c(
             "v-uni-button",
             {
-              staticClass: _vm._$g(2, "sc"),
-              attrs: { type: "primary", _i: 2 },
+              staticClass: _vm._$g(3, "sc"),
+              attrs: { type: "primary", _i: 3 },
               on: {
                 click: function($event) {
                   return _vm.$handleViewEvent($event)
@@ -4614,7 +4643,7 @@ var render = function() {
           )
         : _vm._e()
     ],
-    1
+    2
   )
 }
 var recyclableRender = false
@@ -4994,7 +5023,7 @@ if(false) {}
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../../../../HbuilderX/HBuilderX.3.2.3.20210825.full/HBuilderX/plugins/uniapp-cli/node_modules/css-loader/dist/runtime/api.js */ 13);
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "@charset \"UTF-8\";\r\n/**\r\n * 这里是uni-app内置的常用样式变量\r\n *\r\n * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量\r\n * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App\r\n *\r\n */\r\n/**\r\n * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能\r\n *\r\n * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件\r\n */\r\n/* 颜色变量 */\r\n/* 行为相关颜色 */\r\n/* 文字基本颜色 */\r\n/* 背景颜色 */\r\n/* 边框颜色 */\r\n/* 尺寸变量 */\r\n/* 文字尺寸 */\r\n/* 图片尺寸 */\r\n/* Border Radius */\r\n/* 水平间距 */\r\n/* 垂直间距 */\r\n/* 透明度 */\r\n/* 文章场景相关 */\n.pactBtn {\r\n  margin-top: 50rpx;\n}\r\n", ""]);
+exports.push([module.i, "@charset \"UTF-8\";\r\n/**\r\n * 这里是uni-app内置的常用样式变量\r\n *\r\n * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量\r\n * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App\r\n *\r\n */\r\n/**\r\n * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能\r\n *\r\n * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件\r\n */\r\n/* 颜色变量 */\r\n/* 行为相关颜色 */\r\n/* 文字基本颜色 */\r\n/* 背景颜色 */\r\n/* 边框颜色 */\r\n/* 尺寸变量 */\r\n/* 文字尺寸 */\r\n/* 图片尺寸 */\r\n/* Border Radius */\r\n/* 水平间距 */\r\n/* 垂直间距 */\r\n/* 透明度 */\r\n/* 文章场景相关 */\n.pactBtn {\r\n  margin-top: 200rpx;\n}\n.btn {\r\n  margin-top: 200rpx;\n}\r\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -5085,7 +5114,7 @@ var render = function() {
     [
       _c("v-uni-text", { attrs: { _i: 1 } }, [
         _vm._v(
-          "Zombie ipsum reversus ab viral inferno, nam rick grimes malum cerebro. De carne lumbering animata corpora quaeritis. Summus brains sit​​, morbo vel maleficia? De\n\t\tapocalypsi gorger omero undead survivor dictum mauris. Hi mindless mortuis soulless creaturas, imo evil stalking monstra adventus resi dentevil vultus comedat cerebella\n\t\tviventium. Qui animated corpse, cricket bat max brucks terribilem incessu zomby. The voodoo sacerdos flesh eater, suscitat mortuos comedere carnem virus. Zonbi tattered\n\t\tfor solum oculi eorum defunctis go lum cerebro. Nescio brains an Undead zombies. Sicut malus putrid voodoo horror. Nigh tofth eliv ingdead. Cum horribilem walking dead\n\t\tresurgere de crazed sepulcris creaturis, zombie sicut de grave feeding iride et serpens. Pestilentia, shaun ofthe dead scythe animated corpses ipsa screams. Pestilentia\n\t\test plague haec decaying ambulabat mortuos. Sicut zeder apathetic malus voodoo. Aenean a dolor plan et terror soulless vulnerum contagium accedunt, mortui iam vivam\n\t\tunlife. Qui tardius moveri, brid eof reanimator sed in magna copia sint terribiles undeath legionis. Alii missing oculis aliorum sicut serpere crabs nostram. Putridi\n\t\tbraindead odores kill and infect, aere implent left four dead. Lucio fulci tremor est dark vivos magna. Expansis creepy arm yof darkness ulnis witchcraft missing carnem\n\t\tarmis Kirkman Moore and Adlard caeruleum in locis. Romero morbo Congress amarus in auras. Nihil horum sagittis tincidunt, zombie slack-jawed gelida survival portenta.\n\t\tThe unleashed virus est, et iam zombie mortui ambulabunt super terram. Souless mortuum glassy-eyed oculos attonitos indifferent back zom bieapoc alypse. An hoc dead\n\t\tsnow braaaiiiins sociopathic incipere Clairvius Narcisse, an ante? Is bello mundi z?"
+          "Zombie ipsum reversus ab viral inferno, nam rick grimes malum cerebro. De carne lumbering animata corpora\n\t\tquaeritis. Summus brains sit​​, morbo vel maleficia? Deapocalypsi gorger omero undead survivor dictum\n\t\tmauris. Hi mindless mortuis soulless creaturas, imo evil\n\t\tstalking monstra adventus resi dentevil vultus comedat cerebella\n\t\tviventium. Qui animated corpse, cricket bat max brucks terribilem incessu zomby. The voodoo sacerdos flesh\n\t\teater, suscitat mortuos comedere carnem virus. Zonbi tattered\n\t\tfor solum oculi eorum defunctis go lum cerebro. Nescio brains an Undead zombies. Sicut malus putrid voodoo\n\t\thorror. Nigh tofth eliv ingdead. Cum horribilem walking dead\n\t\tresurgere de crazed sepulcris creaturis, zombie sicut de grave feeding iride et serpens. Pestilentia, shaun\n\t\tofthe dead scythe animated corpses ipsa screams. Pestilentia\n\t\test plague haec decaying ambulabat mortuos. Sicut zeder apathetic malus voodoo. Aenean a dolor plan et\n\t\tterror soulless vulnerum contagium accedunt, mortui iam vivam\n\t\tunlife. Qui tardius moveri, brid eof reanimator sed in magna copia sint terribiles undeath legionis. Alii\n\t\tmissing oculis aliorum sicut serpere crabs nostram. Putridi\n\t\tbraindead odores kill and infect, aere implent left four dead. Lucio fulci tremor est dark vivos magna.\n\t\tExpansis creepy arm yof darkness ulnis witchcraft missing carnem\n\t\tarmis Kirkman Moore and Adlard caeruleum in locis. Romero morbo Congress amarus in auras. Nihil horum\n\t\tsagittis tincidunt, zombie slack-jawed gelida survival portenta.\n\t\tThe unleashed virus est, et iam zombie mortui ambulabunt super terram. Souless mortuum glassy-eyed oculos\n\t\tattonitos indifferent back zom bieapoc alypse. An hoc dead\n\t\tsnow braaaiiiins sociopathic incipere Clairvius Narcisse, an ante? Is bello mundi z?"
         )
       ]),
       _c(
@@ -5113,6 +5142,19 @@ var render = function() {
           }
         },
         [_vm._v("签名")]
+      ),
+      _c(
+        "v-uni-button",
+        {
+          staticClass: _vm._$g(4, "sc"),
+          attrs: { type: "primary", _i: 4 },
+          on: {
+            click: function($event) {
+              return _vm.$handleViewEvent($event)
+            }
+          }
+        },
+        [_vm._v("上传纸质合同")]
       )
     ],
     1
@@ -5206,7 +5248,7 @@ if(false) {}
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../../../../HbuilderX/HBuilderX.3.2.3.20210825.full/HBuilderX/plugins/uniapp-cli/node_modules/css-loader/dist/runtime/api.js */ 13);
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "@charset \"UTF-8\";\r\n/**\r\n * 这里是uni-app内置的常用样式变量\r\n *\r\n * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量\r\n * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App\r\n *\r\n */\r\n/**\r\n * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能\r\n *\r\n * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件\r\n */\r\n/* 颜色变量 */\r\n/* 行为相关颜色 */\r\n/* 文字基本颜色 */\r\n/* 背景颜色 */\r\n/* 边框颜色 */\r\n/* 尺寸变量 */\r\n/* 文字尺寸 */\r\n/* 图片尺寸 */\r\n/* Border Radius */\r\n/* 水平间距 */\r\n/* 垂直间距 */\r\n/* 透明度 */\r\n/* 文章场景相关 */\n.checkState {\r\n  margin-top: 20rpx;\n}\n.signatureBtn {\r\n  margin-top: 20rpx;\r\n  margin-bottom: 20rpx;\r\n  width: 200rpx;\n}\r\n", ""]);
+exports.push([module.i, "@charset \"UTF-8\";\r\n/**\r\n * 这里是uni-app内置的常用样式变量\r\n *\r\n * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量\r\n * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App\r\n *\r\n */\r\n/**\r\n * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能\r\n *\r\n * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件\r\n */\r\n/* 颜色变量 */\r\n/* 行为相关颜色 */\r\n/* 文字基本颜色 */\r\n/* 背景颜色 */\r\n/* 边框颜色 */\r\n/* 尺寸变量 */\r\n/* 文字尺寸 */\r\n/* 图片尺寸 */\r\n/* Border Radius */\r\n/* 水平间距 */\r\n/* 垂直间距 */\r\n/* 透明度 */\r\n/* 文章场景相关 */\n.checkState {\r\n  margin-top: 20rpx;\n}\n.signatureBtn {\r\n  margin-top: 20rpx;\r\n  margin-bottom: 20rpx;\r\n  width: 200rpx;\n}\n.uploadBtn {\r\n  width: 400rpx;\r\n  margin-bottom: 20rpx;\n}\r\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -5553,7 +5595,7 @@ var render = function() {
             }
           }
         },
-        [_vm._v("请将贵AXXXXX车辆交于客户")]
+        [_vm._v("请将" + _vm._$g(2, "t0-0") + "车辆交于客户")]
       )
     ],
     1

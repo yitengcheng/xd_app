@@ -40,26 +40,29 @@
 						sginType: 1,
 						type: 'app',
 						...data,
-					}).then((res)=>{
-						uni.setStorage({
-							key:'tonken',
-							data: res.data.access_token,
-						});
-						uni.setStorageSync('userName',data.userName);
-						uni.setStorageSync('password',data.password);
-						api.info(uni.getStorageSync('token')).then((info)=>{
+					}).then((res = {})=>{
+						if(res.data){
 							uni.setStorage({
-								key:'user',
-								data: {user: info.user, complany: info.complany},
-								success: () => {
-									uni.switchTab({
-										url: '/pages/model/InCar/index'
-									});
-								}
-							})
-						}).catch((err)=>{
-							console.log(err)
-						});
+								key:'tonken',
+								data: res.data.access_token,
+							});
+							uni.setStorageSync('userName',data.userName);
+							uni.setStorageSync('password',data.password);
+							api.info(uni.getStorageSync('token')).then((info)=>{
+								uni.setStorage({
+									key:'user',
+									data: {user: info.user, complany: info.complany},
+									success: () => {
+										uni.switchTab({
+											url: '/pages/model/InCar/index'
+										});
+									}
+								})
+							}).catch((err)=>{
+								console.log(err)
+							});
+						}
+						
 					}).catch((err)=>{
 						console.log(err)
 					});

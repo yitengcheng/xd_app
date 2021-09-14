@@ -1,4 +1,5 @@
 import {convertSerialize} from './utils.js'
+import _ from 'lodash';
 import config from './config.js';
 const request = {}
 const headers = {}
@@ -7,6 +8,7 @@ request.globalRequest = (url, method, data) => {
 	let header = {}
 	let token = uni.getStorageSync('tonken');
 	header['Authorization'] = 'Bearer ' + token;
+	header['content-type'] = 'application/json';
 	
 	//接口公共参数
 	const obj = {
@@ -20,9 +22,10 @@ request.globalRequest = (url, method, data) => {
 		},
 		dataType: 'JSON',
 		header: header,
+		sslVerify:"false",
 	}
 	return uni.request(JSONParams).then(res => {
-		console.log('response:',res[1].data);
+		console.log('response:', res.length > 1 ? res[1].data : res);
 		if (res[1]) {
 			//TODO 根据实际后台返回格式修改
 			if (res[1].data.code == 200) {
@@ -38,7 +41,7 @@ request.globalRequest = (url, method, data) => {
 				return res[1].data;
 				// #endif
 			} else {
-				throw res[1].data;
+				throw (res[1] || {}).data;
 				
 			}
 		}
