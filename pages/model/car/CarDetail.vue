@@ -33,7 +33,7 @@
 			/>
 			<FormUpload ref="carPhotos" :readonly="disabled" :formData="formData" name="carPhotos" label="车辆图片" />
 			<FormPicker
-				v-show="company.length > 1"
+				v-show="(company || []).length > 1"
 				:disabled="disabled"
 				:formData="formData"
 				name="complanyId"
@@ -256,7 +256,7 @@ export default {
 	mounted() {
 		this.carId && this.getCarInfo(this.carId);
 		let user = uni.getStorageSync('user');
-		user.complany.length > 1 && user.complany.forEach(o => {
+		(user.complany || []).length > 1 && user.complany.forEach(o => {
 			this.company.push({value: o.id, text: o.complanyName});
 		})
 	},

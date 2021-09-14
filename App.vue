@@ -17,6 +17,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import './static/icon/iconfont.css';
 /*每个页面公共css */
 .content {
 	display: flex;

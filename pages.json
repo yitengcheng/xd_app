@@ -110,17 +110,40 @@
             }
             
         }
+        ,{
+            "path" : "pages/model/returnCar/index",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "待还车辆",
+                "enablePullDownRefresh": false
+            }
+            
+        },
+		{
+            "path" : "pages/model/returnCar/ReturnCarDetail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "详情",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"tabBar": {
 		"color": "#7A7E83",
 		"selectedColor": "#1296db",
 		"borderStyle": "black",
-		"backgroundColor": "#F8F8F8",
+		"backgroundColor": "#aaaaff",
 		"list": [{
 				"pagePath": "pages/model/InCar/index",
 				"iconPath": "static/img/incar.png",
 				"selectedIconPath": "static/img/incar_active.png",
 				"text": "交车"
+			}, {
+				"pagePath": "pages/model/returnCar/index",
+				"iconPath": "static/img/returnCar.png",
+				"selectedIconPath": "static/img/returnCar_active.png",
+				"text": "还车"
 			}, {
 				"pagePath": "pages/model/car/Car",
 				"iconPath": "static/img/car.png",
@@ -138,7 +161,7 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
+		"navigationBarBackgroundColor": "#aaaaff",
 		"backgroundColor": "#F8F8F8"
 	}
 	

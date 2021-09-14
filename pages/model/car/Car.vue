@@ -30,7 +30,7 @@ export default {
 					text: '回到顶部'
 				},
 				{
-					iconPath: '../../../static/img/CarDetail.png',
+					iconPath: '../../../static/img/carDetail.png',
 					selectedIconPath: '',
 					text: '添加车辆'
 				}

@@ -1,10 +1,10 @@
 <template>
 	<view class="content">
-		<image src="../../../static/img/default_head.png" class="head" mode="aspectFill"></image>
+		<text class="iconfont icon-morentouxiang head"></text>
 		<text class="name">admin</text>
 		<view v-for="(item,index) in Data" :key="index" @click="toPage(item)">
 			<view class="item">
-				<image class="item_icon" :src="item.icon"></image>
+				<text class="iconfont" :class="item.iconName"></text>
 				<text>{{item.title}}</text>
 			</view>
 		</view>
@@ -16,9 +16,9 @@
 		data() {
 			return {
 				Data: [
-					{title: '使用说明', icon: '../../../static/img/explain.png', path: ''},
-					{title: '关于我们', icon: '../../../static/img/aboutus.png', path: ''},
-					{title: '修改密码', icon: '../../../static/img/resetPassword.png', path: '/pages/model/login/ResetPassword'},
+					{title: '使用说明', iconName: 'icon-shuoming', path: ''},
+					{title: '关于我们', iconName: 'icon-guanyuwomen-copy', path: ''},
+					{title: '修改密码', iconName: 'icon-zhongzhimima', path: '/pages/model/login/ResetPassword'},
 				]
 			}
 		},
@@ -34,8 +34,7 @@
 
 <style lang="scss">
 .head {
-	height: 200rpx;
-	width: 200rpx;
+	font-size: 80px;
 	margin-top: 100rpx;
 }
 .name {
@@ -49,10 +48,5 @@
 	flex-direction: row;
 	align-items: center;
 	border-bottom: #808080 1rpx solid;
-}
-.item_icon {
-	width: 40rpx;
-	height: 40rpx;
-	margin-right: 20rpx;
 }
 </style>

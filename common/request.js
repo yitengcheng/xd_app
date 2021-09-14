@@ -50,12 +50,11 @@ request.globalRequest = (url, method, data) => {
 			title: params.msg,
 			icon: 'none'
 		});
-		if(params.msg === '登录状态已过期'){
-			
-			uni.redirectTo({
-				url: '/pages/model/login/Login',
-			});
-		}
+		// if(params.msg === '登录状态已过期'){
+		// 	uni.redirectTo({
+		// 		url: '/pages/model/login/Login',
+		// 	});
+		// }
 	})
 }
 
