@@ -58,7 +58,7 @@ export default {
 			//深度监听，可监听到对象、数组的变化
 			handler(val, oldVal) {
 				this.index = this._.findIndex(this.localdata, o => {
-					return o.value === val[this.name];
+					return o.value == val[this.name];
 				});
 			},
 			deep: true //true 深度监听

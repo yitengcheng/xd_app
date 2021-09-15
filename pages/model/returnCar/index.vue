@@ -47,7 +47,7 @@ export default {
 			api.carList({
 				pageNum,
 				pageSize: 10,
-				status: 0,
+				status: 1,
 				keyword: this.keyword,
 				complanyIds: this._.map(user.complany, 'id'),
 			}).then((res={}) =>{

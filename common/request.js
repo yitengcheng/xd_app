@@ -1,4 +1,6 @@
-import {convertSerialize} from './utils.js'
+import {
+	convertSerialize
+} from './utils.js'
 import _ from 'lodash';
 import config from './config.js';
 const request = {}
@@ -9,21 +11,26 @@ request.globalRequest = (url, method, data) => {
 	let token = uni.getStorageSync('tonken');
 	header['Authorization'] = 'Bearer ' + token;
 	header['content-type'] = 'application/json';
-	
+
 	//接口公共参数
 	const obj = {
-		
+
 	}
 	let JSONParams = {
-		url:`${config.API_URL}${url}` ,
+		url: `${config.API_URL}${url}`,
 		method: method,
-		data: { ...obj,
+		data: {
+			...obj,
 			...data
 		},
 		dataType: 'JSON',
 		header: header,
-		sslVerify:"false",
+		sslVerify: "false",
 	}
+	// #ifdef APP-PLUS
+	console.log('request:', JSONParams);
+	// #endif
+
 	return uni.request(JSONParams).then(res => {
 		console.log('response:', res.length > 1 ? res[1].data : res);
 		if (res[1]) {
@@ -42,7 +49,7 @@ request.globalRequest = (url, method, data) => {
 				// #endif
 			} else {
 				throw (res[1] || {}).data;
-				
+
 			}
 		}
 	}).catch(params => {
@@ -50,11 +57,11 @@ request.globalRequest = (url, method, data) => {
 			title: params.msg,
 			icon: 'none'
 		});
-		// if(params.msg === '登录状态已过期'){
-		// 	uni.redirectTo({
-		// 		url: '/pages/model/login/Login',
-		// 	});
-		// }
+		if (params.msg === '登录状态已过期') {
+			uni.redirectTo({
+				url: '/pages/model/login/Login',
+			});
+		}
 	})
 }
 
