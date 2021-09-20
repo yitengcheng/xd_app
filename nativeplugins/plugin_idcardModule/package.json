@@ -1,0 +1,32 @@
+{
+    "name": "信通身份证识别",
+    "id": "plugin_idcardModule",
+    "version": "1.0",
+    "description": "通过信通ST710F读取身份证信息",
+    "_dp_type":"nativeplugin",
+    "_dp_nativeplugin":{
+        "android": {
+            "plugins": [
+                {
+                    "type": "module",
+                    "name": "plugin_idcardModule",
+                    "class": "com.example.bmpligin.testmodule.TestModule"
+                }
+            ],
+            "permissions": [
+                "android.permission.BLUETOOTH",
+                "android.permission.BLUETOOTH_ADMIN",
+                "android.permission.ACCESS_FINE_LOCATION",
+                "android.permission.ACCESS_NETWORK_STATE",
+                "android.permission.ACCESS_WIFI_STATE",
+                "android.permission.INTERNET"
+            ],
+            "integrateType": "aar",
+            "abis": [
+                "arm64-v8a",
+                "armeabi-v7a",
+                "x86"
+            ]
+        }
+    }
+}

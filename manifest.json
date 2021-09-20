@@ -57,6 +57,22 @@
                     }
                 }
             }
+        },
+        "nativePlugins" : {
+            "plugin_idcardModule" : {
+                "__plugin_info__" : {
+                    "name" : "信通身份证识别",
+                    "description" : "通过信通ST710F读取身份证信息",
+                    "platforms" : "Android",
+                    "url" : "",
+                    "android_package_name" : "",
+                    "ios_bundle_id" : "",
+                    "isCloud" : false,
+                    "bought" : -1,
+                    "pid" : "",
+                    "parameters" : {}
+                }
+            }
         }
     },
     /* 快应用特有相关 */
