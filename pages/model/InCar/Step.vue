@@ -5,6 +5,8 @@
 			<text v-show="!!licenseText" class="info_text">驾照存分：{{licenseText}}</text>
 			<text v-show="!!zdryText" class="info_text">重点人员核查：{{zdryText}}</text>
 			<text v-show="!!faceText" class="info_text">人脸匹配度：{{faceText}}</text>
+			<text v-show="!!idCardText" class="info_text">身份证真伪：{{idCardText}}</text>
+			<text v-show="!!blackText" class="info_text">老赖信息：{{blackText}}</text>
 		</view>
 		<button v-for="(item,index) in options" :key="index" type="primary" class="btn" v-show="active + 1 === index"
 			@click="validation(item.title)">{{item.title}}</button>
@@ -25,6 +27,8 @@
 				zdryText: '',
 				licenseText: '',
 				faceText: '',
+				idCardText: '',
+				blackText: '',
 			};
 		},
 		onLoad(option) {
@@ -67,12 +71,26 @@
 						});
 					}
 					if (o.title === '老赖查询') {
-						this.active = this.active + 1;
-						this.$nextTick(() => {
-							if (this.active === this.options.length - 1) {
-								this.pactFlag = true;
+						api.checkDeadbeat({
+							idcard: this.idCard,
+							realname: this.name,
+						}).then((res = {}) => {
+							if(res.msg){
+								let { result } = res.msg;
+								if(this._.isObject(result)){
+									this.blackText = `${this.name}存在有履行能力而拒不履行生效法律文书确定义务的行为`
+								} else {
+									this.blackText = res.msg.msg
+								}
+								this.active = this.active + 1;
+								this.$nextTick(() => {
+									if (this.active === this.options.length - 1) {
+										this.pactFlag = true;
+									}
+								});
 							}
 						});
+						
 					}
 				});
 			},
@@ -143,6 +161,11 @@
 						})
 						break;
 					case '身份证真伪':
+						const idCardRead = uni.requireNativePlugin('plugin_idcardModule');
+						const idcard = uni.requireNativePlugin('plugin_idcardModule');
+						idcard.readIdcard({mac: '88:1B:99:15:C0:50'}, (e)=>{
+							this.idCardText = JSON.parse(e.data);
+						});
 						this.active = this.active + 1;
 						this.$nextTick(() => {
 							if (this.active === this.options.length - 1) {

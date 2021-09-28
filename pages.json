@@ -54,7 +54,7 @@
 		}, {
 			"path": "pages/model/InCar/Pact",
 			"style": {
-				"navigationBarTitleText": "电子合同",
+				"navigationBarTitleText": "合同",
 				"enablePullDownRefresh": false
 			}
 

@@ -4,6 +4,7 @@
 		    <FormInput :formData="formData" name="userName" label="用户名" :inputBorder="false" :required="false"/>
 		    <FormInput :formData="formData" name="password" label="密码" type="password" :inputBorder="false" :required="false"/>
 			<button type="primary" class="login" @click="login">登录</button>
+			<button type="primary" class="login" @click="test">测试</button>
 			<button type="warn" @click="forgetPassword">忘记密码</button>
 		</uni-forms>
 	</view>
@@ -29,6 +30,13 @@
 			this.formData.password = uni.getStorageSync('password');
 		},
 		methods: {
+			test(){
+				const idcard = uni.requireNativePlugin('plugin_idcardModule');
+				idcard.readIdcard({mac: '88:1B:99:15:C0:50'}, (e)=>{
+					let result = JSON.parse(e.data);
+					console.log(result);
+				});
+			},
 			forgetPassword(){
 				uni.navigateTo({
 					url:'/pages/model/login/ForgetPassword'

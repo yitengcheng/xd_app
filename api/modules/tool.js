@@ -9,6 +9,9 @@ const tool = {
 	},
 	checkFace: (data)=>{
 		return request.globalRequest(`/tool/tencent/face`, 'post', data);
+	},
+	checkDeadbeat: (data)=>{
+		return request.globalRequest(`/tool/tencent/blacklist`, 'post', data);
 	}
 }
 

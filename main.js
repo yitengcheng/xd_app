@@ -18,12 +18,13 @@ const dictInit = (...type) => {
   return Promise.all(allPromise);
 };
 
-// #ifndef VUE3
-import Vue from 'vue'
-Vue.config.productionTip = false;
 Vue.prototype._ = _;
 Vue.prototype.dayjs = dayjs;
 Vue.prototype.dictInit = dictInit;
+
+// #ifndef VUE3
+import Vue from 'vue'
+Vue.config.productionTip = false;
 App.mpType = 'app'
 const app = new Vue({
     ...App

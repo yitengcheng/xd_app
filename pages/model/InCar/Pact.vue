@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<text>
+		<!-- <text>
 			Zombie ipsum reversus ab viral inferno, nam rick grimes malum cerebro. De carne lumbering animata corpora
 			quaeritis. Summus brains sit​​, morbo vel maleficia? Deapocalypsi gorger omero undead survivor dictum
 			mauris. Hi mindless mortuis soulless creaturas, imo evil
@@ -24,19 +24,37 @@
 			snow braaaiiiins sociopathic incipere Clairvius Narcisse, an ante? Is bello mundi z?
 		</text>
 		<radio :checked="check" @click="changeCheck" class="checkState">我已认真阅读合同全部条款</radio>
-		<button type="primary" @click="signature" class="signatureBtn" :disabled="!check">签名</button>
+		<button type="primary" @click="signature" class="signatureBtn" :disabled="!check">签名</button> -->
+		<canvas id="qrcode" canvas-id="qrcode" style="width: 354px;height: 354px;" />
 		<button type="primary" @click="uploadPact" class="uploadBtn">上传纸质合同</button>
 	</view>
 </template>
 
 <script>
-	import config from '../../../common/config.js'
+	import config from '../../../common/config.js';
+	import uQRCode from '../../../components/uqrcode/common/uqrcode.js'
 	export default {
 		data() {
 			return {
 				check: true,
 			};
 		},
+		onReady() {
+		    uQRCode.make({
+		        canvasId: 'qrcode',
+		        componentInstance: this,
+		        size: 354,
+		        margin: 10,
+		        text: '合同地址',
+		        backgroundColor: '#ffffff',
+		        foregroundColor: '#000000',
+		        fileType: 'png',
+		        errorCorrectLevel: uQRCode.errorCorrectLevel.H
+		    })
+		    .then(res => {
+		        console.log(res)
+		    })
+		  },
 		methods: {
 			changeCheck() {
 				this.check = !this.check;
@@ -52,18 +70,6 @@
 						uni.navigateTo({
 							url:'/pages/model/InCar/Finish'
 						});
-						// uni.uploadFile({
-						// 	url: `${config.API_URL}/tool/orc/bankcard`,
-						// 	file: res.tempFiles[0],
-						// 	name: 'file',
-						// 	success(res) {
-						// 		let result = JSON.parse(res.data);
-						// 		this.$emit('click', result);
-						// 	},
-						// 	fail(error) {
-						// 		console.log(error);
-						// 	}
-						// });
 					}
 				})
 			}
