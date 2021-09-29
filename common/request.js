@@ -49,7 +49,7 @@ request.globalRequest = (url, method, data) => {
 				// #endif
 			} else {
 				throw (res[1] || {}).data;
-
+				return {};
 			}
 		}
 	}).catch(params => {

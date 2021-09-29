@@ -10,7 +10,11 @@
 		</view>
 		<button v-for="(item,index) in options" :key="index" type="primary" class="btn" v-show="active + 1 === index"
 			@click="validation(item.title)">{{item.title}}</button>
-		<button v-if="pactFlag" type="primary" class="pactBtn" @click="toPact">租车合同</button>
+		<view v-if="pactFlag" class="pactBtn">
+			<uni-data-checkbox v-model="checkBtn" :localdata="checkData" @change="changePact" class="checkBox"></uni-data-checkbox>
+			<button type="primary"  @click="toPact">{{pactBtnText}}</button>
+		</view>
+
 	</view>
 </template>
 
@@ -29,6 +33,15 @@
 				faceText: '',
 				idCardText: '',
 				blackText: '',
+				pactBtnText: '签订电子合同',
+				checkBtn: 0,
+				checkData: [{
+					value: 0,
+					text: "电子合同"
+				}, {
+					value: 1,
+					text: '纸质合同'
+				}, ]
 			};
 		},
 		onLoad(option) {
@@ -48,7 +61,7 @@
 			autoCheck() {
 				this.options.forEach(o => {
 					if (o.title === '重点人员查询') {
-						api.checkZtryService(this.idCard).then(res => {
+						api.checkZtryService(this.idCard).then((res = {}) => {
 							this.active = this.active + 1;
 							this.zdryText = res.data.msg;
 							this.$nextTick(() => {
@@ -59,10 +72,10 @@
 						});
 					}
 					if (o.title === '驾照存分查询') {
-						api.checkLicense(this.idCard).then(res => {
+						api.checkLicense(this.idCard).then((res = {}) => {
 							this.active = this.active + 1;
-							this.licenseText = (res.data || {}).data ? `已被扣除${res.data.data}分` : res.data
-								.msg;
+							this.licenseText = (res.data || {}).data ? `已被扣除${res.data.data}分` : (res
+								.data || {}).msg;
 							this.$nextTick(() => {
 								if (this.active === this.options.length - 1) {
 									this.pactFlag = true;
@@ -75,9 +88,11 @@
 							idcard: this.idCard,
 							realname: this.name,
 						}).then((res = {}) => {
-							if(res.msg){
-								let { result } = res.msg;
-								if(this._.isObject(result)){
+							if (res.msg) {
+								let {
+									result
+								} = res.msg;
+								if (this._.isObject(result)) {
 									this.blackText = `${this.name}存在有履行能力而拒不履行生效法律文书确定义务的行为`
 								} else {
 									this.blackText = res.msg.msg
@@ -90,14 +105,32 @@
 								});
 							}
 						});
-						
+
 					}
 				});
 			},
 			toPact() {
-				uni.navigateTo({
-					url: '/pages/model/InCar/Pact'
-				})
+				if(this.checkBtn === 1){
+					uni.chooseImage({
+						success(res) {
+							uni.navigateTo({
+								url:'/pages/model/InCar/Finish'
+							});
+						}
+					});
+				} else {
+					uni.navigateTo({
+						url: '/pages/model/InCar/Pact'
+					})
+				}
+			},
+			changePact(e){
+				if(e.detail.value === 1){
+					this.pactBtnText = '上传纸质合同';
+				} else {
+					this.pactBtnText = '签订电子合同';
+				}
+				this.checkBtn = e.detail.value;
 			},
 			validation(checkTitle) {
 				switch (checkTitle) {
@@ -112,7 +145,8 @@
 									maxDuration: 3,
 									success: (video) => {
 										// #ifdef APP-PLUS
-										const path = plus.io.convertLocalFileSystemURL(video.tempFilePath) //绝对路径
+										const path = plus.io.convertLocalFileSystemURL(video
+											.tempFilePath) //绝对路径
 										const fileReader = new plus.io.FileReader()
 										// #endif
 										fileReader.readAsDataURL(path)
@@ -123,16 +157,22 @@
 												livenessType: 'SILENT',
 												videoBase64: res.target.result
 											}).then(res => {
-												let { flag, result } = res.data;
-												if(flag){
+												let {
+													flag,
+													result
+												} = res.data;
+												if (flag) {
 													uni.showToast({
 														title: '人脸核验通过',
 														icon: 'none',
 													});
 													this.active = this.active + 1;
 													this.$nextTick(() => {
-														if (this.active === this.options.length - 1) {
-															this.pactFlag = true;
+														if (this.active ===
+															this.options
+															.length - 1) {
+															this.pactFlag =
+																true;
 														}
 													});
 												} else {
@@ -141,13 +181,25 @@
 														content: '此人人脸核验匹配度过低，可能存在风险，是否强制通过？',
 														confirmText: '通过',
 														success: (e) => {
-															if(e.confirm){
-																this.active = this.active + 1;
-																this.$nextTick(() => {
-																	if (this.active === this.options.length - 1) {
-																		this.pactFlag = true;
-																	}
-																});
+															if (e
+																.confirm) {
+																this.active =
+																	this
+																	.active +
+																	1;
+																this.$nextTick(
+																	() => {
+																		if (this
+																			.active ===
+																			this
+																			.options
+																			.length -
+																			1
+																		) {
+																			this.pactFlag =
+																				true;
+																		}
+																	});
 															}
 														},
 													});
@@ -161,17 +213,26 @@
 						})
 						break;
 					case '身份证真伪':
-						const idCardRead = uni.requireNativePlugin('plugin_idcardModule');
-						const idcard = uni.requireNativePlugin('plugin_idcardModule');
-						idcard.readIdcard({mac: '88:1B:99:15:C0:50'}, (e)=>{
-							this.idCardText = JSON.parse(e.data);
-						});
-						this.active = this.active + 1;
-						this.$nextTick(() => {
-							if (this.active === this.options.length - 1) {
-								this.pactFlag = true;
-							}
-						});
+						if (uni.getSystemInfoSync().platform == "android") {
+							const idCardRead = uni.requireNativePlugin('plugin_idcardModule');
+							const idcard = uni.requireNativePlugin('plugin_idcardModule');
+							idcard.readIdcard({
+								mac: '88:1B:99:15:C0:50'
+							}, (e) => {
+								this.idCardText = JSON.parse(e.data);
+							});
+							this.active = this.active + 1;
+							this.$nextTick(() => {
+								if (this.active === this.options.length - 1) {
+									this.pactFlag = true;
+								}
+							});
+						} else {
+							uni.showToast({
+								title: '该功能暂时仅限安卓系统手机使用',
+								icon: 'none',
+							})
+						}
 						break;
 					default:
 						uni.showToast({
@@ -186,6 +247,9 @@
 </script>
 
 <style lang="scss">
+	.checkBox {
+		margin-bottom: 50rpx;
+	}
 	.pactBtn {
 		margin-top: 200rpx;
 	}
