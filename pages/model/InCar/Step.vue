@@ -11,8 +11,9 @@
 		<button v-for="(item,index) in options" :key="index" type="primary" class="btn" v-show="active + 1 === index"
 			@click="validation(item.title)">{{item.title}}</button>
 		<view v-if="pactFlag" class="pactBtn">
-			<uni-data-checkbox v-model="checkBtn" :localdata="checkData" @change="changePact" class="checkBox"></uni-data-checkbox>
-			<button type="primary"  @click="toPact">{{pactBtnText}}</button>
+			<uni-data-checkbox v-model="checkBtn" :localdata="checkData" @change="changePact" class="checkBox">
+			</uni-data-checkbox>
+			<button type="primary" @click="toPact">{{pactBtnText}}</button>
 		</view>
 
 	</view>
@@ -110,11 +111,11 @@
 				});
 			},
 			toPact() {
-				if(this.checkBtn === 1){
+				if (this.checkBtn === 1) {
 					uni.chooseImage({
 						success(res) {
 							uni.navigateTo({
-								url:'/pages/model/InCar/Finish'
+								url: '/pages/model/InCar/Finish'
 							});
 						}
 					});
@@ -124,8 +125,8 @@
 					})
 				}
 			},
-			changePact(e){
-				if(e.detail.value === 1){
+			changePact(e) {
+				if (e.detail.value === 1) {
 					this.pactBtnText = '上传纸质合同';
 				} else {
 					this.pactBtnText = '签订电子合同';
@@ -181,25 +182,13 @@
 														content: '此人人脸核验匹配度过低，可能存在风险，是否强制通过？',
 														confirmText: '通过',
 														success: (e) => {
-															if (e
-																.confirm) {
-																this.active =
-																	this
-																	.active +
-																	1;
-																this.$nextTick(
-																	() => {
-																		if (this
-																			.active ===
-																			this
-																			.options
-																			.length -
-																			1
-																		) {
-																			this.pactFlag =
-																				true;
+															if (e.confirm) {
+																this.active =this.active +1;
+																this.$nextTick(() => {
+																		if (this.active === this.options.length - 1) {
+																			this.pactFlag = true;
 																		}
-																	});
+																});
 															}
 														},
 													});
@@ -214,17 +203,52 @@
 						break;
 					case '身份证真伪':
 						if (uni.getSystemInfoSync().platform == "android") {
-							const idCardRead = uni.requireNativePlugin('plugin_idcardModule');
-							const idcard = uni.requireNativePlugin('plugin_idcardModule');
-							idcard.readIdcard({
-								mac: '88:1B:99:15:C0:50'
-							}, (e) => {
-								this.idCardText = JSON.parse(e.data);
-							});
-							this.active = this.active + 1;
-							this.$nextTick(() => {
-								if (this.active === this.options.length - 1) {
-									this.pactFlag = true;
+							uni.openBluetoothAdapter({
+								success: () => {
+									let { complany } = uni.getStorageSync('user');
+									uni.startBluetoothDevicesDiscovery({
+										success: (res) => {
+											uni.onBluetoothDeviceFound((e) => {
+												let { devices } = e;
+												if (devices[0].name.search('ST710') !== -1) {
+													uni.showLoading({
+														mask:true,
+														title: '识别中...'
+													});
+													uni.stopBluetoothDevicesDiscovery({
+														success: () => {
+															let device = devices[0];
+															if (this._.includes(complany.macAddress,device.deviceId)) {
+																const idcard = uni.requireNativePlugin('plugin_idcardModule');
+																idcard.readIdcard({mac: e.deviceId}, (e) => {
+																		this.idCardText = JSON.parse(e.data);
+																});
+																this.active = this.active + 1;
+																this.$nextTick(() => {
+																		if (this.active === this.options.length - 1) {
+																			this.pactFlag = true;
+																		}
+																});
+															} else {
+																uni.showToast({
+																	title: `${device.deviceId}不属于本公司授权设备`,
+																	icon: 'none',
+																})
+															}
+															uni.hideLoading();
+															uni.closeBluetoothAdapter();
+														}
+													});
+												}
+											})
+										}
+									});
+								},
+								fail: () => {
+									uni.showToast({
+										title: '蓝牙启动失败',
+										icon: 'none'
+									})
 								}
 							});
 						} else {
@@ -250,6 +274,7 @@
 	.checkBox {
 		margin-bottom: 50rpx;
 	}
+
 	.pactBtn {
 		margin-top: 200rpx;
 	}

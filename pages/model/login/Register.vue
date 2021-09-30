@@ -20,6 +20,10 @@
 			<FormPickAddress v-show="flag === 3" :formData="formData" name="complanyAddressId" label="所属地区" @change="onChange" />
 			<FormInput v-show="flag === 3" :formData="formData" name="phoneNumber" label="法人电话" />
 			<FormInput v-show="flag === 3" :formData="formData" name="nature" label="经营范围" type="textarea" autoHeight />
+			<view class="form_item" @click="setLogLat" v-show="flag === 3">
+				<text>公司坐标：</text>
+				<text>{{complanyAdName}}</text>
+			</view>
 			<button v-show="flag === 3" @click="submit" type="primary" class="submitBtn">注册</button>
 			<button v-show="flag === 3" @click="reset" type="warn">重置</button>
 		</uni-forms>
@@ -40,6 +44,7 @@ export default {
 	},
 	data() {
 		return {
+			complanyAdName: '点击设置公司坐标',
 			formData: {
 				photoComplanyCode: [],
 				idcardFront: [],
@@ -60,7 +65,7 @@ export default {
 				taxRegistration: '',
 				phoneNumber: '',
 				nature: '',
-				wxminiLogin: ''
+				wxminiLogin: '',
 			},
 			rules: {
 				complanyName: { rules: [{ required: true, errorMessage: '请填写公司名称' }] },
@@ -111,6 +116,15 @@ export default {
 					icon: 'none'
 				});
 			}
+		},
+		setLogLat(){
+			uni.chooseLocation({
+				success: (res) => {
+					this.complanyAdName = res.name;
+					let latlon = this._.ceil(res.longitude, 5)  + ',' + this._.ceil(res.latitude, 5);
+					this.$refs.form.setValue('latitude', latlon);
+				}
+			})
 		},
 		getComplantInfo(e = {}) {
 			let { url } = e;
@@ -212,5 +226,9 @@ export default {
 <style lang="scss">
 .submitBtn {
 	margin-bottom: 20rpx;
+}
+.form_item {
+	display: flex;
+	flex-direction: row;
 }
 </style>

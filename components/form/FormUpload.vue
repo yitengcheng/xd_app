@@ -57,7 +57,8 @@ export default {
 				let item = e.tempFiles[i]
 				uni.uploadFile({
 					url:`${config.API_URL}${this.url}`,
-					filePath: item.filePath,
+					filePath: item.path,
+					file: item.file,
 					name:'file',
 					header:{Authorization: 'Bearer ' + token},
 					formData: {...this.otherData},
@@ -65,6 +66,8 @@ export default {
 						let result = JSON.parse(res.data);
 						this.$emit('getOcrData', result.data);
 						result.data && this.fileList.push(result.data);
+					},
+					complete: () => {
 						uni.hideLoading();
 					}
 				});
