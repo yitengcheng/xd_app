@@ -21,8 +21,8 @@
 			<text>手机号：{{ driverUser.phone || '无' }}</text>
 		</view>
 		<view class="btn_box">
-			<button type="primary">正常一键还车</button>
-			<button class="exception_btn">异常还车</button>
+			<button type="primary" @click="normalReturnCar">正常一键还车</button>
+			<button class="exception_btn" @click="abnormalReturnCar">异常还车</button>
 		</view>
 	</view>
 </template>
@@ -68,6 +68,35 @@ export default {
 				}
 			});
 		},
+		normalReturnCar(){
+			api.updateCarStatus({
+				id: this.carInfo.id,
+				status: 0
+			}).then((res={}) => {
+				if(res.msg){
+					uni.showToast({
+						title: res.msg,
+						icon:'error'
+					});
+					return;
+				}
+				uni.showToast({
+					title: '还车成功',
+					icon: 'success',
+					success: () => {
+						uni.switchTab({
+							url: '/pages/model/car/Car'
+						});
+					}
+				});
+			});
+		},
+		abnormalReturnCar(){
+			uni.navigateTo({
+				url: `/pages/model/returnCar/AbnormalReturnCar?id=${this.carInfo.id}`
+			})
+		}
+		// carPhotos exption openid
 	}
 };
 </script>

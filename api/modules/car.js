@@ -13,6 +13,9 @@ const regionalManage = {
 	updateCar:(data)=>{
 		return request.globalRequest('/system/car/update', 'put', data);
 	},
+	updateCarStatus:(data)=>{
+		return request.globalRequest('/system/car/update/status', 'put', data);
+	},
 }
 
 

@@ -22,7 +22,10 @@ export default {
 		localdata: {
 			type: Array,
 			default(){
-				return []
+				return [
+					{value: 0, text: '否'},
+					{value: 1, text: '是'},
+				]
 			}
 		},
 		disabled: {

@@ -2,7 +2,7 @@ import request from '../../common/request.js'
 
 const user = {
 	login:(data)=>{
-		return request.globalRequest('/system/user/api/app/login', 'post', data);
+		return request.globalRequest('/auth/app/login', 'post', data);
 	},
 	info:(data)=>{
 		return request.globalRequest('/system/user/getInfo', 'get', data);

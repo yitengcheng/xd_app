@@ -128,6 +128,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/model/returnCar/AbnormalReturnCar",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "异常还车",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"tabBar": {
 		"color": "#7A7E83",

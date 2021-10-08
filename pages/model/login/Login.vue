@@ -88,10 +88,10 @@
 						type: 'app',
 						...data,
 					}).then((res = {})=>{
-						if(res.data){
+						if(res.token){
 							uni.setStorage({
 								key:'tonken',
-								data: res.data.access_token,
+								data: res.token,
 							});
 							uni.setStorageSync('userName',data.userName);
 							uni.setStorageSync('password',data.password);

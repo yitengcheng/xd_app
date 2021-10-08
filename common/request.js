@@ -32,7 +32,7 @@ request.globalRequest = (url, method, data) => {
 	// #endif
 
 	return uni.request(JSONParams).then(res => {
-		console.log('response:', res.length > 1 ? JSON.parse(res[1].data) : JSON.parse(res));
+		console.log('response:', res.length > 1 ? res[1].data : res);
 		if (res[1]) {
 			let data = '';
 			// #ifdef MP-WEIXIN
@@ -46,7 +46,6 @@ request.globalRequest = (url, method, data) => {
 			// #ifdef APP-PLUS
 			data = res[1].data;
 			// #endif
-
 			//TODO 根据实际后台返回格式修改
 			if (data.code == 200) {
 				// #ifdef H5
@@ -58,6 +57,7 @@ request.globalRequest = (url, method, data) => {
 				// #endif
 
 				// #ifdef APP-PLUS
+				console.log(data)
 				return data;
 				// #endif
 			} else {
