@@ -1,18 +1,24 @@
 @font-face {
   font-family: 'iconfont';  /* Project id 2812934 */
-  src: url('https://at.alicdn.com/t/font_2812934_jbwcvkv72c.woff2?t=1631623351197') format('woff2'),
-       url('https://at.alicdn.com/t/font_2812934_jbwcvkv72c.woff?t=1631623351197') format('woff'),
-       url('https://at.alicdn.com/t/font_2812934_jbwcvkv72c.ttf?t=1631623351197') format('truetype');
+  src: url('https://at.alicdn.com/t/font_2812934_woo5u894ems.ttf?t=1634022618417') format('truetype');
 }
-
 .iconfont {
   font-family: "iconfont" !important;
-  font-size: 24px;
+  font-size: 16px;
   font-style: normal;
-  margin-right: 10rpx;
-  color: #1296db;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: #1296db;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.icon-dingdanguanlix:before {
+  content: "\e603";
+}
+
+.icon-shangjiaguanli_daibanshixiang:before {
+  content: "\e68b";
 }
 
 .icon-shanchu-copy:before {

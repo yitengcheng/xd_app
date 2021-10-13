@@ -225,6 +225,7 @@ export default {
 
 <style lang="scss">
 .submitBtn {
+	margin-top: 20rpx;
 	margin-bottom: 20rpx;
 }
 .form_item {

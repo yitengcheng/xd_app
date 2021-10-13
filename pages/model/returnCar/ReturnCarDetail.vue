@@ -96,7 +96,6 @@ export default {
 				url: `/pages/model/returnCar/AbnormalReturnCar?id=${this.carInfo.id}`
 			})
 		}
-		// carPhotos exption openid
 	}
 };
 </script>

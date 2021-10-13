@@ -2,6 +2,7 @@ import App from './App';
 import _ from 'lodash';
 import dayjs from 'dayjs';
 import dictRequest from 'common/dict.js';
+import store from 'store';
 
 /**
  * 用于初始化字典，返回Promise实例
@@ -21,13 +22,15 @@ const dictInit = (...type) => {
 Vue.prototype._ = _;
 Vue.prototype.dayjs = dayjs;
 Vue.prototype.dictInit = dictInit;
+Vue.prototype.store = store
 
 // #ifndef VUE3
 import Vue from 'vue'
 Vue.config.productionTip = false;
 App.mpType = 'app'
 const app = new Vue({
-    ...App
+    ...App,
+	store
 })
 app.$mount()
 // #endif

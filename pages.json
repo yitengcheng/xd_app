@@ -137,6 +137,33 @@
             }
             
         }
+        ,{
+            "path" : "pages/model/my/Todo",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "待办事项",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/model/my/Orders",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "订单",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+        ,{
+            "path" : "pages/model/my/OrderDetail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "订单详情",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"tabBar": {
 		"color": "#7A7E83",

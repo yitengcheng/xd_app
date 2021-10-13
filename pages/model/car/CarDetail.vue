@@ -33,11 +33,11 @@
 			/>
 			<FormUpload ref="carPhotos" :readonly="disabled" :formData="formData" name="carPhotos" label="车辆图片" />
 			<FormPicker
-				v-show="(company || []).length > 1"
+				v-show="(complany || []).length > 1"
 				:disabled="disabled"
 				:formData="formData"
 				name="complanyId"
-				:localdata="company"
+				:localdata="complany"
 				label="所属公司"
 				@change="e => $refs.form.setValue('complanyId', [e.value])"
 			/>
@@ -99,6 +99,7 @@
 				<button @click="reset" type="warn">重置</button>
 			</view>
 		</uni-forms>
+		<button @click="goToInCar" class="rent_car" type="primary">线下租车</button>
 		<uni-fab v-show="carId" :content="content" horizontal="right" vertical="bottom" direction="vertical" @trigger="trigger"></uni-fab>
 	</view>
 </template>
@@ -235,7 +236,8 @@ export default {
 				}
 			],
 			submitText: '添加',
-			company: [],
+			complany: [],
+			user: uni.getStorageSync('user'),
 		};
 	},
 	onLoad(option) {
@@ -255,9 +257,8 @@ export default {
 	},
 	mounted() {
 		this.carId && this.getCarInfo(this.carId);
-		let user = uni.getStorageSync('user');
-		(user.complany || []).length > 1 && user.complany.forEach(o => {
-			this.company.push({value: o.id, text: o.complanyName});
+		(this.user.complany || []).length > 1 && this.user.complany.forEach(o => {
+			this.complany.push({value: o.id, text: o.complanyName});
 		})
 	},
 	methods: {
@@ -358,12 +359,11 @@ export default {
 			});
 		},
 		submit() {
-			let user = uni.getStorageSync('user');
 			this.$refs.form
 				.validate()
 				.then(data => {
 					let func = this.carId ? api.updateCar : api.addCar;
-					data.complanyId = data.complanyId ? data.complanyId : this._.map(user.complany, 'id').join(','); 
+					data.complanyId = data.complanyId ? data.complanyId : this._.map(this.user.complany, 'id').join(','); 
 					delete data.carPhotos;
 					delete data.licenseFrontUrl;
 					delete data.licenseBackUrl;
@@ -443,6 +443,11 @@ export default {
 			this.moreItemsFlag = !this.moreItemsFlag;
 			this.iconType = this.iconType === 'arrowdown' ? 'arrowup' : 'arrowdown';
 			this.moreTitle = this.moreTitle === '展开更多' ? '收起更多' : '展开更多';
+		},
+		goToInCar(){
+			uni.navigateTo({
+				url: `/pages/model/InCar/InCarDetail?id=${this.carId}&rentType=offline`
+			})
 		}
 	}
 };
@@ -456,5 +461,10 @@ export default {
 .btnGrup {
 	display: flex;
 	flex-direction: row;
+}
+.rent_car {
+	width: 60%;
+	margin-bottom: 20rpx;
+	margin-top: 20rpx;
 }
 </style>
