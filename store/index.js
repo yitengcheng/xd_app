@@ -32,6 +32,10 @@ const store = new Vuex.Store({
 								title: message,
 								success: (e) => {
 									if (e.confirm) {
+										api.handleRead({
+											type,
+											handleId
+										});
 										uni.redirectTo({
 											url: `/pages/model/my/OrderDetail?id=${orderId}&type=1`
 										});
@@ -72,6 +76,10 @@ const store = new Vuex.Store({
 								title: message,
 								success: (e) => {
 									if (e.confirm) {
+										api.handleRead({
+											type,
+											handleId
+										});
 										uni.redirectTo({
 											url: `/pages/model/my/OrderDetail?id=${orderId}&type=2`
 										});

@@ -18,8 +18,8 @@
 				Data: [
 					{title: '代办事项', iconName: 'icon-shangjiaguanli_daibanshixiang', path: '/pages/model/my/Todo'},
 					{title: '订单管理', iconName: 'icon-dingdanguanlix', path: '/pages/model/my/Orders'},
-					{title: '使用说明', iconName: 'icon-shuoming', path: ''},
-					{title: '关于我们', iconName: 'icon-guanyuwomen-copy', path: ''},
+					{title: '合同模板', iconName: 'icon-shuoming', path: '/pages/model/my/ContractTemplate'},
+					// {title: '关于我们', iconName: 'icon-guanyuwomen-copy', path: ''},
 					{title: '修改密码', iconName: 'icon-zhongzhimima', path: '/pages/model/login/ResetPassword'},
 				]
 			}

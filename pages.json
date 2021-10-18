@@ -142,7 +142,7 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "待办事项",
-                "enablePullDownRefresh": false
+                "enablePullDownRefresh": true
             }
             
         }
@@ -160,6 +160,15 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "订单详情",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/model/my/ContractTemplate",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "合同模板",
                 "enablePullDownRefresh": false
             }
             

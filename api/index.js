@@ -5,6 +5,7 @@ import gps from './modules/gps.js'
 import tool from './modules/tool.js'
 import order from './modules/order.js'
 import handle from './modules/handle.js'
+import pay from './modules/pay.js'
 const api = {
 	...user,
 	...regionalManage,
@@ -13,5 +14,6 @@ const api = {
 	...tool,
 	...order,
 	...handle,
+	...pay,
 }
 export default api

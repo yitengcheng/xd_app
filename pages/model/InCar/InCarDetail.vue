@@ -1,7 +1,9 @@
 <template>
 	<view class="content">
 		<swiper class="swiper_box" @change="change">
-			<swiper-item v-for="(item, index) in carInfo.carPhotos" :key="index"><image :src="item" class="swiper_img" mode="aspectFill"></image></swiper-item>
+			<swiper-item v-for="(item, index) in carInfo.carPhotos" :key="index">
+				<image :src="item" class="swiper_img" mode="aspectFill"></image>
+			</swiper-item>
 		</swiper>
 		<view class="info_box">
 			<text>车辆信息</text>
@@ -16,9 +18,9 @@
 		</view>
 		<view class="info_box">
 			<text>下单人信息</text>
-			<text>姓名：{{ appointmentUser.name || '无' }}</text>
-			<text>身份证号：{{ appointmentUser.idCard || '无' }}</text>
-			<text>手机号：{{ appointmentUser.phone || '无' }}</text>
+			<text>姓名：{{ customer.name || '无' }}</text>
+			<text>身份证号：{{ customer.idcard || '无' }}</text>
+			<text>手机号：{{ customer.phoneNum || '无' }}</text>
 		</view>
 		<IdCardOcr @click="getIdCard" type="primary" />
 		<view class="info_box">
@@ -26,15 +28,8 @@
 				<FormInput :formData="formData" name="name" label="姓名" />
 				<FormInput :formData="formData" name="idCard" label="身份证号" />
 				<FormInput :formData="formData" name="phone" label="手机号" />
-				<FormRadio
-					:required="false"
-					:multiple="true"
-					:formData="formData"
-					name="check"
-					:localdata="checkList"
-					label="附加核验"
-					@change="e => $refs.form.setValue('check', e.value)"
-				/>
+				<FormRadio :required="false" :multiple="true" :formData="formData" name="check" :localdata="checkList"
+					label="附加核验" @change="e => $refs.form.setValue('check', e.value)" />
 				<button type="primary" class="btn" @click="submit">提交</button>
 				<button type="warn" class="btn" @click="reset">重置</button>
 			</uni-forms>
@@ -43,127 +38,169 @@
 </template>
 
 <script>
-import api from '../../../api/index.js';
-import config from '../../../common/config.js';
-import IdCardOcr from '../../../components/ocr/IdCardOcr.vue';
-import FormInput from '../../../components/form/FormInput.vue';
-import FormRadio from '../../../components/form/FormRadio.vue';
-import { card15, card18, phoneRegex } from '../../../common/regex.js';
-export default {
-	components: {
-		IdCardOcr,
-		FormInput,
-		FormRadio
-	},
-	data() {
-		return {
-			carInfo: {},
-			idCardInfo: {},
-			appointmentUser: {},
-			formData: {
-				name: '',
-				idCard: '',
-				phone: '',
-				check: []
-			},
-			checkList: [],
-			rules: {
-				name: { rules: [{ required: true, errorMessage: '请填写姓名' }] },
-				idCard: {
-					rules: [
-						{ required: true, errorMessage: '请填写身份证号' },
-						{
-							validateFunction: (rule, value, data, callback) => {
-								let card18 = new RegExp(card18);
-								let card15 = new RegExp(card15);
-								if (value.length !== 15 && value.length !== 18) {
-									callback('身份证长度有误');
-								}
-								if (value.length === 15 && !card15.test(value)) {
-									callback('请输入正确的身份证');
-								} else if (value.length === 18 && !card18.test(value)) {
-									callback('请输入正确的身份证');
-								}
-								return true;
-							}
-						}
-					]
+	import api from '../../../api/index.js';
+	import config from '../../../common/config.js';
+	import IdCardOcr from '../../../components/ocr/IdCardOcr.vue';
+	import FormInput from '../../../components/form/FormInput.vue';
+	import FormRadio from '../../../components/form/FormRadio.vue';
+	import {
+		card15,
+		card18,
+		phoneRegex
+	} from '../../../common/regex.js';
+	export default {
+		components: {
+			IdCardOcr,
+			FormInput,
+			FormRadio
+		},
+		data() {
+			return {
+				carInfo: {},
+				idCardInfo: {},
+				customer: {},
+				formData: {
+					name: '',
+					idCard: '',
+					phone: '',
+					check: []
 				},
-				phone: { rules: [{ required: true, errorMessage: '请填写手机号' }, { pattern: phoneRegex, errorMessage: '请输入正确的法人电话号码' }] }
+				checkList: [],
+				rules: {
+					name: {
+						rules: [{
+							required: true,
+							errorMessage: '请填写姓名'
+						}]
+					},
+					idCard: {
+						rules: [{
+								required: true,
+								errorMessage: '请填写身份证号'
+							},
+							{
+								validateFunction: (rule, value, data, callback) => {
+									let card18 = new RegExp(card18);
+									let card15 = new RegExp(card15);
+									if (value.length !== 15 && value.length !== 18) {
+										callback('身份证长度有误');
+									}
+									if (value.length === 15 && !card15.test(value)) {
+										callback('请输入正确的身份证');
+									} else if (value.length === 18 && !card18.test(value)) {
+										callback('请输入正确的身份证');
+									}
+									return true;
+								}
+							}
+						]
+					},
+					phone: {
+						rules: [{
+							required: true,
+							errorMessage: '请填写手机号'
+						}, {
+							pattern: phoneRegex,
+							errorMessage: '请输入正确的法人电话号码'
+						}]
+					}
+				},
+				current: 0
+			};
+		},
+		onLoad(option) {
+			this.dictInit('additional_check').then(() => {
+				this.checkList = uni.getStorageSync('additional_check');
+			});
+			this.getCarInfo(option.id);
+		},
+		methods: {
+			change(e) {
+				this.current = e.detail.current;
 			},
-			current: 0
-		};
-	},
-	onLoad(option) {
-		this.dictInit('additional_check').then(() => {
-			this.checkList = uni.getStorageSync('additional_check');
-		});
-		this.getCarInfo(option.id);
-	},
-	methods: {
-		change(e) {
-			this.current = e.detail.current;
-		},
-		getCarInfo(id) {
-			api.carInfo(id).then((res = {}) => {
-				if (res.data) {
-					let tmp = [];
-					res.data.carPhotos.split(',').forEach(o => {
-						tmp.push(`${config.IMG_URL}${o}`);
-					});
-					delete res.data.carPhotos;
-					this.carInfo = { carPhotos: tmp, ...res.data };
-					this.appointmentUser = res.data.appointmentUser || {};
-					this.$refs.form.setValue('name', (res.data.appointmentUser || {}).name);
-					this.$refs.form.setValue('idCard', (res.data.appointmentUser || {}).idCard);
-					this.$refs.form.setValue('phone', (res.data.appointmentUser || {}).phone);
+			getCarInfo(id) {
+				api.carInfo(id).then((res = {}) => {
+					if (res.data) {
+						let tmp = [];
+						res.data.carPhotos.split(',').forEach(o => {
+							tmp.push(`${config.IMG_URL}${o}`);
+						});
+						delete res.data.carPhotos;
+						this.carInfo = {
+							carPhotos: tmp,
+							...res.data
+						};
+						this.customer = res.data.customer || {};
+						this.$refs.form.setValue('name', (res.data.customer || {}).name);
+						this.$refs.form.setValue('idCard', (res.data.customer || {}).idcard);
+						this.$refs.form.setValue('phone', (res.data.appointmentUser || {}).phoneNumber);
+					}
+				});
+			},
+			getIdCard(e = {}) {
+				let {
+					url
+				} = e;
+				let {
+					words_result
+				} = e.ocr;
+				if (url && !!words_result) {
+					this.$refs.form.setValue('name', words_result.姓名.words);
+					this.$refs.form.setValue('idCard', words_result.公民身份号码.words);
 				}
-			});
-		},
-		getIdCard(e = {}) {
-			let { url } = e;
-			let { words_result } = e.ocr;
-			if (url && !!words_result) {
-				this.$refs.form.setValue('name', words_result.姓名.words);
-				this.$refs.form.setValue('idCard', words_result.公民身份号码.words);
-			}
-		},
-		submit() {
-			this.$refs.form.validate().then(data => {
-				let checks = [];
-				this.checkList.forEach(o => {
-					data.check.forEach(item => {
-						o.value === item && checks.push(o.text);
+			},
+			submit() {
+				this.$refs.form.validate().then(data => {
+					let checks = [];
+					this.checkList.forEach(o => {
+						data.check.forEach(item => {
+							o.value === item && checks.push({
+								value: o.value * 1,
+								text: o.text
+							});
+						});
 					});
+					api.pay({
+						serviceInfoMoney: this._.sum(this._.map(checks, 'value')),
+						openid: this.carInfo.openid,
+						wantCarTime: this.carInfo.wxOrder.wantCarTime,
+						estimateReturnTime: this.carInfo.wxOrder.estimateReturnTime,
+						serviceRemark: this._.map(checks, 'text').join(','),
+						carId: this.carInfo.id,
+					}).then((res = {}) => {
+						console.log(res);
+					})
+					// uni.navigateTo({
+					// 	url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}`
+					// });
 				});
-				uni.navigateTo({
-					url: `/pages/model/InCar/Step?checks=${checks}&idCard=${data.idCard}&name=${data.name}`
-				});
-			});
-		},
-		reset() {
-			this.$refs.form.reset();
+			},
+			reset() {
+				this.$refs.form.reset();
+			}
 		}
-	}
-};
+	};
 </script>
 
 <style lang="scss">
-.swiper_box {
-	width: 100%;
-	height: 300rpx;
-}
-.swiper_img {
-	width: 100%;
-	height: 300rpx;
-}
-.info_box {
-	width: 90%;
-	display: flex;
-	flex-direction: column;
-	padding-top: 10px;
-}
-.btn {
-	margin-bottom: 10px;
-}
+	.swiper_box {
+		width: 100%;
+		height: 300rpx;
+	}
+
+	.swiper_img {
+		width: 100%;
+		height: 300rpx;
+	}
+
+	.info_box {
+		width: 90%;
+		display: flex;
+		flex-direction: column;
+		padding-top: 10px;
+	}
+
+	.btn {
+		margin-bottom: 10px;
+	}
 </style>
