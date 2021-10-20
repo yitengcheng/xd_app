@@ -97,10 +97,9 @@
 							uni.setStorageSync('password',data.password);
 							api.info(uni.getStorageSync('token')).then((info)=>{
 								// 开启websocket
-								for (let comlany in info.complany) {
-									this.$store.dispatch('WEBSOCKET_INIT', comlany.id);
-								}
-								
+								info.complany.forEach(o => {
+									this.$store.dispatch('WEBSOCKET_INIT', o.id);
+								});
 								uni.setStorage({
 									key:'user',
 									data: {user: info.user, complany: info.complany},

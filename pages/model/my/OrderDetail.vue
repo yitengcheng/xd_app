@@ -14,9 +14,9 @@
 			<text>预计还车时间：{{dayjs(orderInfo.estimateReturnTime).format('YYYY-MM-DD HH:mm:ss')}}</text>
 			<text>交车地点：{{orderInfo.address}}</text>
 			<text>还车地点：{{orderInfo.returnAddress}}</text>
-			<button v-show="type === '1'" @click="orderHandle(1)">确认接单</button>
-			<button v-show="type === '1'" @click="orderHandle(2)">放弃接单</button>
-			<button v-show="type === '2'" @click="orderHandle(3)">确认退款</button>
+			<button v-show="type === '1'" @click="orderHandle(1)" class="btn">确认接单</button>
+			<button v-show="type === '1'" @click="orderHandle(2)" class="btn">放弃接单</button>
+			<button v-show="type === '2'" @click="orderHandle(3)" class="btn">确认退款</button>
 		</view>
 	</view>
 </template>
@@ -80,5 +80,8 @@
 	display: flex;
 	flex-direction: column;
 	padding-top: 10px;
+}
+.btn { 
+	margin-top: 30rpx;
 }
 </style>

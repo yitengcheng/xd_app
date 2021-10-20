@@ -6,6 +6,7 @@ import tool from './modules/tool.js'
 import order from './modules/order.js'
 import handle from './modules/handle.js'
 import pay from './modules/pay.js'
+import qys from './modules/qys.js'
 const api = {
 	...user,
 	...regionalManage,
@@ -15,5 +16,6 @@ const api = {
 	...order,
 	...handle,
 	...pay,
+	...qys,
 }
 export default api

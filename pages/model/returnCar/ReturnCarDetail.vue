@@ -85,7 +85,10 @@ export default {
 					icon: 'success',
 					success: () => {
 						uni.switchTab({
-							url: '/pages/model/car/Car'
+							url: '/pages/model/car/Car',
+							success: () => {
+								uni.$emit('returnCar')
+							}
 						});
 					}
 				});

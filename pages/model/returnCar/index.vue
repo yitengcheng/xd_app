@@ -32,6 +32,9 @@ export default {
 	},
 	onLoad() {
 		this.getData(1);
+		uni.$on('returnCar', ()=>{
+			this.getData(1);
+		});
 	},
 	onPullDownRefresh() {
 		this.getData(1);
@@ -63,7 +66,7 @@ export default {
 		},
 		clickItem(e){
 			uni.navigateTo({
-				url: `/pages/model/InCar/InCarDetail?id=${e.id}`
+				url: `/pages/model/returnCar/ReturnCarDetail?id=${e.id}`
 			})
 			
 		}

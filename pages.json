@@ -59,9 +59,9 @@
 			}
 
 		}, {
-			"path": "pages/model/InCar/Signature",
+			"path": "pages/model/InCar/PactQrcode",
 			"style": {
-				"navigationBarTitleText": "签名",
+				"navigationBarTitleText": "合同二维码",
 				"enablePullDownRefresh": false
 			}
 
@@ -115,7 +115,7 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "待还车辆",
-                "enablePullDownRefresh": false
+                "enablePullDownRefresh": true
             }
             
         },

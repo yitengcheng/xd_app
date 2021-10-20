@@ -21,7 +21,10 @@
 		methods:{
 			toIndex(){
 				uni.switchTab({
-					url: '/pages/model/InCar/index'
+					url: '/pages/model/InCar/index',
+					success: () => {
+						uni.$emit('inCar');
+					}
 				});
 			},
 		}

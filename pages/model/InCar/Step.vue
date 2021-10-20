@@ -21,6 +21,7 @@
 
 <script>
 	import api from '../../../api/index.js';
+	import config from '../../../common/config.js';
 	export default {
 		data() {
 			return {
@@ -35,6 +36,7 @@
 				idCardText: '',
 				blackText: '',
 				pactBtnText: '签订电子合同',
+				orderId: '',
 				checkBtn: 0,
 				checkData: [{
 					value: 0,
@@ -46,9 +48,10 @@
 			};
 		},
 		onLoad(option) {
-			let checks = option.checks.split(',');
+			let checks = (option.checks || '').split(',');
 			this.idCard = option.idCard;
 			this.name = option.name;
+			this.orderId = option.orderId;
 			checks.forEach(o => {
 				this.options.push({
 					title: o
@@ -114,14 +117,22 @@
 				if (this.checkBtn === 1) {
 					uni.chooseImage({
 						success(res) {
-							uni.navigateTo({
-								url: '/pages/model/InCar/Finish'
+							uni.uploadFile({
+								url: `${config.API_URL}/system/wxorder/uploadContract?orderId=${this.orderId}`,
+								filePath: res.tempFilePaths[0],
+								name:'file',
+								header:{Authorization: 'Bearer ' + uni.getStorageSync('tonken')},
+								success:()=>{
+									uni.navigateTo({
+										url: '/pages/model/InCar/Finish'
+									});
+								}
 							});
 						}
 					});
 				} else {
 					uni.navigateTo({
-						url: '/pages/model/InCar/Pact'
+						url: `/pages/model/InCar/Pact?orderId=${this.orderId}`
 					})
 				}
 			},

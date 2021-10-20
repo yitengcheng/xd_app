@@ -30,6 +30,9 @@
 				<FormInput :formData="formData" name="phone" label="手机号" />
 				<FormRadio :required="false" :multiple="true" :formData="formData" name="check" :localdata="checkList"
 					label="附加核验" @change="e => $refs.form.setValue('check', e.value)" />
+				<uni-forms-item>
+					<uni-data-checkbox :localdata="payList" />
+				</uni-forms-item>
 				<button type="primary" class="btn" @click="submit">提交</button>
 				<button type="warn" class="btn" @click="reset">重置</button>
 			</uni-forms>
@@ -66,6 +69,7 @@
 					check: []
 				},
 				checkList: [],
+				payList: [{value: 1, text: '微信支付'}],
 				rules: {
 					name: {
 						rules: [{
@@ -133,7 +137,7 @@
 						this.customer = res.data.customer || {};
 						this.$refs.form.setValue('name', (res.data.customer || {}).name);
 						this.$refs.form.setValue('idCard', (res.data.customer || {}).idcard);
-						this.$refs.form.setValue('phone', (res.data.appointmentUser || {}).phoneNumber);
+						this.$refs.form.setValue('phone', (res.data.customer || {}).phoneNumber);
 					}
 				});
 			},
@@ -151,6 +155,7 @@
 			},
 			submit() {
 				this.$refs.form.validate().then(data => {
+					console.log(data);
 					let checks = [];
 					this.checkList.forEach(o => {
 						data.check.forEach(item => {
@@ -160,6 +165,12 @@
 							});
 						});
 					});
+					if(checks.length === 0){
+						uni.navigateTo({
+							url: `/pages/model/InCar/Step?orderId=${this.carInfo.orderId}`
+						})
+						return;
+					}
 					api.pay({
 						serviceInfoMoney: this._.sum(this._.map(checks, 'value')),
 						openid: this.carInfo.openid,
@@ -168,11 +179,22 @@
 						serviceRemark: this._.map(checks, 'text').join(','),
 						carId: this.carInfo.id,
 					}).then((res = {}) => {
-						console.log(res);
+						let info = res.data;
+						if(info){
+							uni.requestPayment({
+								provider: 'wxpay',
+								orderInfo: info,
+								success: ()=>{
+									uni.navigateTo({
+										url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}`
+									});
+								},
+								fail: (error) => {
+									console.log(error)
+								}
+							});
+						}
 					})
-					// uni.navigateTo({
-					// 	url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}`
-					// });
 				});
 			},
 			reset() {

@@ -32,6 +32,9 @@ export default {
 	},
 	onLoad() {
 		this.getData(1);
+		uni.$on('inCar', ()=>{
+			this.getData(1);
+		})
 	},
 	onPullDownRefresh() {
 		this.getData(1);

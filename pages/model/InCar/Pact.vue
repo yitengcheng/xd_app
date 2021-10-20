@@ -1,39 +1,24 @@
 <template>
 	<view class="content">
-		<canvas id="qrcode" canvas-id="qrcode" style="width: 354px;height: 354px;" />
+		<web-view :src="src"></web-view>
 	</view>
 </template>
 
 <script>
-	import config from '../../../common/config.js';
-	import uQRCode from '../../../components/uqrcode/common/uqrcode.js'
+	import api from '../../../api/index.js';
 	export default {
+		onLoad(option) {
+			api.send(option.orderId).then((res = {}) => {
+				if(res.data){
+					this.src = res.data;
+				}
+			})
+		},
 		data() {
 			return {
-				
+				src: '',
 			};
 		},
-		onReady() {
-		    uQRCode.make({
-		        canvasId: 'qrcode',
-		        componentInstance: this,
-		        size: 354,
-		        margin: 10,
-		        text: '合同id',
-		        backgroundColor: '#ffffff',
-		        foregroundColor: '#000000',
-		        fileType: 'png',
-		        errorCorrectLevel: uQRCode.errorCorrectLevel.H
-		    })
-		    .then(res => {
-		        console.log(res)
-		    })
-		  },
-		methods: {
-			changeCheck() {
-				this.check = !this.check;
-			},
-		}
 	};
 </script>
 
