@@ -5,11 +5,11 @@
 		</swiper>
 		<view class="info_box">
 			<text>订单信息</text>
-			<text>总金额：{{orderInfo.totalMoney}}</text>
+			<text>总金额：{{orderInfo.totalMoney/100 || 0}}</text>
 			<text>支付状态：{{orderInfo.payStatus === 'NOTPAY' ? '未付款' : orderInfo.payStatus === 'SUCCESS' ? '付款成功' : orderInfo.payStatus === 'REFUNDED' ? '退款成功' : '未知状态'}}</text>
-			<text>租赁费用：{{orderInfo.shouldMoney}}</text>
-			<text>保险费用：{{orderInfo.insureMoney}}</text>
-			<text>平台费用：{{orderInfo.serviceMoney}}</text>
+			<text>租赁费用：{{orderInfo.shouldMoney/100 || 0}}</text>
+			<text>保险费用：{{orderInfo.insureMoney/100 || 0}}</text>
+			<text>平台费用：{{orderInfo.serviceMoney/100 || 0}}</text>
 			<text>预计交车时间：{{dayjs(orderInfo.wantCarTime).format('YYYY-MM-DD HH:mm:ss')}}</text>
 			<text>预计还车时间：{{dayjs(orderInfo.estimateReturnTime).format('YYYY-MM-DD HH:mm:ss')}}</text>
 			<text>交车地点：{{orderInfo.address}}</text>
@@ -50,15 +50,19 @@
 				});
 			},
 			orderHandle(type){
+				console.log(type === 3);
 				// 1 确认接单 2 取消接单 3 确认退款
-				let func = type === 1 ? api.orderConfirm : type === 2 ? api.orderCannel : type === 3 ? api.orderComfirRefund : undefined;
+				let func = type === 1 ? api.orderConfirm : type === 2 ? api.orderCannel : type === 3 ? api.orderCannel : undefined;
+				console.log(func)
 				func(this.orderInfo.orderId).then((res)=>{
 					if(res){
 						uni.showToast({
 							title: '操作成功',
 							icon: 'success'
 						});
-						uni.navigateBack();
+						uni.reLaunch({
+							url: '/pages/model/InCar/index'
+						});
 					}
 				})
 			}

@@ -12,7 +12,7 @@
 			<text>车主联系方式：{{ carInfo.phoneNum || '无' }}</text>
 			<text>租车单价：{{ carInfo.unitPrice || '无' }} 元/天</text>
 			<text>超过里程收取金额：{{ carInfo.maxMileagePrice || '无' }} 每日</text>
-			<text>预约租车时间：{{ (carInfo.appointmentTime || '').split(',')[0] || '无' }}至{{ (carInfo.appointmentTime || '').split(',')[1] || '无' }}</text>
+			<text>预约租车时间：{{ (carInfo.wxOrder || {}).wantCarTime || '无' }}至{{ (carInfo.wxOrder || {}).estimateReturnTime || '无' }}</text>
 		</view>
 		<view class="info_box">
 			<text>租车人信息</text>
@@ -56,7 +56,7 @@ export default {
 			this.current = e.detail.current;
 		},
 		getCarInfo(id) {
-			api.carInfo(id).then((res = {}) => {
+			api.returnCarInfo(id).then((res = {}) => {
 				if (res.data) {
 					let tmp = [];
 					res.data.carPhotos.split(',').forEach(o => {

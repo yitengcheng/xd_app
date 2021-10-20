@@ -7,6 +7,9 @@ const handle = {
 	handles:(data)=>{
 		return request.globalRequest(`/main/all`, 'get', data);
 	},
+	handle: (id)=> {
+		return request.globalRequest(`/main/info/${id}`, 'get');
+	}
 }
 
 

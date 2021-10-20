@@ -229,7 +229,7 @@
 													uni.stopBluetoothDevicesDiscovery({
 														success: () => {
 															let device = devices[0];
-															if (this._.includes(complany.macAddress,device.deviceId)) {
+															if (this._.includes((complany.macAddress || '').split(','),device.deviceId)) {
 																const idcard = uni.requireNativePlugin('plugin_idcardModule');
 																idcard.readIdcard({mac: e.deviceId}, (e) => {
 																		this.idCardText = JSON.parse(e.data);

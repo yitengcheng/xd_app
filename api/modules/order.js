@@ -4,10 +4,10 @@ const order = {
 	orderConfirm:(orderId)=>{
 		return request.globalRequest(`/system/wxorder/comfir?orderId=${orderId}`, 'post');
 	},
-	orderCannel: (data)=>{
+	orderCannel: (orderId)=>{
 		return request.globalRequest(`/system/wxorder/cancel?orderId=${orderId}`, 'post');
 	},
-	orderComfirRefund: (data)=>{
+	orderComfirRefund: (orderId)=>{
 		return request.globalRequest(`/system/wxorder/comfirRefund?orderId=${orderId}`, 'post');
 	},
 	orders: (data)=>{

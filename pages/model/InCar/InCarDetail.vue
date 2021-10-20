@@ -14,7 +14,7 @@
 			<text>车主联系方式：{{ carInfo.phoneNum || '无' }}</text>
 			<text>租车单价：{{ carInfo.unitPrice || '无' }} 元/天</text>
 			<text>超过里程收取金额：{{ carInfo.maxMileagePrice || '无' }} 每日</text>
-			<text>预约租车时间：{{ (carInfo.appointmentTime || '').split(',')[0] || '无' }}至{{ (carInfo.appointmentTime || '').split(',')[1] || '无' }}</text>
+			<text>预约租车时间：{{ (carInfo.wxOrder || {}).wantCarTime || '无' }}至{{ (carInfo.wxOrder || {}).estimateReturnTime || '无' }}</text>
 		</view>
 		<view class="info_box">
 			<text>下单人信息</text>
@@ -69,7 +69,10 @@
 					check: []
 				},
 				checkList: [],
-				payList: [{value: 1, text: '微信支付'}],
+				payList: [{
+					value: 1,
+					text: '微信支付'
+				}],
 				rules: {
 					name: {
 						rules: [{
@@ -154,8 +157,8 @@
 				}
 			},
 			submit() {
+				let user = uni.getStorageSync('user');
 				this.$refs.form.validate().then(data => {
-					console.log(data);
 					let checks = [];
 					this.checkList.forEach(o => {
 						data.check.forEach(item => {
@@ -165,10 +168,16 @@
 							});
 						});
 					});
-					if(checks.length === 0){
+					if (checks.length === 0) {
 						uni.navigateTo({
 							url: `/pages/model/InCar/Step?orderId=${this.carInfo.orderId}`
 						})
+						return;
+					}
+					if(user.complany.serviceInfoNum > 0){
+						uni.navigateTo({
+							url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}`
+						});
 						return;
 					}
 					api.pay({
@@ -180,17 +189,20 @@
 						carId: this.carInfo.id,
 					}).then((res = {}) => {
 						let info = res.data;
-						if(info){
+						if (info) {
 							uni.requestPayment({
 								provider: 'wxpay',
 								orderInfo: info,
-								success: ()=>{
+								success: () => {
 									uni.navigateTo({
 										url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}`
 									});
 								},
 								fail: (error) => {
-									console.log(error)
+									uni.showModal({
+										title: error.errMsg,
+										icon: 'none',
+									});
 								}
 							});
 						}

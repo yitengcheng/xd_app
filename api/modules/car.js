@@ -7,6 +7,9 @@ const regionalManage = {
 	carInfo:(id)=>{
 		return request.globalRequest(`/system/car/${id}`, 'get');
 	},
+	returnCarInfo:(id)=>{
+		return request.globalRequest(`/system/car/api/${id}`, 'get');
+	},
 	addCar:(data)=>{
 		return request.globalRequest('/system/car/insert', 'post', data);
 	},
