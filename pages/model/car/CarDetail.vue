@@ -99,7 +99,6 @@
 				<button @click="reset" type="warn">重置</button>
 			</view>
 		</uni-forms>
-		<button @click="goToInCar" class="rent_car" type="primary">线下租车</button>
 		<uni-fab v-show="carId" :content="content" horizontal="right" vertical="bottom" direction="vertical" @trigger="trigger"></uni-fab>
 	</view>
 </template>
@@ -386,9 +385,6 @@ export default {
 							});
 						}
 					});
-				})
-				.catch(error => {
-					console.log('error:', error);
 				});
 		},
 		reset() {
@@ -444,11 +440,6 @@ export default {
 			this.iconType = this.iconType === 'arrowdown' ? 'arrowup' : 'arrowdown';
 			this.moreTitle = this.moreTitle === '展开更多' ? '收起更多' : '展开更多';
 		},
-		goToInCar(){
-			uni.navigateTo({
-				url: `/pages/model/InCar/InCarDetail?id=${this.carId}&rentType=offline`
-			})
-		}
 	}
 };
 </script>

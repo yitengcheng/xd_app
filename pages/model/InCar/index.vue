@@ -65,7 +65,6 @@ export default {
 			uni.stopPullDownRefresh();
 		},
 		clickItem(e){
-			console.log(e);
 			uni.navigateTo({
 				url: `/pages/model/InCar/InCarDetail?id=${e.id}`
 			})

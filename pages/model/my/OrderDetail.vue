@@ -28,11 +28,13 @@
 		data() {
 			return {
 				type: '0',
-				orderInfo: {}
+				orderInfo: {},
+				handleId: '',
 			};
 		},
 		onLoad(option) {
 			this.type = option.type; // 0 列表进入 1 新订单确认或取消 2 退款确认
+			this.handleId = option.handleId;
 			this.initOrderDetail(option.id);
 		},
 		methods:{
@@ -50,11 +52,12 @@
 				});
 			},
 			orderHandle(type){
-				console.log(type === 3);
 				// 1 确认接单 2 取消接单 3 确认退款
 				let func = type === 1 ? api.orderConfirm : type === 2 ? api.orderCannel : type === 3 ? api.orderCannel : undefined;
-				console.log(func)
-				func(this.orderInfo.orderId).then((res)=>{
+				func({
+					orderId: this.orderInfo.orderId,
+					handleId: this.handleId,
+					}).then((res)=>{
 					if(res){
 						uni.showToast({
 							title: '操作成功',

@@ -54,10 +54,10 @@
 		},
 		onReachBottom() {
 			let pageNo = this.current === 0 ? this.allPageNo : this.current === 1 ? this.forRentPageNo : this.rentOutPageNo;
-			this.getCarallList(pageNo);
+			this.getCarList(pageNo);
 		},
 		onPullDownRefresh() {
-			this.getCarallList(1);
+			this.getCarList(1);
 		},
 		methods: {
 			itemTap(item) {

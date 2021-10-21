@@ -28,11 +28,9 @@
 				<FormInput :formData="formData" name="name" label="姓名" />
 				<FormInput :formData="formData" name="idCard" label="身份证号" />
 				<FormInput :formData="formData" name="phone" label="手机号" />
+				<FormInput :formData="formData" name="nowAddress" label="当前居住地" />
 				<FormRadio :required="false" :multiple="true" :formData="formData" name="check" :localdata="checkList"
 					label="附加核验" @change="e => $refs.form.setValue('check', e.value)" />
-				<uni-forms-item>
-					<uni-data-checkbox :localdata="payList" />
-				</uni-forms-item>
 				<button type="primary" class="btn" @click="submit">提交</button>
 				<button type="warn" class="btn" @click="reset">重置</button>
 			</uni-forms>
@@ -66,18 +64,21 @@
 					name: '',
 					idCard: '',
 					phone: '',
+					nowAddress: '',
 					check: []
 				},
 				checkList: [],
-				payList: [{
-					value: 1,
-					text: '微信支付'
-				}],
 				rules: {
 					name: {
 						rules: [{
 							required: true,
 							errorMessage: '请填写姓名'
+						}]
+					},
+					nowAddress: {
+						rules: [{
+							required: true,
+							errorMessage: '请填写当前居住地'
 						}]
 					},
 					idCard: {
@@ -108,7 +109,7 @@
 							errorMessage: '请填写手机号'
 						}, {
 							pattern: phoneRegex,
-							errorMessage: '请输入正确的法人电话号码'
+							errorMessage: '请输入正确的电话号码'
 						}]
 					}
 				},
@@ -126,7 +127,7 @@
 				this.current = e.detail.current;
 			},
 			getCarInfo(id) {
-				api.carInfo(id).then((res = {}) => {
+				api.returnCarInfo(id).then((res = {}) => {
 					if (res.data) {
 						let tmp = [];
 						res.data.carPhotos.split(',').forEach(o => {
@@ -141,6 +142,7 @@
 						this.$refs.form.setValue('name', (res.data.customer || {}).name);
 						this.$refs.form.setValue('idCard', (res.data.customer || {}).idcard);
 						this.$refs.form.setValue('phone', (res.data.customer || {}).phoneNumber);
+						this.$refs.form.setValue('nowAddress', (res.data.customer || {}).nowAddress);
 					}
 				});
 			},
@@ -152,13 +154,28 @@
 					words_result
 				} = e.ocr;
 				if (url && !!words_result) {
+					api.insertUserInfo({
+						name: words_result.姓名.words,
+						idcard: words_result.公民身份号码.words,
+						address: words_result.住址.words,
+						sex: words_result.性别.words === '男' ? 1 : 0,
+						birthday: words_result.出生.words,
+					})
 					this.$refs.form.setValue('name', words_result.姓名.words);
 					this.$refs.form.setValue('idCard', words_result.公民身份号码.words);
+					this.$refs.form.setValue('nowAddress', words_result.住址.words);
 				}
 			},
 			submit() {
-				let user = uni.getStorageSync('user');
 				this.$refs.form.validate().then(data => {
+					console.log(data);
+					api.insertUserInfo({
+						name: data.name,
+						idcard: data.idCard,
+						phoneNumber: data.phoneNumber,
+						orderId: data.orderId, 
+						nowAddress: data.nowAddress,
+					});
 					let checks = [];
 					this.checkList.forEach(o => {
 						data.check.forEach(item => {
@@ -168,25 +185,32 @@
 							});
 						});
 					});
-					if (checks.length === 0) {
+					if (checks.length === 0 && this.carInfo.complany.subMchId) {
 						uni.navigateTo({
-							url: `/pages/model/InCar/Step?orderId=${this.carInfo.orderId}`
+							url: `/pages/model/InCar/Step?orderId=${this.carInfo.orderId}&idCard=${data.idCard}&name=${data.name}`
 						})
 						return;
 					}
-					if(user.complany.serviceInfoNum > 0){
-						uni.navigateTo({
-							url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}`
-						});
+					if (this.carInfo.complany.serviceInfoNum > 0) {
+						api.freeCheck({
+							complanyId: this.carInfo.complanyId,
+						}).then((res = {}) => {
+							if (res) {
+								uni.navigateTo({
+									url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}&macAddress=${this._.map(this.carInfo.complany.macInfo, 'macAddress')}`
+								});
+							}
+						})
 						return;
 					}
-					api.pay({
+					api.payOrder({
 						serviceInfoMoney: this._.sum(this._.map(checks, 'value')),
-						openid: this.carInfo.openid,
+						openid: this.carInfo.wxOrder.openid,
 						wantCarTime: this.carInfo.wxOrder.wantCarTime,
 						estimateReturnTime: this.carInfo.wxOrder.estimateReturnTime,
 						serviceRemark: this._.map(checks, 'text').join(','),
 						carId: this.carInfo.id,
+						orderId: this.carInfo.orderId,
 					}).then((res = {}) => {
 						let info = res.data;
 						if (info) {
@@ -195,7 +219,7 @@
 								orderInfo: info,
 								success: () => {
 									uni.navigateTo({
-										url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}`
+										url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}&macAddress=${this._.map(this.carInfo.complany.macInfo, 'macAddress')}`
 									});
 								},
 								fail: (error) => {

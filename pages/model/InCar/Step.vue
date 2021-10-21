@@ -38,6 +38,7 @@
 				pactBtnText: '签订电子合同',
 				orderId: '',
 				checkBtn: 0,
+				macAddress: '',
 				checkData: [{
 					value: 0,
 					text: "电子合同"
@@ -52,11 +53,15 @@
 			this.idCard = option.idCard;
 			this.name = option.name;
 			this.orderId = option.orderId;
+			this.macAddress = option.macAddress;
 			checks.forEach(o => {
 				this.options.push({
 					title: o
 				})
 			});
+			if(!checks[0]){
+				this.pactFlag = true
+			}
 		},
 		mounted() {
 			this.autoCheck();
@@ -116,13 +121,18 @@
 			toPact() {
 				if (this.checkBtn === 1) {
 					uni.chooseImage({
-						success(res) {
+						success: (res) => {
+							uni.showLoading({
+								mask:true,
+								title: '合同上传中'
+							})
 							uni.uploadFile({
-								url: `${config.API_URL}/system/wxorder/uploadContract?orderId=${this.orderId}`,
+								url: `${config.API_URL}/system/wxorder/uploadContract/${this.orderId}`,
 								filePath: res.tempFilePaths[0],
 								name:'file',
 								header:{Authorization: 'Bearer ' + uni.getStorageSync('tonken')},
-								success:()=>{
+								success:(res)=>{
+									uni.hideLoading();
 									uni.navigateTo({
 										url: '/pages/model/InCar/Finish'
 									});
@@ -147,13 +157,13 @@
 			validation(checkTitle) {
 				switch (checkTitle) {
 					case '人脸核验':
-						uni.showModal({
+						uni.showToast({
 							title: '人脸核验',
-							content: '即将开启人脸核验，点击确认开启核验。',
-							confirmText: '确认',
-							success: (e) => {
-								e.confirm && uni.chooseVideo({
-									sourceType: ['camera', 'album'],
+							content: '即将开启人脸核验，请保持面部正向对着屏幕3秒。',
+							duration: 5000,
+							success: () => {
+								uni.chooseVideo({
+									sourceType: ['camera'],
 									maxDuration: 3,
 									success: (video) => {
 										// #ifdef APP-PLUS
@@ -216,7 +226,6 @@
 						if (uni.getSystemInfoSync().platform == "android") {
 							uni.openBluetoothAdapter({
 								success: () => {
-									let { complany } = uni.getStorageSync('user');
 									uni.startBluetoothDevicesDiscovery({
 										success: (res) => {
 											uni.onBluetoothDeviceFound((e) => {
@@ -229,10 +238,10 @@
 													uni.stopBluetoothDevicesDiscovery({
 														success: () => {
 															let device = devices[0];
-															if (this._.includes((complany.macAddress || '').split(','),device.deviceId)) {
+															if (this._.includes((this.macAddress || '').split(','),device.deviceId)) {
 																const idcard = uni.requireNativePlugin('plugin_idcardModule');
-																idcard.readIdcard({mac: e.deviceId}, (e) => {
-																		this.idCardText = JSON.parse(e.data);
+																idcard.readIdcard({mac: device.deviceId}, (e) => {
+																		this.idCardText = e.data;
 																});
 																this.active = this.active + 1;
 																this.$nextTick(() => {
@@ -242,7 +251,7 @@
 																});
 															} else {
 																uni.showToast({
-																	title: `${device.deviceId}不属于本公司授权设备`,
+																	title: `此身份证阅读器不属于本公司授权设备`,
 																	icon: 'none',
 																})
 															}

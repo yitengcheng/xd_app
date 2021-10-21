@@ -27,10 +27,6 @@ export default {
 						},
 						fail:(error) => {
 							uni.hideLoading();
-							console.log(error);
-						},
-						complete: (msg) => {
-							console.log(msg);
 						}
 					});
 				}

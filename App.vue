@@ -4,7 +4,6 @@ export default {
 		text: 'text'
 	},
 	onLaunch() {
-		uni.clearStorage();
 		console.log('App Launch');
 	},
 	onShow() {

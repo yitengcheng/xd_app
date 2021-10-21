@@ -267,8 +267,7 @@
 					// 过滤隐藏文件
 					if(!plus.android.invoke(files[i],"isHidden")){
 						// 判断是文件还是文件夹
-						if(plus.android.invoke(files[i],"isDirectory")){ 
-							console.log(files[i]);
+						if(plus.android.invoke(files[i],"isDirectory")){
 							var folderName = plus.android.invoke(files[i],"getName")
 							this.folderArr.push({name: folderName,file: files[i]})
 						}

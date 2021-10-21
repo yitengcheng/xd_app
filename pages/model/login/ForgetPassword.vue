@@ -32,11 +32,7 @@ export default {
 	},
 	methods: {
 		getCode(val) {
-			console.log(val);
 			this.codeFlag = 3;
-		},
-		getPhone(val){
-			console.log(val);
 		},
 		codeFuc(){
 			switch(this.codeFlag){

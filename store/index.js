@@ -42,7 +42,7 @@ const store = new Vuex.Store({
 													handleId
 												});
 												uni.redirectTo({
-													url: `/pages/model/my/OrderDetail?id=${orderId}&type=1`
+													url: `/pages/model/my/OrderDetail?id=${orderId}&type=1&handleId=${handleId}`
 												});
 											}
 										}
@@ -86,7 +86,7 @@ const store = new Vuex.Store({
 													handleId
 												});
 												uni.redirectTo({
-													url: `/pages/model/my/OrderDetail?id=${orderId}&type=2`
+													url: `/pages/model/my/OrderDetail?id=${orderId}&type=2&handleId=${handleId}`
 												});
 											}
 										}

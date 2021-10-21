@@ -94,11 +94,9 @@ export default {
 		getVal(e) {
 			let { value } = e.detail;
 			this.val=value;
-			// console.log('验证码:', value);
 			let arr = value.split('');
 			this.codeIndex = arr.length + 1;
 			this.codeArr = arr;
-			// console.log(this.codeIndex, this.pwdArr);
 			if (this.codeIndex > Number(this.maxlength)) {
 				//输入完成
 				this.$emit('finish',this.codeArr.join(''));

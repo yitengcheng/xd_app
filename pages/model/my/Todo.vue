@@ -95,12 +95,12 @@
 				switch (item.type) {
 					case 'NEWORDER': // 新的订单-确认
 						uni.redirectTo({
-							url: `/pages/model/my/OrderDetail?id=${item.orderId}&type=1`
+							url: `/pages/model/my/OrderDetail?id=${item.orderId}&type=1&handleId=${item.id}`
 						});
 						break;
 					case 'APPLYREFUNDED': // 申请退款通知
 						uni.redirectTo({
-							url: `/pages/model/my/OrderDetail?id=${item.orderId}&type=2`
+							url: `/pages/model/my/OrderDetail?id=${item.orderId}&type=2&handleId=${item.id}`
 						});
 						break;
 				}

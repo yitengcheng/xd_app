@@ -1,14 +1,14 @@
 import request from '../../common/request.js';
 
 const order = {
-	orderConfirm:(orderId)=>{
-		return request.globalRequest(`/system/wxorder/comfir?orderId=${orderId}`, 'post');
+	orderConfirm:(data)=>{
+		return request.globalRequest(`/system/wxorder/comfir`, 'post', data);
 	},
-	orderCannel: (orderId)=>{
-		return request.globalRequest(`/system/wxorder/cancel?orderId=${orderId}`, 'post');
+	orderCannel: (data)=>{
+		return request.globalRequest(`/system/wxorder/cancel`, 'post', data);
 	},
-	orderComfirRefund: (orderId)=>{
-		return request.globalRequest(`/system/wxorder/comfirRefund?orderId=${orderId}`, 'post');
+	orderComfirRefund: (data)=>{
+		return request.globalRequest(`/system/wxorder/comfirRefund`, 'post', data);
 	},
 	orders: (data)=>{
 		return request.globalRequest(`/system/wxorder/list`, 'get', data);
@@ -16,6 +16,9 @@ const order = {
 	orderDetail: (orderId)=>{
 		return request.globalRequest(`/system/wxorder/${orderId}`, 'get');
 	},
+	insertUserInfo: (data) => {
+		return request.globalRequest(`/tool/idcard`, 'post', data);
+	}
 }
 
 

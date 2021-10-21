@@ -1,7 +1,7 @@
 import request from '../../common/request.js'
 
 const pay = {
-	pay:(data)=>{
+	payOrder:(data)=>{
 		return request.globalRequest('/direct/pay/app/create', 'post', data);
 	},
 }

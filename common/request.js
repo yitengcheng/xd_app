@@ -64,7 +64,7 @@ request.globalRequest = (url, method, data) => {
 			});
 		} else {
 			uni.showToast({
-				title: params.msg,
+				title: params.msg || '服务器返回错误',
 				icon: 'none'
 			});
 		}

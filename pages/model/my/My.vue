@@ -8,6 +8,7 @@
 				<text>{{item.title}}</text>
 			</view>
 		</view>
+		<button @click="logout">退出登录</button>
 		<text class="complany">贵州小滴科技有限公司 版权所有</text>
 	</view>
 </template>
@@ -29,6 +30,9 @@
 				uni.navigateTo({
 					url: e.path,
 				})
+			},
+			logout(){
+				uni.reLaunch({url: '/pages/model/login/Login'});
 			}
 		}
 	}
