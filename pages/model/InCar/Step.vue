@@ -68,9 +68,15 @@
 		},
 		methods: {
 			autoCheck() {
+				
 				this.options.forEach(o => {
 					if (o.title === '重点人员查询') {
+						uni.showLoading({
+							mask: true,
+							title: '查询中'
+						})
 						api.checkZtryService(this.idCard).then((res = {}) => {
+							uni.hideLoading();
 							this.active = this.active + 1;
 							this.zdryText = res.data.msg;
 							this.$nextTick(() => {
@@ -81,7 +87,12 @@
 						});
 					}
 					if (o.title === '驾照存分查询') {
+						uni.showLoading({
+							mask: true,
+							title: '查询中'
+						})
 						api.checkLicense(this.idCard).then((res = {}) => {
+							uni.hideLoading()
 							this.active = this.active + 1;
 							this.licenseText = (res.data || {}).data ? `已被扣除${res.data.data}分` : (res
 								.data || {}).msg;
@@ -93,10 +104,15 @@
 						});
 					}
 					if (o.title === '老赖查询') {
+						uni.showLoading({
+							mask: true,
+							title: '查询中'
+						})
 						api.checkDeadbeat({
 							idcard: this.idCard,
 							realname: this.name,
 						}).then((res = {}) => {
+							uni.hideLoading()
 							if (res.msg) {
 								let {
 									result
@@ -104,7 +120,7 @@
 								if (this._.isObject(result)) {
 									this.blackText = `${this.name}存在有履行能力而拒不履行生效法律文书确定义务的行为`
 								} else {
-									this.blackText = res.msg.msg
+									this.blackText = res.msg
 								}
 								this.active = this.active + 1;
 								this.$nextTick(() => {
@@ -114,7 +130,6 @@
 								});
 							}
 						});
-
 					}
 				});
 			},
@@ -157,68 +172,70 @@
 			validation(checkTitle) {
 				switch (checkTitle) {
 					case '人脸核验':
-						uni.showToast({
+						uni.showModal({
 							title: '人脸核验',
 							content: '即将开启人脸核验，请保持面部正向对着屏幕3秒。',
-							duration: 5000,
-							success: () => {
-								uni.chooseVideo({
-									sourceType: ['camera'],
-									maxDuration: 3,
-									success: (video) => {
-										// #ifdef APP-PLUS
-										const path = plus.io.convertLocalFileSystemURL(video
-											.tempFilePath) //绝对路径
-										const fileReader = new plus.io.FileReader()
-										// #endif
-										fileReader.readAsDataURL(path)
-										fileReader.onloadend = (res) => { //读取文件成功完成的回调函数
-											api.checkFace({
-												idCard: this.idCard,
-												name: this.name,
-												livenessType: 'SILENT',
-												videoBase64: res.target.result
-											}).then(res => {
-												let {
-													flag,
-													result
-												} = res.data;
-												if (flag) {
-													uni.showToast({
-														title: '人脸核验通过',
-														icon: 'none',
-													});
-													this.active = this.active + 1;
-													this.$nextTick(() => {
-														if (this.active ===
-															this.options
-															.length - 1) {
-															this.pactFlag =
-																true;
-														}
-													});
-												} else {
-													uni.showModal({
-														title: '人脸核验结果',
-														content: '此人人脸核验匹配度过低，可能存在风险，是否强制通过？',
-														confirmText: '通过',
-														success: (e) => {
-															if (e.confirm) {
-																this.active =this.active +1;
-																this.$nextTick(() => {
-																		if (this.active === this.options.length - 1) {
-																			this.pactFlag = true;
-																		}
-																});
+							success: (e) => {
+								if(e.confirm){
+									uni.chooseVideo({
+										sourceType: ['camera'],
+										camera: 'front',
+										maxDuration: 3,
+										success: (video) => {
+											// #ifdef APP-PLUS
+											const path = plus.io.convertLocalFileSystemURL(video
+												.tempFilePath) //绝对路径
+											const fileReader = new plus.io.FileReader()
+											// #endif
+											fileReader.readAsDataURL(path)
+											fileReader.onloadend = (res) => { //读取文件成功完成的回调函数
+												api.checkFace({
+													idCard: this.idCard,
+													name: this.name,
+													livenessType: 'SILENT',
+													videoBase64: res.target.result
+												}).then(res => {
+													let {
+														flag,
+														result
+													} = res.data;
+													if (flag) {
+														uni.showToast({
+															title: '人脸核验通过',
+															icon: 'none',
+														});
+														this.active = this.active + 1;
+														this.$nextTick(() => {
+															if (this.active ===
+																this.options
+																.length - 1) {
+																this.pactFlag =
+																	true;
 															}
-														},
-													});
-												}
-												this.faceText = result.Sim;
-											});
+														});
+													} else {
+														uni.showModal({
+															title: '人脸核验结果',
+															content: '此人人脸核验匹配度过低，可能存在风险，是否强制通过？',
+															confirmText: '通过',
+															success: (e) => {
+																if (e.confirm) {
+																	this.active =this.active +1;
+																	this.$nextTick(() => {
+																			if (this.active === this.options.length - 1) {
+																				this.pactFlag = true;
+																			}
+																	});
+																}
+															},
+														});
+													}
+													this.faceText = result.Sim;
+												});
+											}
 										}
-									}
-								})
+									})
+								}
 							}
 						})
 						break;
@@ -241,14 +258,20 @@
 															if (this._.includes((this.macAddress || '').split(','),device.deviceId)) {
 																const idcard = uni.requireNativePlugin('plugin_idcardModule');
 																idcard.readIdcard({mac: device.deviceId}, (e) => {
-																		this.idCardText = e.data;
-																});
-																this.active = this.active + 1;
-																this.$nextTick(() => {
-																		if (this.active === this.options.length - 1) {
-																			this.pactFlag = true;
+																		if(e.data.length < 20){
+																			this.idCardText = e.data;
+																		}else {
+																			this.idCardText = e.data;
+																			this.active = this.active + 1;
+																			this.$nextTick(() => {
+																					if (this.active === this.options.length - 1) {
+																						this.pactFlag = true;
+																					}
+																			});
 																		}
+																		
 																});
+																
 															} else {
 																uni.showToast({
 																	title: `此身份证阅读器不属于本公司授权设备`,

@@ -15,6 +15,8 @@
 				if (res.data) {
 					this.src = res.data;
 					uni.hideLoading();
+				} else {
+					uni.navigateBack()
 				}
 			})
 		},

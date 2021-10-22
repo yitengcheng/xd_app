@@ -20,7 +20,7 @@
 			<text>下单人信息</text>
 			<text>姓名：{{ customer.name || '无' }}</text>
 			<text>身份证号：{{ customer.idcard || '无' }}</text>
-			<text>手机号：{{ customer.phoneNum || '无' }}</text>
+			<text>手机号：{{ customer.phoneNumber || '无' }}</text>
 		</view>
 		<IdCardOcr @click="getIdCard" type="primary" />
 		<view class="info_box">
@@ -160,6 +160,8 @@
 						address: words_result.住址.words,
 						sex: words_result.性别.words === '男' ? 1 : 0,
 						birthday: words_result.出生.words,
+						complanyId: this.carInfo.complanyId,
+						orderId: this.carInfo.orderId,
 					})
 					this.$refs.form.setValue('name', words_result.姓名.words);
 					this.$refs.form.setValue('idCard', words_result.公民身份号码.words);
@@ -168,13 +170,14 @@
 			},
 			submit() {
 				this.$refs.form.validate().then(data => {
-					console.log(data);
 					api.insertUserInfo({
 						name: data.name,
 						idcard: data.idCard,
 						phoneNumber: data.phoneNumber,
 						orderId: data.orderId, 
 						nowAddress: data.nowAddress,
+						complanyId: this.carInfo.complanyId,
+						orderId: this.carInfo.orderId,
 					});
 					let checks = [];
 					this.checkList.forEach(o => {
@@ -185,13 +188,13 @@
 							});
 						});
 					});
-					if (checks.length === 0 && this.carInfo.complany.subMchId) {
+					if (checks.length === 0 && typeof this.carInfo.complany.subMchId === 'string') {
 						uni.navigateTo({
 							url: `/pages/model/InCar/Step?orderId=${this.carInfo.orderId}&idCard=${data.idCard}&name=${data.name}`
 						})
 						return;
 					}
-					if (this.carInfo.complany.serviceInfoNum > 0) {
+					if (this.carInfo.complany.serviceInfoNum > 0 && typeof this.carInfo.complany.subMchId === 'string') {
 						api.freeCheck({
 							complanyId: this.carInfo.complanyId,
 						}).then((res = {}) => {

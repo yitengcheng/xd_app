@@ -63,7 +63,7 @@ request.globalRequest = (url, method, data) => {
 				url: '/pages/model/login/Login',
 			});
 		} else {
-			uni.showToast({
+			uni.showModal({
 				title: params.msg || '服务器返回错误',
 				icon: 'none'
 			});

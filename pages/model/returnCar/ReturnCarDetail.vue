@@ -16,9 +16,9 @@
 		</view>
 		<view class="info_box">
 			<text>租车人信息</text>
-			<text>姓名：{{ driverUser.name || '无' }}</text>
-			<text>身份证号：{{ driverUser.idCard || '无' }}</text>
-			<text>手机号：{{ driverUser.phone || '无' }}</text>
+			<text>姓名：{{ carInfo.driverUser.name || '无' }}</text>
+			<text>身份证号：{{ carInfo.driverUser.idcard || '无' }}</text>
+			<text>手机号：{{ carInfo.driverUser.phoneNumber || '无' }}</text>
 		</view>
 		<view class="btn_box">
 			<button type="primary" @click="normalReturnCar">正常一键还车</button>

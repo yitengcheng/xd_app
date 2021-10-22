@@ -80,7 +80,7 @@
 				}
 			},
 			haveRead(item) {
-				if (item.handle) {
+				if (item.handle && item.flag === 2) {
 					api.handleRead({
 						type: item.type,
 						handleId: item.id,
@@ -91,6 +91,13 @@
 							}
 						});
 					});
+				}
+				if(item.handle){
+					uni.showToast({
+						title: '事项已处理，无需重复处理',
+						icon: 'error',
+					});
+					return;
 				}
 				switch (item.type) {
 					case 'NEWORDER': // 新的订单-确认

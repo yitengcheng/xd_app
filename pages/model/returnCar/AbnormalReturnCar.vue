@@ -1,10 +1,10 @@
 <template>
 	<view>
 		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="320">
-			<FormUpload ref="upload" :formData="formData" name="carPhotos" label="异常车辆照片" :limit="8" :required="false"/>
+			<FormUpload ref="upload" :formData="formData" name="photos" label="异常车辆照片" :limit="8" :required="false"/>
 			<FormInput :formData="formData" name="remark" label="异常车辆说明" type="textarea" :required="false"></FormInput>
 			<FormRadio :formData="formData" name="isJoinBlack" label="是否加入黑名单" :required="false"></FormRadio>
-			<button size="mini" type="warn" :plain='true' @click="chooseAddress">还车地点: {{address || '选择还车地点'}}</button>
+			<text>还车地点: {{address}}</text>
 			<button type="primary" class="submitBtn" @click="sumbit">提交</button>
 		</uni-forms>
 	</view>
@@ -27,7 +27,7 @@
 		data() {
 			return {
 				formData:{
-					carPhotos: [],
+					photos: [],
 					remark:'',
 					isJoinBlack: 0,
 					latlong:'',
@@ -35,6 +35,15 @@
 				id: '',
 				address: '',
 			};
+		},
+		mounted() {
+			uni.getLocation({
+				geocode: true,
+				success:(res)=>{
+					this.address =`${res.address.country}${res.address.province}${res.address.city}${res.address.district}${res.address.street}`;
+					this.$refs.form.setValue('latlong', [res.longitude, res.latitude].toString());
+				}
+			})
 		},
 		methods:{
 			chooseAddress(){
@@ -46,24 +55,19 @@
 				})
 			},
 			sumbit(){
-				this.$refs.form.setValue('carPhotos',this.$refs.upload.getFileList());
+				this.$refs.form.setValue('photos',this.$refs.upload.getFileList());
 				this.$refs.form.validate().then(res => {
 					api.updateCarStatus({
-						id: this.carInfo.id,
+						id: this.id,
 						status: 8,
 						...res,
 					}).then(o => {
-						if(o.msg){
-							uni.showToast({
-								title: o.msg,
-								icon: 'error'
-							});
-							return;
-						}
 						uni.showToast({
 							title: '还车成功',
 							icon: 'success',
 							success: () => {
+								this.$emit('inCar');
+								this.$emit('returnCar');
 								uni.switchTab({
 									url: '../car/Car'
 								})

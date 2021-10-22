@@ -43,8 +43,9 @@
 				this.complany = e.detail.value[0].data;
 			},
 			downLoadTemplate() {
+				let url = this.complany.templateUrl ? `${config.API_URL}/contract/template?url=${this.complany.templateUrl}` : 'http://www.fanzehua.cn/uploads/contractTemplate.docx'
 				uni.downloadFile({
-					url: `${config.API_URL}/contract/template?url=${this.complany.templateUrl}`,
+					url,
 					header: {
 						Authorization: 'Bearer ' + uni.getStorageSync('tonken')
 					},
@@ -82,9 +83,8 @@
 				this.fileFlag = true;
 			},
 			getPath(path) {
-				console.log(path);
 				uni.uploadFile({
-					url: `${config.API_URL}/qys/upload/${this.complanyId}`,
+					url: `${config.API_URL}/qys/upload/${this.complany.id}`,
 					filePath: path[0].url,
 					name:'file',
 					header:{Authorization: 'Bearer ' + uni.getStorageSync('tonken')},
@@ -94,10 +94,8 @@
 							title: data.msg,
 							icon: 'success'
 						});
+						uni.navigateBack();
 					},
-					fail: (error) => {
-						console.log(error);
-					}
 				})
 			}
 		}
