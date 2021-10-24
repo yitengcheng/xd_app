@@ -17,7 +17,10 @@ const regionalManage = {
 		return request.globalRequest('/system/car/update', 'put', data);
 	},
 	updateCarStatus:(data)=>{
-		return request.globalRequest('/system/car/update/status', 'put', data);
+		return request.globalRequest('/system/car/update/status', 'post', data);
+	},
+	returnCarAndJoinBlack:(data)=>{
+		return request.globalRequest('/system/car/black/return', 'post', data);
 	},
 }
 

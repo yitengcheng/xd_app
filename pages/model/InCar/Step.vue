@@ -7,12 +7,11 @@
 			<text v-show="!!faceText" class="info_text">人脸匹配度：{{faceText}}</text>
 			<text v-show="!!idCardText" class="info_text">身份证真伪：{{idCardText}}</text>
 			<text v-show="!!blackText" class="info_text">老赖信息：{{blackText}}</text>
+			<text v-show="!!blackListText" class="info_text">平台黑名单记录：{{blackListText}}</text>
 		</view>
 		<button v-for="(item,index) in options" :key="index" type="primary" class="btn" v-show="active + 1 === index"
 			@click="validation(item.title)">{{item.title}}</button>
 		<view v-if="pactFlag" class="pactBtn">
-			<uni-data-checkbox v-model="checkBtn" :localdata="checkData" @change="changePact" class="checkBox">
-			</uni-data-checkbox>
 			<button type="primary" @click="toPact">{{pactBtnText}}</button>
 		</view>
 
@@ -35,17 +34,11 @@
 				faceText: '',
 				idCardText: '',
 				blackText: '',
+				blackListText: '',
 				pactBtnText: '签订电子合同',
 				orderId: '',
 				checkBtn: 0,
 				macAddress: '',
-				checkData: [{
-					value: 0,
-					text: "电子合同"
-				}, {
-					value: 1,
-					text: '纸质合同'
-				}, ]
 			};
 		},
 		onLoad(option) {
@@ -55,11 +48,15 @@
 			this.orderId = option.orderId;
 			this.macAddress = option.macAddress;
 			checks.forEach(o => {
+				if (o !== '电子合同') {
+					this.checkBtn = 1;
+					this.pactBtnText = '上传纸质合同';
+				}
 				this.options.push({
 					title: o
 				})
 			});
-			if(!checks[0]){
+			if (!checks[0]) {
 				this.pactFlag = true
 			}
 		},
@@ -68,7 +65,6 @@
 		},
 		methods: {
 			autoCheck() {
-				
 				this.options.forEach(o => {
 					if (o.title === '重点人员查询') {
 						uni.showLoading({
@@ -131,6 +127,31 @@
 							}
 						});
 					}
+					if (o.title === '平台黑名单校验') {
+						uni.showLoading({
+							mask: true,
+							title: '查询中'
+						})
+						api.checkBlack({
+							idcard: this.idCard,
+						}).then((res = {}) => {
+							uni.hideLoading()
+							console.log(res.data);
+							if (res.data) {
+								if (res.data.length > 0) {
+									this.blackListText = `此人已在平台中有${res.data.length}次不良记录`
+								} else {
+									this.blackListText = `此人在平台中未有不良记录`
+								}
+								this.active = this.active + 1;
+								this.$nextTick(() => {
+									if (this.active === this.options.length - 1) {
+										this.pactFlag = true;
+									}
+								});
+							}
+						});
+					}
 				});
 			},
 			toPact() {
@@ -138,15 +159,17 @@
 					uni.chooseImage({
 						success: (res) => {
 							uni.showLoading({
-								mask:true,
+								mask: true,
 								title: '合同上传中'
 							})
 							uni.uploadFile({
 								url: `${config.API_URL}/system/wxorder/uploadContract/${this.orderId}`,
 								filePath: res.tempFilePaths[0],
-								name:'file',
-								header:{Authorization: 'Bearer ' + uni.getStorageSync('tonken')},
-								success:(res)=>{
+								name: 'file',
+								header: {
+									Authorization: 'Bearer ' + uni.getStorageSync('tonken')
+								},
+								success: (res) => {
 									uni.hideLoading();
 									uni.navigateTo({
 										url: '/pages/model/InCar/Finish'
@@ -161,14 +184,6 @@
 					})
 				}
 			},
-			changePact(e) {
-				if (e.detail.value === 1) {
-					this.pactBtnText = '上传纸质合同';
-				} else {
-					this.pactBtnText = '签订电子合同';
-				}
-				this.checkBtn = e.detail.value;
-			},
 			validation(checkTitle) {
 				switch (checkTitle) {
 					case '人脸核验':
@@ -176,7 +191,7 @@
 							title: '人脸核验',
 							content: '即将开启人脸核验，请保持面部正向对着屏幕3秒。',
 							success: (e) => {
-								if(e.confirm){
+								if (e.confirm) {
 									uni.chooseVideo({
 										sourceType: ['camera'],
 										camera: 'front',
@@ -219,13 +234,27 @@
 															content: '此人人脸核验匹配度过低，可能存在风险，是否强制通过？',
 															confirmText: '通过',
 															success: (e) => {
-																if (e.confirm) {
-																	this.active =this.active +1;
-																	this.$nextTick(() => {
-																			if (this.active === this.options.length - 1) {
-																				this.pactFlag = true;
+																if (e
+																	.confirm
+																	) {
+																	this.active =
+																		this
+																		.active +
+																		1;
+																	this.$nextTick(
+																		() => {
+																			if (this
+																				.active ===
+																				this
+																				.options
+																				.length -
+																				1
+																			) {
+																				this.pactFlag =
+																					true;
 																			}
-																	});
+																		}
+																		);
 																}
 															},
 														});
@@ -239,39 +268,82 @@
 							}
 						})
 						break;
-					case '身份证真伪':
+					case '身份证阅读器':
 						if (uni.getSystemInfoSync().platform == "android") {
 							uni.openBluetoothAdapter({
 								success: () => {
 									uni.startBluetoothDevicesDiscovery({
 										success: (res) => {
 											uni.onBluetoothDeviceFound((e) => {
-												let { devices } = e;
-												if (devices[0].name.search('ST710') !== -1) {
+												let {
+													devices
+												} = e;
+												if (devices[0].name.search('ST710') !== -
+													1) {
 													uni.showLoading({
-														mask:true,
+														mask: true,
 														title: '识别中...'
 													});
 													uni.stopBluetoothDevicesDiscovery({
 														success: () => {
-															let device = devices[0];
-															if (this._.includes((this.macAddress || '').split(','),device.deviceId)) {
-																const idcard = uni.requireNativePlugin('plugin_idcardModule');
-																idcard.readIdcard({mac: device.deviceId}, (e) => {
-																		if(e.data.length < 20){
-																			this.idCardText = e.data;
-																		}else {
-																			this.idCardText = e.data;
-																			this.active = this.active + 1;
-																			this.$nextTick(() => {
-																					if (this.active === this.options.length - 1) {
-																						this.pactFlag = true;
+															let device =
+																devices[
+																	0];
+															if (this._
+																.includes((
+																		this
+																		.macAddress ||
+																		'')
+																	.split(
+																		','),
+																	device
+																	.deviceId
+																)) {
+																const idcard =
+																	uni
+																	.requireNativePlugin(
+																		'plugin_idcardModule'
+																	);
+																idcard
+																	.readIdcard({
+																			mac: device
+																				.deviceId
+																		}, (
+																		e) => {
+																			if (e
+																				.data
+																				.length <
+																				20
+																			) {
+																				this.idCardText =
+																					e
+																					.data;
+																			} else {
+																				this.idCardText =
+																					e
+																					.data;
+																				this.active =
+																					this
+																					.active +
+																					1;
+																				this.$nextTick(
+																					() => {
+																						if (this
+																							.active ===
+																							this
+																							.options
+																							.length -
+																							1
+																						) {
+																							this.pactFlag =
+																								true;
+																						}
 																					}
-																			});
-																		}
-																		
-																});
-																
+																				);
+																			}
+
+																		});
+
 															} else {
 																uni.showToast({
 																	title: `此身份证阅读器不属于本公司授权设备`,
@@ -279,7 +351,8 @@
 																})
 															}
 															uni.hideLoading();
-															uni.closeBluetoothAdapter();
+															uni
+																.closeBluetoothAdapter();
 														}
 													});
 												}

@@ -1,6 +1,6 @@
 <template>
 	<uni-forms-item :label="label" :required="required" :name="name">
-		<uni-data-checkbox v-model="formData[name]" v-bind="$attrs" :localdata="localdata"></uni-data-checkbox>
+		<uni-data-checkbox v-model="formData[name]" v-bind="$attrs" :localdata="localdata" @change="change"></uni-data-checkbox>
 	</uni-forms-item>
 </template>
 
@@ -43,6 +43,11 @@ export default {
 		this.disabled && this.localdata.forEach((item)=>{
 			item.disabled = true
 		})
+	},
+	methods:{
+		change(e){
+			this.$emit('change',e);
+		}
 	}
 };
 </script>

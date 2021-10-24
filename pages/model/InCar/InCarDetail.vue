@@ -195,16 +195,24 @@
 						return;
 					}
 					if (this.carInfo.complany.serviceInfoNum > 0 && typeof this.carInfo.complany.subMchId === 'string') {
-						api.freeCheck({
-							complanyId: this.carInfo.complanyId,
-						}).then((res = {}) => {
-							if (res) {
-								uni.navigateTo({
-									url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}&macAddress=${this._.map(this.carInfo.complany.macInfo, 'macAddress')}`
-								});
+						uni.showModal({
+							title: `剩余免费核验次数${this.carInfo.complany.serviceInfoNum}次`,
+							icon: 'none',
+							success: (e) => {
+								if(e.confirm){
+									api.freeCheck({
+										complanyId: this.carInfo.complanyId,
+									}).then((res = {}) => {
+										if (res) {
+											uni.navigateTo({
+												url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}&macAddress=${this._.map(this.carInfo.complany.macInfo, 'macAddress')}`
+											});
+										}
+									})
+								}
+								return;
 							}
 						})
-						return;
 					}
 					api.payOrder({
 						serviceInfoMoney: this._.sum(this._.map(checks, 'value')),
@@ -214,6 +222,7 @@
 						serviceRemark: this._.map(checks, 'text').join(','),
 						carId: this.carInfo.id,
 						orderId: this.carInfo.orderId,
+						infoOrderId: this.carInfo.orderId,
 					}).then((res = {}) => {
 						let info = res.data;
 						if (info) {

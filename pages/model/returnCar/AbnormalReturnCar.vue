@@ -3,7 +3,10 @@
 		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="320">
 			<FormUpload ref="upload" :formData="formData" name="photos" label="异常车辆照片" :limit="8" :required="false"/>
 			<FormInput :formData="formData" name="remark" label="异常车辆说明" type="textarea" :required="false"></FormInput>
-			<FormRadio :formData="formData" name="isJoinBlack" label="是否加入黑名单" :required="false"></FormRadio>
+			<FormRadio :formData="formData" name="isJoinBlack" label="是否加入黑名单" :required="false" @change="hasJoinBlack"></FormRadio>
+			<FormRadio v-if="blackFlag" :formData="formData" name="dictValue" label="黑名单类型" :required="false" :localdata="blackList" :multiple="true"></FormRadio>
+			<FormRadio v-if="blackFlag" :formData="formData" name="hideInfo" label="是否隐藏公司信息" :required="false"></FormRadio>
+			<FormInput v-if="blackFlag" :formData="formData" name="cause" label="拉黑原因" :required="false" type="textarea" autoHeight ></FormInput>
 			<text>还车地点: {{address}}</text>
 			<button type="primary" class="submitBtn" @click="sumbit">提交</button>
 		</uni-forms>
@@ -22,7 +25,13 @@
 			FormRadio,
 		},
 		onLoad(option) {
+			this.dictInit('black_type').then(() => {
+				this.blackList = uni.getStorageSync('black_type');
+			});
 			this.id = option.id;
+			this.blackIdcard = option.idcard;
+			this.blackPhoneNumber = option.phoneNumber;
+			this.blackName = option.name;
 		},
 		data() {
 			return {
@@ -31,9 +40,16 @@
 					remark:'',
 					isJoinBlack: 0,
 					latlong:'',
+					hideInfo: 0,
+					cause: '',
 				},
 				id: '',
 				address: '',
+				blackFlag: false,
+				blackList: [],
+				blackIdcard: '',
+				blackPhoneNumber: '',
+				blackName: '',
 			};
 		},
 		mounted() {
@@ -57,10 +73,18 @@
 			sumbit(){
 				this.$refs.form.setValue('photos',this.$refs.upload.getFileList());
 				this.$refs.form.validate().then(res => {
-					api.updateCarStatus({
-						id: this.id,
-						status: 8,
+					let params = {
+						dictValue: res.dictValue.join(','),
+						blackIdcard: this.blackIdcard,
+						blackPhoneNumber: this.blackPhoneNumber,
+						blackName: this.blackName,
+					};
+					let func = this.blackFlag ? api.returnCarAndJoinBlack : api.updateCarStatus;
+					let id = this.blackFlag ? {carId: this.id} : {id: this.id};
+					func({
+						...id,
 						...res,
+						...params,
 					}).then(o => {
 						uni.showToast({
 							title: '还车成功',
@@ -75,7 +99,9 @@
 						});
 					});
 				});
-				
+			},
+			hasJoinBlack(e){
+				e.detail.value === 1 ? this.blackFlag = true :this.blackFlag = false;
 			}
 		}
 	}

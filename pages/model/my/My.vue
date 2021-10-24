@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<text class="iconfont icon-morentouxiang head"></text>
+		<text class="iconfont icon-morentouxiang head" @click="showShopQR"></text>
 		<text class="name">{{(user.user || {}).nickName}}</text>
 		<view v-for="(item,index) in data" :key="index" @click="toPage(item)">
 			<view class="item">
@@ -14,6 +14,7 @@
 </template>
 
 <script>
+	import uQRCode from '../../../components/uqrcode/common/uqrcode.js'
 	export default {
 		data() {
 			return {

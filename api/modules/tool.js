@@ -16,6 +16,9 @@ const tool = {
 	freeCheck: (data)=>{
 		return request.globalRequest(`/direct/pay/service`, 'post', data);
 	},
+	checkBlack: (data)=>{
+		return request.globalRequest(`/system/black/check`, 'post', data);
+	},
 }
 
 export default tool

@@ -1,7 +1,9 @@
 <template>
 	<view class="content">
 		<swiper class="swiper_box" @change="change">
-			<swiper-item v-for="(item, index) in carInfo.carPhotos" :key="index"><image :src="item" class="swiper_img" mode="aspectFill"></image></swiper-item>
+			<swiper-item v-for="(item, index) in carInfo.carPhotos" :key="index">
+				<image :src="item" class="swiper_img" mode="aspectFill"></image>
+			</swiper-item>
 		</swiper>
 		<view class="info_box">
 			<text>车辆信息</text>
@@ -16,9 +18,9 @@
 		</view>
 		<view class="info_box">
 			<text>租车人信息</text>
-			<text>姓名：{{ carInfo.driverUser.name || '无' }}</text>
-			<text>身份证号：{{ carInfo.driverUser.idcard || '无' }}</text>
-			<text>手机号：{{ carInfo.driverUser.phoneNumber || '无' }}</text>
+			<text>姓名：{{ (carInfo.driverUser || {}).name || '无' }}</text>
+			<text>身份证号：{{ (carInfo.driverUser || {}).idcard || '无' }}</text>
+			<text>手机号：{{ (carInfo.driverUser || {}).phoneNumber || '无' }}</text>
 		</view>
 		<view class="btn_box">
 			<button type="primary" @click="normalReturnCar">正常一键还车</button>
@@ -28,103 +30,114 @@
 </template>
 
 <script>
-import api from '../../../api/index.js';
-import config from '../../../common/config.js';
-import IdCardOcr from '../../../components/ocr/IdCardOcr.vue';
-import FormInput from '../../../components/form/FormInput.vue';
-import FormRadio from '../../../components/form/FormRadio.vue';
-import { card15, card18, phoneRegex } from '../../../common/regex.js';
-export default {
-	components: {
-		IdCardOcr,
-		FormInput,
-		FormRadio
-	},
-	data() {
-		return {
-			carInfo: {},
-			idCardInfo: {},
-			driverUser: {},
-			current: 0
-		};
-	},
-	onLoad(option) {
-		this.getCarInfo(option.id);
-	},
-	methods: {
-		change(e) {
-			this.current = e.detail.current;
+	import api from '../../../api/index.js';
+	import config from '../../../common/config.js';
+	import IdCardOcr from '../../../components/ocr/IdCardOcr.vue';
+	import FormInput from '../../../components/form/FormInput.vue';
+	import FormRadio from '../../../components/form/FormRadio.vue';
+	import {
+		card15,
+		card18,
+		phoneRegex
+	} from '../../../common/regex.js';
+	export default {
+		components: {
+			IdCardOcr,
+			FormInput,
+			FormRadio
 		},
-		getCarInfo(id) {
-			api.returnCarInfo(id).then((res = {}) => {
-				if (res.data) {
-					let tmp = [];
-					res.data.carPhotos.split(',').forEach(o => {
-						tmp.push(`${config.IMG_URL}${o}`);
-					});
-					delete res.data.carPhotos;
-					this.carInfo = { carPhotos: tmp, ...res.data };
-					this.driverUser = res.data.driverUser || {};
-				}
-			});
+		data() {
+			return {
+				carInfo: {},
+				idCardInfo: {},
+				driverUser: {},
+				current: 0
+			};
 		},
-		normalReturnCar(){
-			api.updateCarStatus({
-				id: this.carInfo.id,
-				status: 0
-			}).then((res={}) => {
-				if(res.msg){
-					uni.showToast({
-						title: res.msg,
-						icon:'error'
-					});
-					return;
-				}
-				uni.showToast({
-					title: '还车成功',
-					icon: 'success',
-					success: () => {
-						uni.switchTab({
-							url: '/pages/model/car/Car',
-							success: () => {
-								uni.$emit('returnCar')
-							}
+		onLoad(option) {
+			this.getCarInfo(option.id);
+		},
+		methods: {
+			change(e) {
+				this.current = e.detail.current;
+			},
+			getCarInfo(id) {
+				api.returnCarInfo(id).then((res = {}) => {
+					if (res.data) {
+						let tmp = [];
+						res.data.carPhotos.split(',').forEach(o => {
+							tmp.push(`${config.IMG_URL}${o}`);
 						});
+						delete res.data.carPhotos;
+						this.carInfo = {
+							carPhotos: tmp,
+							...res.data
+						};
+						this.driverUser = res.data.driverUser || {};
 					}
 				});
-			});
-		},
-		abnormalReturnCar(){
-			uni.navigateTo({
-				url: `/pages/model/returnCar/AbnormalReturnCar?id=${this.carInfo.id}`
-			})
+			},
+			normalReturnCar() {
+				api.updateCarStatus({
+					id: this.carInfo.id,
+					status: 0
+				}).then((res = {}) => {
+					if (res.msg) {
+						uni.showToast({
+							title: res.msg,
+							icon: 'error'
+						});
+						return;
+					}
+					uni.showToast({
+						title: '还车成功',
+						icon: 'success',
+						success: () => {
+							uni.switchTab({
+								url: '/pages/model/car/Car',
+								success: () => {
+									uni.$emit('returnCar')
+								}
+							});
+						}
+					});
+				});
+			},
+			abnormalReturnCar() {
+				uni.navigateTo({
+					url: `/pages/model/returnCar/AbnormalReturnCar?id=${this.carInfo.id}&idcard=${(this.carInfo.driverUser || {}).idcard}&phoneNumber=${(this.carInfo.driverUser || {}).phoneNumber}&name=${(this.carInfo.driverUser || {}).name}`
+				})
+			}
 		}
-	}
-};
+	};
 </script>
 
 <style lang="scss">
-.swiper_box {
-	width: 100%;
-	height: 300rpx;
-}
-.swiper_img {
-	width: 100%;
-	height: 300rpx;
-}
-.info_box {
-	width: 90%;
-	display: flex;
-	flex-direction: column;
-	padding-top: 10px;
-}
-.btn_box {
-	display: flex;
-	flex-direction: row;
-	width: 100%;
-	margin-top: 50rpx;
-}
-.exception_btn {
-	background-color: #E6A23C;
-}
+	.swiper_box {
+		width: 100%;
+		height: 300rpx;
+	}
+
+	.swiper_img {
+		width: 100%;
+		height: 300rpx;
+	}
+
+	.info_box {
+		width: 90%;
+		display: flex;
+		flex-direction: column;
+		padding-top: 10px;
+	}
+
+	.btn_box {
+		display: flex;
+		flex-direction: row;
+		width: 100%;
+		margin-top: 50rpx;
+	}
+
+	.exception_btn {
+		background-color: #E6A23C;
+	}
 </style>
