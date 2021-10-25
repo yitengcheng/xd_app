@@ -14,6 +14,7 @@
 			api.send(option.orderId).then((res = {}) => {
 				if (res.data) {
 					this.src = res.data;
+					// this.src = 'https://www.baidu.com';
 					uni.hideLoading();
 				} else {
 					uni.navigateBack()

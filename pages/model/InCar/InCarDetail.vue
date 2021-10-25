@@ -30,7 +30,7 @@
 				<FormInput :formData="formData" name="phone" label="手机号" />
 				<FormInput :formData="formData" name="nowAddress" label="当前居住地" />
 				<FormRadio :required="false" :multiple="true" :formData="formData" name="check" :localdata="checkList"
-					label="附加核验" @change="e => $refs.form.setValue('check', e.value)" />
+					label="附加核验" @change="e => $refs.form.setValue('check', e.detail.value)" />
 				<button type="primary" class="btn" @click="submit">提交</button>
 				<button type="warn" class="btn" @click="reset">重置</button>
 			</uni-forms>
@@ -180,6 +180,8 @@
 						orderId: this.carInfo.orderId,
 					});
 					let checks = [];
+					console.log(this.checkList);
+					console.log(data.check);
 					this.checkList.forEach(o => {
 						data.check.forEach(item => {
 							o.value === item && checks.push({
@@ -210,9 +212,9 @@
 										}
 									})
 								}
-								return;
 							}
 						})
+						return;
 					}
 					api.payOrder({
 						serviceInfoMoney: this._.sum(this._.map(checks, 'value')),

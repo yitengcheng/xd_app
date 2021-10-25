@@ -73,15 +73,19 @@
 			sumbit(){
 				this.$refs.form.setValue('photos',this.$refs.upload.getFileList());
 				this.$refs.form.validate().then(res => {
+					let photos = res.photos.join(',');
+					delete res.photos;
 					let params = {
-						dictValue: res.dictValue.join(','),
+						dictValue: (res.dictValue || []).join(','),
 						blackIdcard: this.blackIdcard,
 						blackPhoneNumber: this.blackPhoneNumber,
 						blackName: this.blackName,
+						photos,
 					};
 					let func = this.blackFlag ? api.returnCarAndJoinBlack : api.updateCarStatus;
 					let id = this.blackFlag ? {carId: this.id} : {id: this.id};
 					func({
+						status: 8,
 						...id,
 						...res,
 						...params,

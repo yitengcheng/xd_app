@@ -82,13 +82,6 @@
 					id: this.carInfo.id,
 					status: 0
 				}).then((res = {}) => {
-					if (res.msg) {
-						uni.showToast({
-							title: res.msg,
-							icon: 'error'
-						});
-						return;
-					}
 					uni.showToast({
 						title: '还车成功',
 						icon: 'success',

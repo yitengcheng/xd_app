@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<text class="iconfont icon-morentouxiang head" @click="showShopQR"></text>
+		<text class="iconfont icon-morentouxiang head"></text>
 		<text class="name">{{(user.user || {}).nickName}}</text>
 		<view v-for="(item,index) in data" :key="index" @click="toPage(item)">
 			<view class="item">
@@ -9,6 +9,7 @@
 			</view>
 		</view>
 		<button @click="logout" type="warn" class="logout">退出登录</button>
+		<button @click="clear" type="warn" class="logout">清理本地缓存</button>
 		<text class="complany">贵州小滴科技有限公司 版权所有</text>
 	</view>
 </template>
@@ -35,6 +36,12 @@
 			},
 			logout(){
 				uni.reLaunch({url: '/pages/model/login/Login'});
+			},
+			clear(){
+				uni.clearStorageSync();
+				uni.showToast({
+					title: '清理完毕',
+				})
 			}
 		}
 	}

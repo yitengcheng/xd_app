@@ -35,9 +35,8 @@
 				idCardText: '',
 				blackText: '',
 				blackListText: '',
-				pactBtnText: '签订电子合同',
+				pactBtnText: '上传纸质合同',
 				orderId: '',
-				checkBtn: 0,
 				macAddress: '',
 			};
 		},
@@ -48,10 +47,6 @@
 			this.orderId = option.orderId;
 			this.macAddress = option.macAddress;
 			checks.forEach(o => {
-				if (o !== '电子合同') {
-					this.checkBtn = 1;
-					this.pactBtnText = '上传纸质合同';
-				}
 				this.options.push({
 					title: o
 				})
@@ -155,34 +150,28 @@
 				});
 			},
 			toPact() {
-				if (this.checkBtn === 1) {
-					uni.chooseImage({
-						success: (res) => {
-							uni.showLoading({
-								mask: true,
-								title: '合同上传中'
-							})
-							uni.uploadFile({
-								url: `${config.API_URL}/system/wxorder/uploadContract/${this.orderId}`,
-								filePath: res.tempFilePaths[0],
-								name: 'file',
-								header: {
-									Authorization: 'Bearer ' + uni.getStorageSync('tonken')
-								},
-								success: (res) => {
-									uni.hideLoading();
-									uni.navigateTo({
-										url: '/pages/model/InCar/Finish'
-									});
-								}
-							});
-						}
-					});
-				} else {
-					uni.navigateTo({
-						url: `/pages/model/InCar/Pact?orderId=${this.orderId}`
-					})
-				}
+				uni.chooseImage({
+					success: (res) => {
+						uni.showLoading({
+							mask: true,
+							title: '合同上传中'
+						})
+						uni.uploadFile({
+							url: `${config.API_URL}/system/wxorder/uploadContract/${this.orderId}`,
+							filePath: res.tempFilePaths[0],
+							name: 'file',
+							header: {
+								Authorization: 'Bearer ' + uni.getStorageSync('tonken')
+							},
+							success: (res) => {
+								uni.hideLoading();
+								uni.navigateTo({
+									url: '/pages/model/InCar/Finish'
+								});
+							}
+						});
+					}
+				});
 			},
 			validation(checkTitle) {
 				switch (checkTitle) {
@@ -373,6 +362,11 @@
 								icon: 'none',
 							})
 						}
+						break;
+					case "电子合同":
+						uni.navigateTo({
+							url: `/pages/model/InCar/Pact?orderId=${this.orderId}`
+						});
 						break;
 					default:
 						uni.showToast({
