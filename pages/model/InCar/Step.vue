@@ -5,7 +5,6 @@
 			<text v-show="!!licenseText" class="info_text">驾照存分：{{licenseText}}</text>
 			<text v-show="!!zdryText" class="info_text">重点人员核查：{{zdryText}}</text>
 			<text v-show="!!faceText" class="info_text">人脸匹配度：{{faceText}}</text>
-			<text v-show="!!idCardText" class="info_text">身份证真伪：{{idCardText}}</text>
 			<text v-show="!!blackText" class="info_text">老赖信息：{{blackText}}</text>
 			<text v-show="!!blackListText" class="info_text">平台黑名单记录：{{blackListText}}</text>
 		</view>
@@ -32,12 +31,10 @@
 				zdryText: '',
 				licenseText: '',
 				faceText: '',
-				idCardText: '',
 				blackText: '',
 				blackListText: '',
 				pactBtnText: '上传纸质合同',
 				orderId: '',
-				macAddress: '',
 			};
 		},
 		onLoad(option) {
@@ -45,10 +42,9 @@
 			this.idCard = option.idCard;
 			this.name = option.name;
 			this.orderId = option.orderId;
-			this.macAddress = option.macAddress;
 			checks.forEach(o => {
 				this.options.push({
-					title: o
+					title: o.substr(0, o.indexOf(" ")),
 				})
 			});
 			if (!checks[0]) {
@@ -256,112 +252,6 @@
 								}
 							}
 						})
-						break;
-					case '身份证阅读器':
-						if (uni.getSystemInfoSync().platform == "android") {
-							uni.openBluetoothAdapter({
-								success: () => {
-									uni.startBluetoothDevicesDiscovery({
-										success: (res) => {
-											uni.onBluetoothDeviceFound((e) => {
-												let {
-													devices
-												} = e;
-												if (devices[0].name.search('ST710') !== -
-													1) {
-													uni.showLoading({
-														mask: true,
-														title: '识别中...'
-													});
-													uni.stopBluetoothDevicesDiscovery({
-														success: () => {
-															let device =
-																devices[
-																	0];
-															if (this._
-																.includes((
-																		this
-																		.macAddress ||
-																		'')
-																	.split(
-																		','),
-																	device
-																	.deviceId
-																)) {
-																const idcard =
-																	uni
-																	.requireNativePlugin(
-																		'plugin_idcardModule'
-																	);
-																idcard
-																	.readIdcard({
-																			mac: device
-																				.deviceId
-																		}, (
-																		e) => {
-																			if (e
-																				.data
-																				.length <
-																				20
-																			) {
-																				this.idCardText =
-																					e
-																					.data;
-																			} else {
-																				this.idCardText =
-																					e
-																					.data;
-																				this.active =
-																					this
-																					.active +
-																					1;
-																				this.$nextTick(
-																					() => {
-																						if (this
-																							.active ===
-																							this
-																							.options
-																							.length -
-																							1
-																						) {
-																							this.pactFlag =
-																								true;
-																						}
-																					}
-																				);
-																			}
-
-																		});
-
-															} else {
-																uni.showToast({
-																	title: `此身份证阅读器不属于本公司授权设备`,
-																	icon: 'none',
-																})
-															}
-															uni.hideLoading();
-															uni
-																.closeBluetoothAdapter();
-														}
-													});
-												}
-											})
-										}
-									});
-								},
-								fail: () => {
-									uni.showToast({
-										title: '蓝牙启动失败',
-										icon: 'none'
-									})
-								}
-							});
-						} else {
-							uni.showToast({
-								title: '该功能暂时仅限安卓系统手机使用',
-								icon: 'none',
-							})
-						}
 						break;
 					case "电子合同":
 						uni.navigateTo({

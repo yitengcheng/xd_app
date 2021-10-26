@@ -22,6 +22,9 @@ const regionalManage = {
 	returnCarAndJoinBlack:(data)=>{
 		return request.globalRequest('/system/car/black/return', 'post', data);
 	},
+	getUserByComplany:(data)=>{
+		return request.globalRequest(`/system/customer/findByComplanyId?ids=${data}`, 'get');
+	},
 }
 
 

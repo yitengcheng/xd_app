@@ -23,9 +23,12 @@
 			<text>手机号：{{ customer.phoneNumber || '无' }}</text>
 		</view>
 		<IdCardOcr @click="getIdCard" type="primary" />
+		<button @click="readIdcard" class="readIdcard" type="primary">身份证阅读器</button>
 		<view class="info_box">
 			<uni-forms ref="form" v-model="formData" :rules="rules">
-				<FormInput :formData="formData" name="name" label="姓名" />
+				<uni-forms-item label="姓名" :name="formData.name" :required="true">
+					<Combox :value="formData.name" :candidates="candidates" :isJSON="true" keyName="name" @getValue="getComboxValue" class="form_combox"></Combox>
+				</uni-forms-item>
 				<FormInput :formData="formData" name="idCard" label="身份证号" />
 				<FormInput :formData="formData" name="phone" label="手机号" />
 				<FormInput :formData="formData" name="nowAddress" label="当前居住地" />
@@ -42,8 +45,9 @@
 	import api from '../../../api/index.js';
 	import config from '../../../common/config.js';
 	import IdCardOcr from '../../../components/ocr/IdCardOcr.vue';
-	import FormInput from '../../../components/form/FormInput.vue';
 	import FormRadio from '../../../components/form/FormRadio.vue';
+	import FormInput from '../../../components/form/FormInput.vue';
+	import Combox from '../../../components/cuihai-combox/cuihai-combox.vue';
 	import {
 		card15,
 		card18,
@@ -52,8 +56,9 @@
 	export default {
 		components: {
 			IdCardOcr,
+			FormRadio,
 			FormInput,
-			FormRadio
+			Combox,
 		},
 		data() {
 			return {
@@ -113,16 +118,99 @@
 						}]
 					}
 				},
-				current: 0
+				current: 0,
+				candidates: []
 			};
 		},
 		onLoad(option) {
 			this.dictInit('additional_check').then(() => {
 				this.checkList = uni.getStorageSync('additional_check');
 			});
+			let user = uni.getStorageSync('user');
+			api.getUserByComplany(this._.map(user.complany, 'id').join(',')).then((res)=>{
+				if((res.data || []).length > 0){
+					let { data } = res;
+					data.forEach(o => {
+						this.candidates.push({
+							name: o.name,
+							phoneNumber: o.phoneNumber,
+							idcard: o.idcard,
+							nowAddress: o.nowAddress
+						})
+					})
+				}
+			});
 			this.getCarInfo(option.id);
 		},
 		methods: {
+			getComboxValue(e){
+				this.formData.name = this.candidates[e].name || '';
+				this.$refs.form.setValue('idCard', this.candidates[e].idcard || '');
+				this.$refs.form.setValue('phone', this.candidates[e].phoneNumber || '');
+				this.$refs.form.setValue('nowAddress', this.candidates[e].nowAddress || '');
+			},
+			readIdcard() {
+				if (uni.getSystemInfoSync().platform == "android") {
+					uni.openBluetoothAdapter({
+						success: () => {
+							uni.startBluetoothDevicesDiscovery({
+								success: (res) => {
+									uni.onBluetoothDeviceFound((e) => {
+										let {devices} = e;
+										if (devices[0].name.search('ST710') !== -1) {
+											uni.showLoading({
+												mask: true,
+												title: '识别中...'
+											});
+											uni.stopBluetoothDevicesDiscovery({
+												success: () => {
+													let device = devices[0];
+													if (this._.includes(this._.map(this.carInfo.complany.macInfo, 'macAddress'), device.deviceId)) {
+														const idcard = uni.requireNativePlugin('plugin_idcardModule');
+														idcard.readIdcard({mac: device.deviceId}, (e) => {
+																if (e.data.length <20) {
+																	uni.showToast({
+																		title: '识别失败，请重新点击识别按钮',
+																		icon: 'none',
+																	});
+																} else {
+																	let data = JSON.parse(e.data);
+																	this.formData.name = data.姓名;
+																	this.$refs.form.setValue('idCard', data.身份证号);
+																	this.$refs.form.setValue('nowAddress', data.地址);
+																}
+
+															});
+
+													} else {
+														uni.showToast({
+															title: `此身份证阅读器不属于本公司授权设备`,
+															icon: 'none',
+														})
+													}
+													uni.hideLoading();
+													uni.closeBluetoothAdapter();
+												}
+											});
+										}
+									})
+								}
+							});
+						},
+						fail: () => {
+							uni.showToast({
+								title: '蓝牙启动失败',
+								icon: 'none'
+							})
+						}
+					});
+				} else {
+					uni.showToast({
+						title: '该功能暂时仅限安卓系统手机使用',
+						icon: 'none',
+					})
+				}
+			},
 			change(e) {
 				this.current = e.detail.current;
 			},
@@ -139,7 +227,7 @@
 							...res.data
 						};
 						this.customer = res.data.customer || {};
-						this.$refs.form.setValue('name', (res.data.customer || {}).name);
+						this.formData.name = (res.data.customer || {}).name;
 						this.$refs.form.setValue('idCard', (res.data.customer || {}).idcard);
 						this.$refs.form.setValue('phone', (res.data.customer || {}).phoneNumber);
 						this.$refs.form.setValue('nowAddress', (res.data.customer || {}).nowAddress);
@@ -163,7 +251,7 @@
 						complanyId: this.carInfo.complanyId,
 						orderId: this.carInfo.orderId,
 					})
-					this.$refs.form.setValue('name', words_result.姓名.words);
+					this.formData.name = words_result.姓名.words;
 					this.$refs.form.setValue('idCard', words_result.公民身份号码.words);
 					this.$refs.form.setValue('nowAddress', words_result.住址.words);
 				}
@@ -171,17 +259,15 @@
 			submit() {
 				this.$refs.form.validate().then(data => {
 					api.insertUserInfo({
-						name: data.name,
+						name: this.formData.name,
 						idcard: data.idCard,
 						phoneNumber: data.phoneNumber,
-						orderId: data.orderId, 
+						orderId: data.orderId,
 						nowAddress: data.nowAddress,
 						complanyId: this.carInfo.complanyId,
 						orderId: this.carInfo.orderId,
 					});
 					let checks = [];
-					console.log(this.checkList);
-					console.log(data.check);
 					this.checkList.forEach(o => {
 						data.check.forEach(item => {
 							o.value === item && checks.push({
@@ -196,18 +282,19 @@
 						})
 						return;
 					}
-					if (this.carInfo.complany.serviceInfoNum > 0 && typeof this.carInfo.complany.subMchId === 'string') {
+					if (this.carInfo.complany.serviceInfoNum > 0 && typeof this.carInfo.complany.subMchId ===
+						'string') {
 						uni.showModal({
 							title: `剩余免费核验次数${this.carInfo.complany.serviceInfoNum}次`,
 							icon: 'none',
 							success: (e) => {
-								if(e.confirm){
+								if (e.confirm) {
 									api.freeCheck({
 										complanyId: this.carInfo.complanyId,
 									}).then((res = {}) => {
 										if (res) {
 											uni.navigateTo({
-												url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}&macAddress=${this._.map(this.carInfo.complany.macInfo, 'macAddress')}`
+												url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}`
 											});
 										}
 									})
@@ -233,7 +320,7 @@
 								orderInfo: info,
 								success: () => {
 									uni.navigateTo({
-										url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}&macAddress=${this._.map(this.carInfo.complany.macInfo, 'macAddress')}`
+										url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}`
 									});
 								},
 								fail: (error) => {
@@ -274,5 +361,16 @@
 
 	.btn {
 		margin-bottom: 10px;
+	}
+	
+	.readIdcard {
+		margin-top: 20rpx;
+	}
+	
+	.form_combox {
+		border: 1px solid #c8c7cc;
+		padding-left: 5px;
+		padding-right: 5px;
+		border-radius: 5px;
 	}
 </style>

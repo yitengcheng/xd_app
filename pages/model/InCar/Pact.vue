@@ -10,16 +10,27 @@
 		onLoad(option) {
 			uni.showLoading({
 				title: '加载中'
-			})
+			});
 			api.send(option.orderId).then((res = {}) => {
 				if (res.data) {
 					this.src = res.data;
-					// this.src = 'https://www.baidu.com';
 					uni.hideLoading();
+					let timer = setInterval(()=>{
+						api.sign(option.orderId).then(res =>{
+							if((res || {}).data){
+								uni.navigateTo({
+									url: `/pages/model/InCar/PactQrcode?pactId=${res.data}`,
+									success: () => {
+										clearInterval(timer);
+									}
+								});
+							}
+						})
+					},120000);
 				} else {
 					uni.navigateBack()
 				}
-			})
+			});
 		},
 		data() {
 			return {
