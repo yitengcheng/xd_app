@@ -282,60 +282,77 @@
 						})
 						return;
 					}
-					if (this.carInfo.complany.serviceInfoNum > 0 && typeof this.carInfo.complany.subMchId ===
-						'string') {
-						uni.showModal({
-							title: `剩余免费核验次数${this.carInfo.complany.serviceInfoNum}次`,
-							icon: 'none',
-							success: (e) => {
-								if (e.confirm) {
-									api.freeCheck({
-										complanyId: this.carInfo.complanyId,
-									}).then((res = {}) => {
-										if (res) {
-											uni.navigateTo({
-												url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}`
+					api.checkService({
+						complanyId: this.carInfo.complany.id,
+						money: this._.sum(this._.map(checks, 'value')),
+					}).then(res => {
+						if(res){
+							if(res.data){
+								uni.showModal({
+									title: `剩余代金券金额${res.msg}元`,
+									confirmText:'代金券支付',
+									cancelText: '微信全额支付',
+									success: (e) => {
+										if(e.confirm){
+											api.deduct({
+												complanyId: this.carInfo.complany.id,
+												money: this._.sum(this._.map(checks, 'value')),
+											}).then(result => {
+												if(result){
+													this.payOrder(0, data);
+												}
 											});
+										} else {
+											this.payOrder(this._.sum(this._.map(checks, 'value')), data);
 										}
-									})
-								}
+									}
+								});
+							} else {
+								uni.showModal({
+									title: `剩余代金券${res.msg}元不足以支付本次费用${this._.sum(this._.map(checks, 'value'))}元`,
+									success: (e) => {
+										if(e.confirm){
+											this.payOrder(this._.sum(this._.map(checks, 'value')), data);
+										}
+									}
+								})
 							}
-						})
-						return;
-					}
-					api.payOrder({
-						serviceInfoMoney: this._.sum(this._.map(checks, 'value')),
-						openid: this.carInfo.wxOrder.openid,
-						wantCarTime: this.carInfo.wxOrder.wantCarTime,
-						estimateReturnTime: this.carInfo.wxOrder.estimateReturnTime,
-						serviceRemark: this._.map(checks, 'text').join(','),
-						carId: this.carInfo.id,
-						orderId: this.carInfo.orderId,
-						infoOrderId: this.carInfo.orderId,
-					}).then((res = {}) => {
-						let info = res.data;
-						if (info) {
-							uni.requestPayment({
-								provider: 'wxpay',
-								orderInfo: info,
-								success: () => {
-									uni.navigateTo({
-										url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}`
-									});
-								},
-								fail: (error) => {
-									uni.showModal({
-										title: error.errMsg,
-										icon: 'none',
-									});
-								}
-							});
 						}
-					})
+					});
 				});
 			},
 			reset() {
 				this.$refs.form.reset();
+			},
+			payOrder(serviceInfoMoney, data){
+				api.payOrder({
+					serviceInfoMoney,
+					openid: this.carInfo.wxOrder.openid,
+					wantCarTime: this.carInfo.wxOrder.wantCarTime,
+					estimateReturnTime: this.carInfo.wxOrder.estimateReturnTime,
+					serviceRemark: this._.map(checks, 'text').join(','),
+					carId: this.carInfo.id,
+					infoOrderId: this.carInfo.orderId,
+				}).then((res = {}) => {
+					let info = res.data;
+					if (info) {
+						uni.requestPayment({
+							provider: 'wxpay',
+							orderInfo: info,
+							success: () => {
+								uni.navigateTo({
+									url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}`
+								});
+							},
+							fail: (error) => {
+								uni.showModal({
+									title: error.errMsg,
+									icon: 'none',
+								});
+							}
+						});
+					}
+				});
 			}
 		}
 	};

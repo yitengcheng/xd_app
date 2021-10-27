@@ -28,7 +28,7 @@
 		},
 		data() {
 			return {
-				current: 0,
+				current: 1,
 				items: ['全部车辆', '可租车辆', '在租车辆'],
 				allList: [],
 				forRentList: [],

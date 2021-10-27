@@ -13,9 +13,6 @@ const tool = {
 	checkDeadbeat: (data)=>{
 		return request.globalRequest(`/tool/tencent/blacklist`, 'post', data);
 	},
-	freeCheck: (data)=>{
-		return request.globalRequest(`/direct/pay/service`, 'post', data);
-	},
 	checkBlack: (data)=>{
 		return request.globalRequest(`/system/black/check`, 'post', data);
 	},
