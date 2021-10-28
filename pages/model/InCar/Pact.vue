@@ -19,14 +19,14 @@
 						api.sign(option.orderId).then(res =>{
 							if((res || {}).data){
 								uni.navigateTo({
-									url: `/pages/model/InCar/PactQrcode?pactId=${res.data}`,
+									url: `/pages/model/InCar/PactQrcode?pactId=${res.data}&orderId=${option.orderId}`,
 									success: () => {
 										clearInterval(timer);
 									}
 								});
 							}
 						})
-					},120000);
+					}, 3000);
 				} else {
 					uni.navigateBack()
 				}

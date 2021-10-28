@@ -299,11 +299,17 @@
 												money: this._.sum(this._.map(checks, 'value')),
 											}).then(result => {
 												if(result){
-													this.payOrder(0, data);
+													if(typeof this.carInfo.complany.subMchId === 'string'){
+														uni.navigateTo({
+															url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}`
+														});
+													} else{
+														this.payOrder(0, this._.map(checks, 'text').join(','), data);
+													}
 												}
 											});
 										} else {
-											this.payOrder(this._.sum(this._.map(checks, 'value')), data);
+											this.payOrder(this._.sum(this._.map(checks, 'value')),this._.map(checks, 'text').join(','), data);
 										}
 									}
 								});
@@ -312,7 +318,7 @@
 									title: `剩余代金券${res.msg}元不足以支付本次费用${this._.sum(this._.map(checks, 'value'))}元`,
 									success: (e) => {
 										if(e.confirm){
-											this.payOrder(this._.sum(this._.map(checks, 'value')), data);
+											this.payOrder(this._.sum(this._.map(checks, 'value')),this._.map(checks, 'text').join(','), data);
 										}
 									}
 								})
@@ -322,15 +328,18 @@
 				});
 			},
 			reset() {
-				this.$refs.form.reset();
+				this.formData.name = '';
+				this.$refs.form.setValue('idCard', '');
+				this.$refs.form.setValue('phone', '');
+				this.$refs.form.setValue('nowAddress', '');
 			},
-			payOrder(serviceInfoMoney, data){
+			payOrder(serviceInfoMoney, serviceRemark, data){
 				api.payOrder({
 					serviceInfoMoney,
 					openid: this.carInfo.wxOrder.openid,
 					wantCarTime: this.carInfo.wxOrder.wantCarTime,
 					estimateReturnTime: this.carInfo.wxOrder.estimateReturnTime,
-					serviceRemark: this._.map(checks, 'text').join(','),
+					serviceRemark,
 					carId: this.carInfo.id,
 					infoOrderId: this.carInfo.orderId,
 				}).then((res = {}) => {
@@ -341,7 +350,7 @@
 							orderInfo: info,
 							success: () => {
 								uni.navigateTo({
-									url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}`
+									url: `/pages/model/InCar/Step?checks=${serviceRemark}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}`
 								});
 							},
 							fail: (error) => {

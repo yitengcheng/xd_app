@@ -29,7 +29,7 @@
 		data() {
 			return {
 				current: 1,
-				items: ['全部车辆', '可租车辆', '在租车辆'],
+				items: ['全部车辆', '待租车辆', '在租车辆'],
 				allList: [],
 				forRentList: [],
 				rentOutList: [],

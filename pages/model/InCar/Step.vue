@@ -9,7 +9,7 @@
 			<text v-show="!!blackListText" class="info_text">平台黑名单记录：{{blackListText}}</text>
 		</view>
 		<button v-for="(item,index) in options" :key="index" type="primary" class="btn" v-show="active + 1 === index"
-			@click="validation(item.title)">{{item.title}}</button>
+			@click="validation(item.title)">{{item.title === '电子合同' ? '电子合同签订' : item.title}}</button>
 		<view v-if="pactFlag" class="pactBtn">
 			<button type="primary" @click="toPact">{{pactBtnText}}</button>
 		</view>
@@ -118,7 +118,7 @@
 							}
 						});
 					}
-					if (o.title === '平台黑名单校验') {
+					if (o.title === '黑名单校验') {
 						uni.showLoading({
 							mask: true,
 							title: '查询中'
