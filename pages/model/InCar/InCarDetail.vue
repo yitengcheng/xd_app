@@ -184,8 +184,8 @@
 
 													} else {
 														uni.showToast({
-															title: `此身份证阅读器不属于本公司授权设备`,
-															icon: 'none',
+															title: `未授权设备`,
+															icon: 'error',
 														})
 													}
 													uni.hideLoading();
