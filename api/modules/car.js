@@ -25,6 +25,9 @@ const regionalManage = {
 	getUserByComplany:(data)=>{
 		return request.globalRequest(`/system/customer/findByComplanyId?ids=${data}`, 'get');
 	},
+	getChangeCarList: (data)=>{
+		return request.globalRequest(`/system/car/change/car`, 'post', data);
+	},
 }
 
 

@@ -55,6 +55,7 @@
 						}
 						this.pageNo = pageNum + 1;
 					}
+					uni.stopPullDownRefresh();
 				});
 			},
 			typeTile(type) {
@@ -101,6 +102,11 @@
 				}
 				switch (item.type) {
 					case 'NEWORDER': // 新的订单-确认
+						uni.redirectTo({
+							url: `/pages/model/my/OrderDetail?id=${item.orderId}&type=1&handleId=${item.id}`
+						});
+						break;
+					case 'VIEWORDER': // 新线下订单-确认
 						uni.redirectTo({
 							url: `/pages/model/my/OrderDetail?id=${item.orderId}&type=1&handleId=${item.id}`
 						});

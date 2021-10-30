@@ -21,8 +21,13 @@
 			<text>姓名：{{ (carInfo.driverUser || {}).name || '无' }}</text>
 			<text>身份证号：{{ (carInfo.driverUser || {}).idcard || '无' }}</text>
 			<text>手机号：{{ (carInfo.driverUser || {}).phoneNumber || '无' }}</text>
+			<view>
+				<text>是否续租：</text>
+				<switch v-model="hasRelet" @change="changeRelet"></switch>
+			</view>
+			<uni-datetime-picker ref="pickerDate" class="reletDate" v-if="hasRelet" type="date" :value="reletDate" :start="dayjs().format('YYYY-MM-DD')" @change="changeDate"></uni-datetime-picker>
 		</view>
-		<view class="btn_box">
+		<view class="btn_box" v-if="!hasRelet">
 			<button type="primary" @click="normalReturnCar">正常一键还车</button>
 			<button class="exception_btn" @click="abnormalReturnCar">异常还车</button>
 		</view>
@@ -51,13 +56,77 @@
 				carInfo: {},
 				idCardInfo: {},
 				driverUser: {},
-				current: 0
+				current: 0,
+				hasRelet: false,
+				reletDate: '',
 			};
 		},
 		onLoad(option) {
 			this.getCarInfo(option.id);
 		},
 		methods: {
+			changeRelet(e){
+				this.hasRelet = e.detail.value;
+			},
+			changeDate(e){
+				let selectDate = this.dayjs(e);
+				let returnDate = this.dayjs(this.carInfo.estimateReturnTime);
+				if(selectDate.isBefore(returnDate)){
+					uni.showModal({
+						content: '请选择正确的续租时间',
+						showCancel: false,
+					});
+					return;
+				}
+				if(selectDate.diff(returnDate, 'day') < 1){
+					uni.showModal({
+						content: '续租最少一天',
+						showCancel: false,
+					});
+					return;
+				}
+				api.reletCar({
+					orderId: this.carInfo.wxOrder.orderId,
+					carId: this.carInfo.id,
+					beginTime: returnDate.format('YYYY-MM-DD HH:mm:ss'),
+					endTime: selectDate.format('YYYY-MM-DD HH:mm:ss'),
+					status: false,
+				}).then(res => {
+					if(res.data){
+						uni.showModal({
+							content: '续租成功',
+							showCancel: false,
+							success: () => {
+								uni.navigateBack();
+							}
+						});
+					} else {
+						uni.showModal({
+							title: '提示',
+							content: res.msg,
+							success: (e) => {
+								if(e.confirm){
+									api.reletCar({
+										orderId: this.carInfo.wxOrder.orderId,
+										carId: this.carInfo.id,
+										beginTime: returnDate.format('YYYY-MM-DD HH:mm:ss'),
+										endTime: selectDate.format('YYYY-MM-DD HH:mm:ss'),
+										status: true,
+									}).then(result => {
+										uni.showModal({
+											content: '续租成功',
+											showCancel: false,
+											success: () => {
+												uni.navigateBack();
+											}
+										})
+									})
+								}
+							}
+						});
+					}
+				});
+			},
 			change(e) {
 				this.current = e.detail.current;
 			},
@@ -132,5 +201,8 @@
 
 	.exception_btn {
 		background-color: #E6A23C;
+	}
+	.reletDate {
+		margin-top: 20rpx;
 	}
 </style>

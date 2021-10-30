@@ -58,6 +58,9 @@ const store = new Vuex.Store({
 													type,
 													handleId
 												});
+												uni.redirectTo({
+													url: `/pages/model/my/OrderDetail?id=${orderId}&type=1&handleId=${handleId}`
+												});
 											}
 										}
 									});

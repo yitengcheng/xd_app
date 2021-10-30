@@ -1,6 +1,6 @@
 <template>
 	<uni-forms-item :label="label" :required="required" :name="name">
-		<switch  v-model="formData[name]" v-bind="$attrs" :checked="formData[name]"></switch>
+		<switch  v-model="formData[name]" v-bind="$attrs" :checked="formData[name]" @change="change"></switch>
 	</uni-forms-item>
 </template>
 
@@ -24,6 +24,11 @@ export default {
 			default() {
 				return {};
 			}
+		}
+	},
+	methods:{
+		change(e){
+			this.$emit('change', e.detail.value);
 		}
 	}
 };

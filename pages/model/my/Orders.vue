@@ -70,7 +70,7 @@
 			},
 			clickItem(e){
 				uni.navigateTo({
-					url: `/pages/model/my/OrderDetail?id=${e.orderId}&type=0`
+					url: `/pages/model/my/OrderDetail?id=${e.orderId}&type=0&`
 				})
 			}
 		}

@@ -21,7 +21,8 @@
 				formData: {
 					userName: '',
 					password: '',
-				}
+				},
+				appVersion: '',
 			}
 		},
 		mounted() {
@@ -37,6 +38,7 @@
 					this.$refs.form.setValue('password',res.data);
 				}
 			});
+			this.appVersion = plus.runtime.versionCode
 		},
 		methods: {
 			forgetPassword(){
@@ -51,6 +53,21 @@
 						type: 'app',
 						...data,
 					}).then((res = {})=>{
+						if (uni.getSystemInfoSync().platform == "android" && this.appVersion * 1 < res.appVersion * 1) {
+							uni.showModal({
+								content: '当前使用版本过低，请移步后台管理页面下载最新版本',
+								showCancel: false,
+								success: () => {
+									if (uni.getSystemInfoSync().platform == 'ios'){
+									    plus.ios.import("UIApplication").sharedApplication().performSelector("exit")
+									} else if (uni.getSystemInfoSync().platform == 'android'){
+									    plus.runtime.quit();
+									}
+								}
+							});
+							return;
+						}
+						
 						if(res.token){
 							uni.setStorage({
 								key:'tonken',

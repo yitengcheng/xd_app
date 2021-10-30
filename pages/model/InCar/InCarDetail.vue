@@ -27,11 +27,14 @@
 		<view class="info_box">
 			<uni-forms ref="form" v-model="formData" :rules="rules">
 				<uni-forms-item label="姓名" :name="formData.name" :required="true">
-					<Combox :value="formData.name" :candidates="candidates" :isJSON="true" keyName="name" @getValue="getComboxValue" class="form_combox"></Combox>
+					<Combox :value="formData.name" :candidates="candidates" :isJSON="true" keyName="name"
+						@getValue="getComboxValue" class="form_combox"></Combox>
 				</uni-forms-item>
+				<FormPicker :formData="formData" name="carId" label="移交车辆" :localdata="carList"></FormPicker>
 				<FormInput :formData="formData" name="idCard" label="身份证号" />
 				<FormInput :formData="formData" name="phone" label="手机号" />
 				<FormInput :formData="formData" name="nowAddress" label="当前居住地" />
+				<FormSwitch :formData="formData" name="preferredUse" label="优先使用代金" @change="changePreferredUse"></FormSwitch>
 				<FormRadio :required="false" :multiple="true" :formData="formData" name="check" :localdata="checkList"
 					label="附加核验" @change="e => $refs.form.setValue('check', e.detail.value)" />
 				<button type="primary" class="btn" @click="submit">提交</button>
@@ -48,6 +51,8 @@
 	import FormRadio from '../../../components/form/FormRadio.vue';
 	import FormInput from '../../../components/form/FormInput.vue';
 	import Combox from '../../../components/cuihai-combox/cuihai-combox.vue';
+	import FormPicker from '../../../components/form/FormPicker.vue';
+	import FormSwitch from '../../../components/form/FormSwitch.vue';
 	import {
 		card15,
 		card18,
@@ -59,18 +64,23 @@
 			FormRadio,
 			FormInput,
 			Combox,
+			FormPicker,
+			FormSwitch,
 		},
 		data() {
 			return {
 				carInfo: {},
 				idCardInfo: {},
+				carList: [],
 				customer: {},
 				formData: {
 					name: '',
 					idCard: '',
 					phone: '',
 					nowAddress: '',
-					check: []
+					check: [],
+					carId: '',
+					preferredUse: false,
 				},
 				checkList: [],
 				rules: {
@@ -78,6 +88,12 @@
 						rules: [{
 							required: true,
 							errorMessage: '请填写姓名'
+						}]
+					},
+					carId: {
+						rules: [{
+							required: true,
+							errorMessage: '请选择移交车辆'
 						}]
 					},
 					nowAddress: {
@@ -119,7 +135,8 @@
 					}
 				},
 				current: 0,
-				candidates: []
+				candidates: [],
+				oldCarId: '',
 			};
 		},
 		onLoad(option) {
@@ -127,9 +144,26 @@
 				this.checkList = uni.getStorageSync('additional_check');
 			});
 			let user = uni.getStorageSync('user');
-			api.getUserByComplany(this._.map(user.complany, 'id').join(',')).then((res)=>{
-				if((res.data || []).length > 0){
-					let { data } = res;
+			api.getChangeCarList({
+				complanyIds: this._.map(user.complany, 'id').join(',')
+			}).then((res) => {
+				if (res.data) {
+					let {
+						data
+					} = res;
+					data.forEach(car => {
+						this.carList.push({
+							value: car.id,
+							text: car.carNum
+						});
+					})
+				}
+			});
+			api.getUserByComplany(this._.map(user.complany, 'id').join(',')).then((res) => {
+				if ((res.data || []).length > 0) {
+					let {
+						data
+					} = res;
 					data.forEach(o => {
 						this.candidates.push({
 							name: o.name,
@@ -143,7 +177,10 @@
 			this.getCarInfo(option.id);
 		},
 		methods: {
-			getComboxValue(e){
+			changePreferredUse(e){
+				this.$refs.form.setValue('preferredUse', e);
+			},
+			getComboxValue(e) {
 				this.formData.name = this.candidates[e].name || '';
 				this.$refs.form.setValue('idCard', this.candidates[e].idcard || '');
 				this.$refs.form.setValue('phone', this.candidates[e].phoneNumber || '');
@@ -156,7 +193,9 @@
 							uni.startBluetoothDevicesDiscovery({
 								success: (res) => {
 									uni.onBluetoothDeviceFound((e) => {
-										let {devices} = e;
+										let {
+											devices
+										} = e;
 										if (devices[0].name.search('ST710') !== -1) {
 											uni.showLoading({
 												mask: true,
@@ -165,22 +204,55 @@
 											uni.stopBluetoothDevicesDiscovery({
 												success: () => {
 													let device = devices[0];
-													if (this._.includes(this._.map(this.carInfo.complany.macInfo, 'macAddress'), device.deviceId)) {
-														const idcard = uni.requireNativePlugin('plugin_idcardModule');
-														idcard.readIdcard({mac: device.deviceId}, (e) => {
-																if (e.data.length <20) {
-																	uni.showToast({
-																		title: '识别失败，请重新点击识别按钮',
-																		icon: 'none',
-																	});
-																} else {
-																	let data = JSON.parse(e.data);
-																	this.formData.name = data.姓名;
-																	this.$refs.form.setValue('idCard', data.身份证号);
-																	this.$refs.form.setValue('nowAddress', data.地址);
-																}
+													if (this._.includes(this._
+															.map(this.carInfo
+																.complany
+																.macInfo,
+																'macAddress'),
+															device.deviceId)) {
+														const idcard = uni
+															.requireNativePlugin(
+																'plugin_idcardModule'
+																);
+														idcard.readIdcard({
+															mac: device
+																.deviceId
+														}, (e) => {
+															if (e.data
+																.length <
+																20) {
+																uni.showToast({
+																	title: '识别失败，请重新点击识别按钮',
+																	icon: 'none',
+																});
+															} else {
+																let data =
+																	JSON
+																	.parse(
+																		e
+																		.data
+																		);
+																this.formData
+																	.name =
+																	data
+																	.姓名;
+																this.$refs
+																	.form
+																	.setValue(
+																		'idCard',
+																		data
+																		.身份证号
+																		);
+																this.$refs
+																	.form
+																	.setValue(
+																		'nowAddress',
+																		data
+																		.地址
+																		);
+															}
 
-															});
+														});
 
 													} else {
 														uni.showToast({
@@ -189,7 +261,8 @@
 														})
 													}
 													uni.hideLoading();
-													uni.closeBluetoothAdapter();
+													uni
+												.closeBluetoothAdapter();
 												}
 											});
 										}
@@ -231,6 +304,8 @@
 						this.$refs.form.setValue('idCard', (res.data.customer || {}).idcard);
 						this.$refs.form.setValue('phone', (res.data.customer || {}).phoneNumber);
 						this.$refs.form.setValue('nowAddress', (res.data.customer || {}).nowAddress);
+						this.$refs.form.setValue('carId', res.data.id || '');
+						this.oldCarId = res.data.id;
 					}
 				});
 			},
@@ -258,6 +333,13 @@
 			},
 			submit() {
 				this.$refs.form.validate().then(data => {
+					let params = {};
+					if(data.carId !== this.oldCarId){
+						params = {
+							newCarId: data.carId,
+							oldCarId: this.oldCarId
+						};
+					}
 					api.insertUserInfo({
 						name: this.formData.name,
 						idcard: data.idCard,
@@ -266,6 +348,7 @@
 						nowAddress: data.nowAddress,
 						complanyId: this.carInfo.complanyId,
 						orderId: this.carInfo.orderId,
+						...params,
 					});
 					let checks = [];
 					this.checkList.forEach(o => {
@@ -282,49 +365,55 @@
 						})
 						return;
 					}
-					api.checkService({
-						complanyId: this.carInfo.complany.id,
-						money: this._.sum(this._.map(checks, 'value')),
-					}).then(res => {
-						if(res){
-							if(res.data){
-								uni.showModal({
-									title: `剩余代金券金额${res.msg}元`,
-									confirmText:'代金券支付',
-									cancelText: '微信全额支付',
-									success: (e) => {
-										if(e.confirm){
+					if (data.preferredUse) {
+						api.checkService({
+							complanyId: this.carInfo.complany.id,
+							money: this._.sum(this._.map(checks, 'value')),
+						}).then(res => {
+							if (res) {
+								if (res.data) {
+									uni.showModal({
+										title: `剩余代金券金额${res.msg}元`,
+										confirmText: '代金券支付',
+										showCancel: false,
+										success: (e) => {
 											api.deduct({
 												complanyId: this.carInfo.complany.id,
-												money: this._.sum(this._.map(checks, 'value')),
+												money: this._.sum(this._.map(checks,
+													'value')),
 											}).then(result => {
-												if(result){
-													if(typeof this.carInfo.complany.subMchId === 'string'){
+												if (result) {
+													if (typeof this.carInfo.complany
+														.subMchId === 'string') {
 														uni.navigateTo({
 															url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}`
 														});
-													} else{
-														this.payOrder(0, this._.map(checks, 'text').join(','), data);
+													} else {
+														this.payOrder(0, this._.map(
+																checks, 'text')
+															.join(','), data);
 													}
 												}
 											});
-										} else {
-											this.payOrder(this._.sum(this._.map(checks, 'value')),this._.map(checks, 'text').join(','), data);
 										}
-									}
-								});
-							} else {
-								uni.showModal({
-									title: `剩余代金券${res.msg}元不足以支付本次费用${this._.sum(this._.map(checks, 'value'))}元`,
-									success: (e) => {
-										if(e.confirm){
-											this.payOrder(this._.sum(this._.map(checks, 'value')),this._.map(checks, 'text').join(','), data);
+									});
+								} else {
+									uni.showModal({
+										title: `剩余代金券${res.msg}元不足以支付本次费用${this._.sum(this._.map(checks, 'value'))}元`,
+										success: (e) => {
+											if (e.confirm) {
+												this.payOrder(this._.sum(this._.map(checks,
+													'value')), this._.map(checks,
+													'text').join(','), data);
+											}
 										}
-									}
-								})
+									})
+								}
 							}
-						}
-					});
+						});
+					} else {
+						this.payOrder(this._.sum(this._.map(checks, 'value')), this._.map(checks, 'text').join(','), data);
+					}
 				});
 			},
 			reset() {
@@ -333,14 +422,14 @@
 				this.$refs.form.setValue('phone', '');
 				this.$refs.form.setValue('nowAddress', '');
 			},
-			payOrder(serviceInfoMoney, serviceRemark, data){
+			payOrder(serviceInfoMoney, serviceRemark, data) {
 				api.payOrder({
 					serviceInfoMoney,
 					openid: this.carInfo.wxOrder.openid,
 					wantCarTime: this.carInfo.wxOrder.wantCarTime,
 					estimateReturnTime: this.carInfo.wxOrder.estimateReturnTime,
 					serviceRemark,
-					carId: this.carInfo.id,
+					carId: data.carId,
 					infoOrderId: this.carInfo.orderId,
 				}).then((res = {}) => {
 					let info = res.data;
@@ -388,11 +477,11 @@
 	.btn {
 		margin-bottom: 10px;
 	}
-	
+
 	.readIdcard {
 		margin-top: 20rpx;
 	}
-	
+
 	.form_combox {
 		border: 1px solid #c8c7cc;
 		padding-left: 5px;

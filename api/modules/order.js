@@ -18,7 +18,10 @@ const order = {
 	},
 	insertUserInfo: (data) => {
 		return request.globalRequest(`/tool/idcard`, 'post', data);
-	}
+	},
+	reletCar: (data) => {
+		return request.globalRequest(`/system/wxorder/renewal`, 'post', data);
+	},
 }
 
 
