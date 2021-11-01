@@ -1,12 +1,14 @@
 <template>
 	<view class="content">
 		<swiper class="swiper_box">
-			<swiper-item v-for="(item, index) in orderInfo.carPhotos" :key="index"><image :src="item" class="swiper_img" mode="aspectFill"></image></swiper-item>
+			<swiper-item v-for="(item, index) in orderInfo.carPhotos" :key="index">
+				<image :src="item" class="swiper_img" mode="aspectFill"></image>
+			</swiper-item>
 		</swiper>
 		<view class="info_box">
 			<text>订单信息</text>
 			<text>总金额：{{orderInfo.totalMoney/100 || 0}}</text>
-			<text>支付状态：{{orderInfo.payStatus === 'NOTPAY' ? '未付款' : orderInfo.payStatus === 'SUCCESS' ? '付款成功' : orderInfo.payStatus === 'REFUNDED' ? '退款成功' : '未知状态'}}</text>
+			<text>支付状态：{{orderInfo.payStatus === 'NOTPAY' ? '未付款' : orderInfo.payStatus === 'SUCCESS' ? '付款成功' : orderInfo.payStatus === 'REFUNDED' ? '退款成功' : orderInfo.payStatus === '到店付款' ? '到店付款' : '未知状态'}}</text>
 			<text>租赁费用：{{orderInfo.shouldMoney/100 || 0}}</text>
 			<text>保险费用：{{orderInfo.insureMoney/100 || 0}}</text>
 			<text>平台费用：{{orderInfo.serviceMoney/100 || 0}}</text>
@@ -37,28 +39,35 @@
 			this.handleId = option.handleId;
 			this.initOrderDetail(option.id);
 		},
-		methods:{
-			initOrderDetail(id){
-				api.orderDetail(id).then((res = {})=>{
-					let { data } = res;
+		methods: {
+			initOrderDetail(id) {
+				api.orderDetail(id).then((res = {}) => {
+					let {
+						data
+					} = res;
 					if (data) {
 						let tmp = [];
 						data.car.carPhotos.split(',').forEach(o => {
 							tmp.push(`${config.IMG_URL}${o}`);
 						});
 						delete res.data.car.carPhotos;
-						this.orderInfo = { carPhotos: tmp, ...res.data };
+						this.orderInfo = {
+							carPhotos: tmp,
+							...res.data
+						};
 					}
 				});
 			},
-			orderHandle(type){
+			orderHandle(type) {
 				// 1 确认接单 2 取消接单 3 确认退款
-				let func = type === 1 ? api.orderConfirm : type === 2 ? api.orderCannel : type === 3 ? api.orderCannel : undefined;
+				let func = type === 1 ? api.orderConfirm : (type === 2 && typeof this.orderInfo.complany.subMchId ===
+						'string') ? api.orderCannel : (type === 2 && typeof this.orderInfo.complany.subMchId !==
+					'string') ? api.handleRead : type === 3 ? api.orderCannel : undefined;
 				func({
 					orderId: this.orderInfo.orderId,
 					handleId: this.handleId,
-					}).then((res)=>{
-					if(res){
+				}).then((res) => {
+					if (res) {
 						uni.showToast({
 							title: '操作成功',
 							icon: 'success'
@@ -74,21 +83,24 @@
 </script>
 
 <style lang="scss">
-.swiper_box {
-	width: 100%;
-	height: 300rpx;
-}
-.swiper_img {
-	width: 100%;
-	height: 300rpx;
-}
-.info_box {
-	width: 90%;
-	display: flex;
-	flex-direction: column;
-	padding-top: 10px;
-}
-.btn { 
-	margin-top: 30rpx;
-}
+	.swiper_box {
+		width: 100%;
+		height: 300rpx;
+	}
+
+	.swiper_img {
+		width: 100%;
+		height: 300rpx;
+	}
+
+	.info_box {
+		width: 90%;
+		display: flex;
+		flex-direction: column;
+		padding-top: 10px;
+	}
+
+	.btn {
+		margin-top: 30rpx;
+	}
 </style>

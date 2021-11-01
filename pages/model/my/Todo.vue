@@ -1,7 +1,7 @@
 <template>
 	<uni-list>
 		<uni-list-item v-for="item in toDos" :key="item.id" :title="typeTile(item.type)" :note="item.message"
-			:rightText="dayjs(item.createTime).format('YYYY-MM-DD')" :show-badge="item.handle " badge-text="*"
+			:rightText="dayjs(item.createTime).format('YYYY-MM-DD')" :show-badge="!item.handle " badge-text="*"
 			:clickable="true" @click="haveRead(item)">
 		</uni-list-item>
 	</uni-list>

@@ -9,7 +9,10 @@ const handle = {
 	},
 	handle: (id)=> {
 		return request.globalRequest(`/main/info/${id}`, 'get');
-	}
+	},
+	notHandle:(data)=>{
+		return request.globalRequest(`/main/not/handle`, 'get', data);
+	},
 }
 
 

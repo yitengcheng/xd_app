@@ -100,11 +100,8 @@
 							realname: this.name,
 						}).then((res = {}) => {
 							uni.hideLoading()
-							if (res.msg) {
-								let {
-									result
-								} = res.msg;
-								if (this._.isObject(result)) {
+							if (res.data) {
+								if (res.data) {
 									this.blackText = `${this.name}存在有履行能力而拒不履行生效法律文书确定义务的行为`
 								} else {
 									this.blackText = res.msg

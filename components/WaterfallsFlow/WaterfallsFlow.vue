@@ -4,8 +4,8 @@
         <view>
             <view id="left" v-if="leftList.length">
                 <view v-for="(item,index) in leftList" :key="index"
-                      class="wf-item" @tap="itemTap(item)">
-                    <WaterfallsFlowItem :item="item"/>
+                      class="wf-item">
+                    <WaterfallsFlowItem :item="item"  @itemTap="itemTap" @itemClick="itemClick"/>
                 </view>
             </view>
         </view>
@@ -15,8 +15,8 @@
         <view>
             <view id="right" v-if="rightList.length">
                 <view v-for="(item,index) in rightList" :key="index"
-                      class="wf-item" @tap="itemTap(item)">
-                    <WaterfallsFlowItem :item="item"/>
+                      class="wf-item">
+                    <WaterfallsFlowItem :item="item" @itemTap="itemTap" @itemClick="itemClick"/>
                 </view>
             </view>
         </view>
@@ -116,11 +116,13 @@ export default {
                 }).exec();
             })
         },
+		itemTap(e){
+			this.$emit('itemTap',e);
+		},
+		itemClick(e){
+			this.$emit('itemClick',e);
+		}
 
-        // item点击
-        itemTap(item) {
-            this.$emit('itemTap', item)
-        }
     }
 }
 </script>

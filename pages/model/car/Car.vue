@@ -4,13 +4,13 @@
 			activeColor="#4cd964"></uni-segmented-control>
 		<view>
 			<view v-show="current === 0">
-				<WaterfallsFlow :wfList="allList" @itemTap="itemTap" />
+				<WaterfallsFlow :wfList="allList" @itemTap="itemTap" @itemClick="checkIllegal"/>
 			</view>
 			<view v-show="current === 1">
-				<WaterfallsFlow :wfList="forRentList" @itemTap="itemTap" />
+				<WaterfallsFlow :wfList="forRentList" @itemTap="itemTap" @itemClick="checkIllegal"/>
 			</view>
 			<view v-show="current === 2">
-				<WaterfallsFlow :wfList="rentOutList" @itemTap="itemTap" />
+				<WaterfallsFlow :wfList="rentOutList" @itemTap="itemTap" @itemClick="checkIllegal"/>
 			</view>
 		</view>
 		<uni-fab :content="content" horizontal="right" vertical="bottom" direction="vertical" @trigger="trigger">
@@ -60,6 +60,11 @@
 			this.getCarList(1);
 		},
 		methods: {
+			checkIllegal(e){
+				api.checkIllegal({carId: e.id}).then(res => {
+					console.log(res);
+				});
+			},
 			itemTap(item) {
 				uni.navigateTo({
 					url: `/pages/model/car/CarDetail?type=detail&id=${item.carInfo.id}`,
@@ -114,27 +119,32 @@
 					status,
 					complanyIds: this._.map(user.complany, 'id'),
 				}).then((res) => {
-					let tmp = [];
-					!!res && res.rows.forEach((item) => {
-						let img = item.carPhotos.split(',')[0];
-						tmp.push({
-							image: `${config.IMG_URL}${img}`,
-							nickName: item.carNum,
-							carInfo: item
-						})
-					});
-					if (pageNum === 1) {
-						this.current === 0 ? this.allList = tmp : this.current === 1 ? this.forRentList = tmp :
-							this.rentOutList = tmp;
-						this.current === 0 ? this.allPageNo = pageNo : this.current === 1 ? this.forRentPageNo =
-							pageNo : this.rentOutPageNo = pageNo;
-					} else {
-						this.current === 0 ? this.allList = this._.concat(this.allList, tmp) : this.current === 1 ?
-							this.forRentList = this._.concat(this.forRentList, tmp) : this.rentOutList = this._
-							.concat(this.rentOutList, tmp);
+					
+					if(res.rows.length > 0){
+						let tmp = [];
+						res.rows.forEach((item) => {
+							let img = item.carPhotos.split(',')[0];
+							tmp.push({
+								image: `${config.IMG_URL}${img}`,
+								nickName: item.carNum,
+								carInfo: item,
+								btnText: '违章查询',
+								id: item.id,
+							})
+						});
+						if (pageNum === 1) {
+							this.current === 0 ? this.allList = tmp : this.current === 1 ? this.forRentList = tmp :
+								this.rentOutList = tmp;
+							this.current === 0 ? this.allPageNo = pageNo : this.current === 1 ? this.forRentPageNo =
+								pageNo : this.rentOutPageNo = pageNo;
+						} else {
+							this.current === 0 ? this.allList = this._.concat(this.allList, tmp) : this.current === 1 ?
+								this.forRentList = this._.concat(this.forRentList, tmp) : this.rentOutList = this._
+								.concat(this.rentOutList, tmp);
+						}
+						this.current === 0 ? this.allPageNo = this.allPageNo + 1 : this.current === 1 ? this.forRentPageNo = this.forRentPageNo + 1 :
+							this.rentOutPageNo = this.rentOutPageNo + 1;
 					}
-					this.current === 0 ? this.allPageNo = this.allPageNo + 1 : this.current === 1 ? this.forRentPageNo = this.forRentPageNo + 1 :
-						this.rentOutPageNo = this.rentOutPageNo + 1;
 					uni.stopPullDownRefresh();
 				});
 			}

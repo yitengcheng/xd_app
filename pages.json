@@ -173,6 +173,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/model/my/ReaderApply",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "读卡器申领",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"tabBar": {
 		"color": "#7A7E83",

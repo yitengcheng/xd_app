@@ -30,11 +30,14 @@
 					<Combox :value="formData.name" :candidates="candidates" :isJSON="true" keyName="name"
 						@getValue="getComboxValue" class="form_combox"></Combox>
 				</uni-forms-item>
-				<FormPicker :formData="formData" name="carId" label="移交车辆" :localdata="carList"></FormPicker>
+				<uni-forms-item label="移交车辆" :name="formData.carId" :required="true">
+					<Combox :value="formData.carId" :candidates="carList" :isJSON="true" keyName="text"
+						@getValue="getCarValue" class="form_combox"></Combox>
+				</uni-forms-item>
 				<FormInput :formData="formData" name="idCard" label="身份证号" />
 				<FormInput :formData="formData" name="phone" label="手机号" />
 				<FormInput :formData="formData" name="nowAddress" label="当前居住地" />
-				<FormSwitch :formData="formData" name="preferredUse" label="优先使用代金" @change="changePreferredUse"></FormSwitch>
+				<FormSwitch :formData="formData" name="preferredUse" label="代金券" @change="changePreferredUse"></FormSwitch>
 				<FormRadio :required="false" :multiple="true" :formData="formData" name="check" :localdata="checkList"
 					label="附加核验" @change="e => $refs.form.setValue('check', e.detail.value)" />
 				<button type="primary" class="btn" @click="submit">提交</button>
@@ -186,6 +189,9 @@
 				this.$refs.form.setValue('phone', this.candidates[e].phoneNumber || '');
 				this.$refs.form.setValue('nowAddress', this.candidates[e].nowAddress || '');
 			},
+			getCarValue(e) {
+				this.formData.carId = this.carList[e].text || '';
+			},
 			readIdcard() {
 				if (uni.getSystemInfoSync().platform == "android") {
 					uni.openBluetoothAdapter({
@@ -301,10 +307,10 @@
 						};
 						this.customer = res.data.customer || {};
 						this.formData.name = (res.data.customer || {}).name;
+						this.formData.carId = res.data.carNum || '';
 						this.$refs.form.setValue('idCard', (res.data.customer || {}).idcard);
 						this.$refs.form.setValue('phone', (res.data.customer || {}).phoneNumber);
 						this.$refs.form.setValue('nowAddress', (res.data.customer || {}).nowAddress);
-						this.$refs.form.setValue('carId', res.data.id || '');
 						this.oldCarId = res.data.id;
 					}
 				});
@@ -334,9 +340,10 @@
 			submit() {
 				this.$refs.form.validate().then(data => {
 					let params = {};
-					if(data.carId !== this.oldCarId){
+					let currentCar = this._.find(this.carList, o => {return o.text === this.formData.carId});
+					if(currentCar.value !== this.oldCarId){
 						params = {
-							newCarId: data.carId,
+							newCarId: currentCar.value,
 							oldCarId: this.oldCarId
 						};
 					}
@@ -423,13 +430,14 @@
 				this.$refs.form.setValue('nowAddress', '');
 			},
 			payOrder(serviceInfoMoney, serviceRemark, data) {
+				let currentCar = this._.find(this.carList, o => {return o.text === this.formData.carId});
 				api.payOrder({
 					serviceInfoMoney,
 					openid: this.carInfo.wxOrder.openid,
 					wantCarTime: this.carInfo.wxOrder.wantCarTime,
 					estimateReturnTime: this.carInfo.wxOrder.estimateReturnTime,
 					serviceRemark,
-					carId: data.carId,
+					carId: currentCar.value,
 					infoOrderId: this.carInfo.orderId,
 				}).then((res = {}) => {
 					let info = res.data;

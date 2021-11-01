@@ -7,6 +7,10 @@ const request = {}
 const headers = {}
 
 request.globalRequest = (url, method, data) => {
+	uni.showLoading({
+		title: '加载中...',
+		mask:true,
+	})
 	let header = {}
 	let token = uni.getStorageSync('tonken');
 	header['Authorization'] = 'Bearer ' + token;
@@ -32,6 +36,7 @@ request.globalRequest = (url, method, data) => {
 	// #endif
 
 	return uni.request(JSONParams).then(res => {
+		uni.hideLoading();
 		console.log('response:', res.length > 1 ? res[1].data : res);
 		if (res[1]) {
 			let data = '';

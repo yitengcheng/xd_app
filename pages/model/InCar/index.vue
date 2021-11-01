@@ -34,7 +34,26 @@ export default {
 		this.getData(1);
 		uni.$on('inCar', ()=>{
 			this.getData(1);
-		})
+		});
+	},
+	mounted() {
+		api.notHandle({
+			pageNum: 1,
+			pageSize: 10,
+		}).then(res => {
+			if(res.total > 0){
+				uni.showModal({
+					title: '提示',
+					content: '您有待办事项未处理，请及时处理！',
+					showCancel: false,
+					success: () => {
+						uni.navigateTo({
+							url: '/pages/model/my/Todo',
+						})
+					}
+				})
+			}
+		});
 	},
 	onPullDownRefresh() {
 		this.getData(1);

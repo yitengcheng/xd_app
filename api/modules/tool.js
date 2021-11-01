@@ -16,6 +16,9 @@ const tool = {
 	checkBlack: (data)=>{
 		return request.globalRequest(`/system/black/check`, 'post', data);
 	},
+	checkIllegal: (data)=>{
+		return request.globalRequest(`/tool/license/violation`, 'post', data);
+	},
 }
 
 export default tool
