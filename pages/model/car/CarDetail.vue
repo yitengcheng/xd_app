@@ -2,16 +2,6 @@
 	<view>
 		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="280" :rules="rules">
 			<FormUpload
-				:required="false"
-				:readonly="disabled"
-				:formData="formData"
-				name="registrationUrl"
-				label="机动车登记本"
-				:limit="1"
-				@getOcrData="getRegistration"
-				url="/tool/ocr/registration"
-			/>
-			<FormUpload
 				:readonly="disabled"
 				:formData="formData"
 				name="licenseFrontUrl"
@@ -174,7 +164,6 @@ export default {
 				maxMileagePrice: { rules: [{ pattern: positiveRegex, errorMessage: '请输入正确的超过里程每公里收取金额' }] }
 			},
 			formData: {
-				registrationUrl: [],
 				licenseFrontUrl: [],
 				licenseBackUrl: [],
 				carPhotos: [],
@@ -220,7 +209,6 @@ export default {
 			carId: '',
 			licenseFrontUrl: '',
 			licenseBackUrl: '',
-			registrationUrl: '',
 			moreTitle: '展开更多',
 			content: [
 				{
@@ -296,7 +284,6 @@ export default {
 					let carsPhotos = [];
 					let licenseBack = [];
 					let licenseFront = [];
-					let registrationUrl = [];
 					files.forEach((item, index) => {
 						let extname = item.substring(item.lastIndexOf('.') + 1);
 						let name = item.substring(item.lastIndexOf('/') + 1);
@@ -316,17 +303,10 @@ export default {
 						extname: data.licenseFrontUrl.substring(data.licenseFrontUrl.lastIndexOf('.') + 1),
 						url: `${config.IMG_URL}${data.licenseFrontUrl}`
 					});
-					data.registrationUrl &&
-						registrationUrl.push({
-							name: data.registrationUrl.substring(data.registrationUrl.lastIndexOf('/') + 1),
-							extname: data.registrationUrl.substring(data.registrationUrl.lastIndexOf('.') + 1),
-							url: `${config.IMG_URL}${data.registrationUrl}`
-						});
 					this.source = data.source;
 					this.$refs.form.setValue('carPhotos', carsPhotos);
 					this.$refs.form.setValue('licenseFrontUrl', licenseFront);
 					this.$refs.form.setValue('licenseBackUrl', licenseBack);
-					this.$refs.form.setValue('registrationUrl', registrationUrl);
 					this.$refs.form.setValue('source', data.source);
 					this.$refs.form.setValue('operatorId', data.operatorId);
 					this.$refs.form.setValue('carNum', data.carNum);
@@ -366,13 +346,11 @@ export default {
 					delete data.carPhotos;
 					delete data.licenseFrontUrl;
 					delete data.licenseBackUrl;
-					delete data.registrationUrl;
 					let carPhotos = this.$refs.carPhotos.getFileList();
 					func({
 						id: this.carId,
 						licenseFrontUrl: this.licenseFrontUrl,
 						licenseBackUrl: this.licenseBackUrl,
-						registrationUrl: this.registrationUrl,
 						carPhotos: carPhotos.join(','),
 						...data
 					}).then((res = {}) => {
@@ -394,45 +372,23 @@ export default {
 			this.source = e.value;
 			this.$refs.form.setValue('source', e.value);
 		},
-		getRegistration(e = {}) {
-			let { url } = e;
-			let { words_result } = e.ocr;
-			if (url && !!words_result) {
-				let n_i_n = words_result.name_idcard_no.words;
-				let name = n_i_n.substring(0, n_i_n.indexOf('/'));
-				let idcard = n_i_n.substring(n_i_n.lastIndexOf('/') + 1);
-				this.registrationUrl = url;
-				this.$refs.form.setValue('color', words_result.body_color.words);
-				this.$refs.form.setValue('engineNum', words_result.engine_num.words);
-				this.$refs.form.setValue('name', name);
-				this.$refs.form.setValue('idcard', idcard);
-				this.$refs.form.setValue('nature', words_result.nature_of_use.words);
-				this.$refs.form.setValue('nature', words_result.nature_of_use.words);
-				this.$refs.form.setValue('carNum', words_result.registration_num.words);
-				this.$refs.form.setValue('maxManned', words_result.seating_capacity.words);
-				this.$refs.form.setValue('model', words_result.vehicle_model.words);
-				this.$refs.form.setValue('type', words_result.vehicle_type.words);
-			}
-		},
 		getLicenseFront(e = {}) {
-			let { url } = e;
-			let { words_result } = e.ocr;
-			if (url && !!words_result) {
+			let { url, ocr } = e;
+			if (url && !!ocr) {
 				this.licenseFrontUrl = url;
-				this.$refs.form.setValue('engineNum', words_result.发动机号码.words);
-				this.$refs.form.setValue('carNum', words_result.号牌号码.words);
-				this.$refs.form.setValue('carBrand', words_result.品牌型号.words);
-				this.$refs.form.setValue('type', words_result.车辆类型.words);
-				this.$refs.form.setValue('frameNum', words_result.车辆识别代号.words);
+				this.$refs.form.setValue('engineNum', ocr.engineNumber);
+				this.$refs.form.setValue('carNum', ocr.plateNumber);
+				this.$refs.form.setValue('carBrand', ocr.model);
+				this.$refs.form.setValue('type', ocr.vehicleType);
+				this.$refs.form.setValue('frameNum', ocr.vin);
 			}
 		},
 		getLicenseBack(e = {}) {
-			let { url } = e;
-			let { words_result } = e.ocr;
-			if (url && !!words_result) {
+			let { url, ocr } = e;
+			if (url && !!ocr) {
 				this.licenseBackUrl = url;
-				this.$refs.form.setValue('maxManned', words_result.核定载人数.words);
-				this.$refs.form.setValue('fuelType', words_result.燃油类型.words);
+				this.$refs.form.setValue('maxManned', ocr.approvedPassengerCapacity);
+				this.$refs.form.setValue('fuelType', ocr.energyType);
 			}
 		},
 		showMoreItems() {

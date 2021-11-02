@@ -45,7 +45,7 @@ export default {
 		};
 	},
 	mounted() {
-		this.holder = this.placeholder ? this.placeholder : `请输入${this.label}`;
+		this.holder = this.placeholder ? this.placeholder : `请选择${this.label}`;
 	},
 	methods:{
 		change(e){

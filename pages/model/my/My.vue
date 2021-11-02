@@ -24,7 +24,7 @@
 					{title: '订单管理', iconName: 'icon-dingdanguanlix', path: '/pages/model/my/Orders'},
 					{title: '合同模板', iconName: 'icon-shuoming', path: '/pages/model/my/ContractTemplate'},
 					{title: '修改密码', iconName: 'icon-zhongzhimima', path: '/pages/model/login/ResetPassword'},
-					{title: '读卡器申领', iconName: 'icon-jifangmenjinkashenlingbiangeng', path: '/pages/model/login/ReaderApply'},
+					{title: '读卡器申领', iconName: 'icon-jifangmenjinkashenlingbiangeng', path: '/pages/model/my/ReaderApply'},
 				],
 				user: uni.getStorageSync('user')
 			}

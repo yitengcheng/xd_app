@@ -127,40 +127,34 @@ export default {
 			})
 		},
 		getComplantInfo(e = {}) {
-			let { url } = e;
-			let { words_result } = e.ocr || {};
-			if (url && !!words_result) {
+			let { url, ocr } = e;
+			if (url && !!ocr) {
 				this.photoComplanyCode = url;
-				this.$refs.form.setValue('complanyName', words_result.单位名称.words);
-				this.$refs.form.setValue('creditCode', words_result.社会信用代码.words);
-				this.$refs.form.setValue('complanyCode', words_result.证件编号.words);
-				this.$refs.form.setValue('nature', words_result.经营范围.words);
-				this.$refs.form.setValue('complanyYxq', words_result.有效期.words);
-				this.$refs.form.setValue('complanyAddress', words_result.地址.words);
-				this.$refs.form.setValue('juridiclName', words_result.法人.words);
-				this.$refs.form.setValue('complanyType', words_result.类型.words);
-				this.$refs.form.setValue('capital', words_result.注册资本.words);
-				this.$refs.form.setValue('reallyCapital', words_result.实收资本.words);
-				this.$refs.form.setValue('establishTime', words_result.成立日期.words);
-				this.$refs.form.setValue('componentType', words_result.组成形式.words);
-				this.$refs.form.setValue('taxRegistration', words_result.税务登记号.words);
+				this.$refs.form.setValue('complanyName', ocr.name);
+				this.$refs.form.setValue('creditCode', ocr.registerNumber);
+				this.$refs.form.setValue('nature', ocr.business);
+				this.$refs.form.setValue('complanyYxq', ocr.validPeriod);
+				this.$refs.form.setValue('complanyAddress', ocr.address);
+				this.$refs.form.setValue('juridiclName', ocr.legalPerson);
+				this.$refs.form.setValue('complanyType', ocr.type);
+				this.$refs.form.setValue('capital', ocr.capital);
+				this.$refs.form.setValue('establishTime', ocr.establishDate);
 			}
 			this.$nextTick(() => {
 				this.changeFlag();
 			});
 		},
 		getIdcardFront(e = {}) {
-			let { url } = e;
-			let { words_result } = e.ocr || {};
-			if (url && !!words_result) {
+			let { url, ocr } = e;
+			if (url && !!ocr) {
 				this.idcardFront = url;
-				this.$refs.form.setValue('juridicalZjhm', words_result.公民身份号码.words);
+				this.$refs.form.setValue('juridicalZjhm', ocr.idnumber);
 				this.idCard = {
-					address: words_result.住址.words,
-					idcard: words_result.公民身份号码.words,
-					name: words_result.姓名.words,
-					sex: words_result.性别.words === '男' ? 0 : 1,
-					nation: words_result.民族.words,
+					address: ocr.address,
+					idcard: ocr.idnumber,
+					name: ocr.name,
+					sex: ocr.gender === '男' ? 0 : 1,
+					nation: ocr.nationality,
 					...this.idCard
 				};
 			}
@@ -169,14 +163,13 @@ export default {
 			});
 		},
 		getIdcardBack(e = {}) {
-			let { url } = e;
-			let { words_result } = e.ocr || {};
-			if (url && !!words_result) {
+			let { url, ocr } = e;
+			if (url && !!ocr) {
 				this.idcardBack = url;
 				this.idCard = {
-					lssueOffice: words_result.签发机关.words,
-					lssueTime: words_result.签发日期.words,
-					invalidTime: words_result.失效日期.words,
+					lssueOffice: ocr.issue,
+					lssueTime: ocr.startDate,
+					invalidTime: ocr.endDate,
 					...this.idCard
 				};
 			}
