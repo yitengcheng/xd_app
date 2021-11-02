@@ -117,7 +117,7 @@
 					pageNum,
 					pageSize: 10,
 					status,
-					complanyIds: this._.map(user.complany, 'id'),
+					complanyIds: this._.map(user.complany, 'id').join(','),
 				}).then((res) => {
 					
 					if(res.rows.length > 0){
