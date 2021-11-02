@@ -52,7 +52,7 @@ export default {
 				pageSize: 10,
 				status: 1,
 				keyword: this.keyword,
-				complanyIds: this._.map(user.complany, 'id'),
+				complanyIds: this._.map(user.complany, 'id').join(','),
 			}).then((res={}) =>{
 				if(pageNum === 1){
 					this.data = res.rows;
