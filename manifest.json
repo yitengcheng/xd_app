@@ -2,8 +2,8 @@
     "name" : "优行小滴",
     "appid" : "__UNI__1ECB71E",
     "description" : "",
-    "versionName" : "1.0.9",
-    "versionCode" : 109,
+    "versionName" : "1.1.0",
+    "versionCode" : 110,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -21,7 +21,8 @@
             "Payment" : {},
             "Bluetooth" : {},
             "Maps" : {},
-            "Geolocation" : {}
+            "Geolocation" : {},
+            "Push" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -73,6 +74,9 @@
                         "appkey_ios" : "",
                         "appkey_android" : "XsYUBcUYZHmbV653wrxPgwWX1n0pdcHM"
                     }
+                },
+                "push" : {
+                    "unipush" : {}
                 }
             },
             "icons" : {

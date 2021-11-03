@@ -30,11 +30,9 @@
 			initOrders(pageNo) {
 				let pageNum = pageNo || this.pageNo;
 				let status = this.current === 0 ? undefined : this.current === 1 ? 0 : 1;
-				let user = uni.getStorageSync('user');
 				api.orders({
 					pageNum,
 					pageSize: 10,
-					complanyIds: this._.map(user.complany, 'id').join(','),
 				}).then((res = {}) => {
 					if ((res.rows || []).length > 0) {
 						if (pageNum === 1) {

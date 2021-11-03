@@ -46,13 +46,11 @@ export default {
 		getData(page) {
 			let tmp = [];
 			let pageNum = page || this.pageNo;
-			let user = uni.getStorageSync('user');
 			api.carList({
 				pageNum,
 				pageSize: 10,
 				status: 1,
 				keyword: this.keyword,
-				complanyIds: this._.map(user.complany, 'id').join(','),
 			}).then((res={}) =>{
 				if(pageNum === 1){
 					this.data = res.rows;

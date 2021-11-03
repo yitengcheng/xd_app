@@ -2,6 +2,7 @@
 	<view class="content">
 		<text class="iconfont icon-morentouxiang head"></text>
 		<text class="name">{{(user.user || {}).nickName}}</text>
+		
 		<view v-for="(item,index) in data" :key="index" @click="toPage(item)">
 			<view class="item">
 				<text class="iconfont" :class="item.iconName"></text>

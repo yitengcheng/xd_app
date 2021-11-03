@@ -28,11 +28,9 @@
 		methods: {
 			initTodoList(pageNo) {
 				let pageNum = pageNo || this.pageNo;
-				let user = uni.getStorageSync('user');
 				api.handles({
 					pageNum,
 					pageSize: 10,
-					complanyIds: this._.map(user.complany, 'id').join(','),
 				}).then((res = {}) => {
 					if ((res.rows || []).length > 0) {
 						let {

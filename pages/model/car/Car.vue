@@ -112,12 +112,10 @@
 			getCarList(pageNo) {
 				let pageNum = pageNo || this.judgePageNo();
 				let status = this.current === 0 ? undefined : this.current === 1 ? 0 : 1;
-				let user = uni.getStorageSync('user');
 				api.carList({
 					pageNum,
 					pageSize: 10,
 					status,
-					complanyIds: this._.map(user.complany, 'id').join(','),
 				}).then((res) => {
 					
 					if(res.rows.length > 0){

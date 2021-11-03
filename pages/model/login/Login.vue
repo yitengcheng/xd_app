@@ -57,17 +57,37 @@
 							uni.showModal({
 								content: '当前使用版本过低，请移步后台管理页面下载最新版本',
 								showCancel: false,
-								success: () => {
-									if (uni.getSystemInfoSync().platform == 'ios'){
-									    plus.ios.import("UIApplication").sharedApplication().performSelector("exit")
-									} else if (uni.getSystemInfoSync().platform == 'android'){
-									    plus.runtime.quit();
+								success: (e) => {
+									if(e.confirm){
+										if(uni.getSystemInfoSync().platform == 'android'){
+											uni.showLoading({
+												mask:true,
+												title: '下载中，请稍后'
+											})
+											uni.downloadFile({
+												url: 'http://www.fanzehua.cn/uploads/xd-app.apk',
+												success: (downloadResult) => {
+													uni.hideLoading();
+													plus.runtime.install(downloadResult.tempFilePath, {force: false}, ()=> {
+														plus.runtime.restart();
+													});
+												},
+												fail: () => {
+													uni.hideLoading();
+													uni.showToast({
+														title: '更新失败',
+														icon: 'error',
+													})
+												}
+											});
+										} else if(uni.getSystemInfoSync().platform == 'ios'){
+											plus.ios.import("UIApplication").sharedApplication().performSelector("exit")
+										}
 									}
 								}
 							});
 							return;
 						}
-						
 						if(res.token){
 							uni.setStorage({
 								key:'tonken',
