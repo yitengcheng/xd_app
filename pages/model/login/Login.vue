@@ -55,14 +55,14 @@
 					}).then((res = {})=>{
 						if (uni.getSystemInfoSync().platform == "android" && this.appVersion * 1 < res.appVersion * 1) {
 							uni.showModal({
-								content: '当前使用版本过低，请移步后台管理页面下载最新版本',
+								content: '当前使用版本过低，请更新',
 								showCancel: false,
 								success: (e) => {
 									if(e.confirm){
 										if(uni.getSystemInfoSync().platform == 'android'){
 											uni.showLoading({
 												mask:true,
-												title: '下载中，请稍后'
+												title: '更新中，请稍后'
 											})
 											uni.downloadFile({
 												url: 'http://www.fanzehua.cn/uploads/xd-app.apk',
@@ -103,9 +103,8 @@
 							});
 							api.info(uni.getStorageSync('token')).then((info)=>{
 								// 开启websocket
-								info.complany.forEach(o => {
-									this.$store.dispatch('WEBSOCKET_INIT', o.id);
-								});
+								let complanyId = uni.getStorageSync('complanyId');
+								this.$store.dispatch('WEBSOCKET_INIT', complanyId ? complanyId : info.complany[0].id);
 								uni.setStorage({
 									key:'user',
 									data: {user: info.user, complany: info.complany},
@@ -114,7 +113,11 @@
 											url: '/pages/model/InCar/index'
 										});
 									}
-								})
+								});
+								uni.setStorage({
+									key: 'complanyId',
+									data: complanyId ? complanyId : info.complany[0].id,
+								});
 							});
 						}
 					});

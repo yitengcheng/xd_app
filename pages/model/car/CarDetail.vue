@@ -29,7 +29,7 @@
 				name="complanyId"
 				:localdata="complany"
 				label="所属公司"
-				@change="e => $refs.form.setValue('complanyId', [e.value])"
+				@change="e => $refs.form.setValue('complanyId', e.value)"
 			/>
 			<FormPicker :disabled="disabled" :formData="formData" name="source" :localdata="sourceType" label="车辆来源" @change="sourceChange" />
 			<FormPicker
@@ -74,9 +74,9 @@
 			<FormInput :disabled="disabled" :formData="formData" name="phoneNum" label="车主手机号码" />
 			<FormInput :disabled="disabled" v-show="moreItemsFlag" :formData="formData" name="bondMoney" label="租车保证金(元)" :required="false" />
 			<FormInput :disabled="disabled" v-show="moreItemsFlag" :formData="formData" name="violationBondMoney" label="违章保证金(元)" :required="false" />
-			<FormInput :disabled="disabled" v-show="moreItemsFlag" :formData="formData" name="strongEndTime" label="交强险到期时间(格式:yyyy-mm-dd)" :required="false" />
-			<FormInput :disabled="disabled" v-show="moreItemsFlag" :formData="formData" name="businessEndTime" label="商业险到期时间 (格式:yyyy-mm-dd)" :required="false" />
-			<FormInput :disabled="disabled" v-show="moreItemsFlag" :formData="formData" name="annualReview" label="年审到期时间 (格式:yyyy-mm-dd)" :required="false" />
+			<FormDatePicker :disabled="disabled" v-show="moreItemsFlag" :formData="formData" name="strongEndTime" label="交强险到期时间(格式:yyyy-mm-dd)" :required="false" @change="changeStrongEndTime"/>
+			<FormDatePicker :disabled="disabled" v-show="moreItemsFlag" :formData="formData" name="businessEndTime" label="商业险到期时间 (格式:yyyy-mm-dd)" :required="false" @change="changeBusinessEndTime"/>
+			<FormDatePicker :disabled="disabled" v-show="moreItemsFlag" :formData="formData" name="annualReview" label="年审到期时间 (格式:yyyy-mm-dd)" :required="false" @change="changeAnnualReview"/>
 			<FormInput :disabled="disabled" v-show="moreItemsFlag" :formData="formData" name="maxMileage" label="每日平均最高行驶里程(公里)" :required="false" />
 			<FormInput :disabled="disabled" v-show="moreItemsFlag" :formData="formData" name="maxMileagePrice" label="超过里程每公里收取金额(公里)" :required="false" />
 			<FormInput :disabled="disabled" v-show="moreItemsFlag" :formData="formData" name="remark" label="车辆备注说明" :required="false" autoHeight type="textarea" />
@@ -99,6 +99,7 @@ import FormPicker from '../../../components/form/FormPicker.vue';
 import FormRadio from '../../../components/form/FormRadio.vue';
 import FormSwitch from '../../../components/form/FormSwitch.vue';
 import FormUpload from '../../../components/form/FormUpload.vue';
+import FormDatePicker from '../../../components/form/FormDatePicker.vue';
 import { plateRegex, integerRegex, positiveRegex, socialCodeRegex, card18, card15, phoneRegex, dateFormatRegex } from '../../../common/regex.js';
 import api from '../../../api/index.js';
 import config from '../../../common/config.js';
@@ -108,7 +109,8 @@ export default {
 		FormPicker,
 		FormRadio,
 		FormSwitch,
-		FormUpload
+		FormUpload,
+		FormDatePicker,
 	},
 	data() {
 		return {
@@ -225,6 +227,7 @@ export default {
 			submitText: '添加',
 			complany: [],
 			user: uni.getStorageSync('user'),
+			complanyId: '',
 		};
 	},
 	onLoad(option) {
@@ -232,7 +235,7 @@ export default {
 			title: option.type === 'add' ? '添加车辆' : '车辆详情'
 		});
 		this.disabled = option.type === 'add' ? false : true;
-		this.submitText = option.type === 'add' ? '添加' : '编辑';
+		this.submitText = option.type === 'add' ? '保存' : '保存';
 		this.getGpsList();
 		this.dictInit('car_type', 'sources_vehicle', 'fuel_number', 'insurance_status').then(() => {
 			this.carType = uni.getStorageSync('car_type');
@@ -249,6 +252,15 @@ export default {
 		})
 	},
 	methods: {
+		changeStrongEndTime(e){
+			this.$refs.form.setValue('strongEndTime', e);
+		},
+		changeBusinessEndTime(e){
+			this.$refs.form.setValue('businessEndTime', e);
+		},
+		changeAnnualReview(e){
+			this.$refs.form.setValue('annualReview', e);
+		},
 		trigger(e) {
 			switch (e.index) {
 				case 0:
@@ -304,6 +316,7 @@ export default {
 						url: `${config.IMG_URL}${data.licenseFrontUrl}`
 					});
 					this.source = data.source;
+					this.complanyId = data.complanyId;
 					this.$refs.form.setValue('carPhotos', carsPhotos);
 					this.$refs.form.setValue('licenseFrontUrl', licenseFront);
 					this.$refs.form.setValue('licenseBackUrl', licenseBack);
@@ -342,7 +355,7 @@ export default {
 				.validate()
 				.then(data => {
 					let func = this.carId ? api.updateCar : api.addCar;
-					data.complanyId = data.complanyId ? data.complanyId : this._.map(this.user.complany, 'id').join(','); 
+					data.complanyId = data.complanyId ? data.complanyId : this.complanyId; 
 					delete data.carPhotos;
 					delete data.licenseFrontUrl;
 					delete data.licenseBackUrl;
@@ -353,9 +366,17 @@ export default {
 						licenseBackUrl: this.licenseBackUrl,
 						carPhotos: carPhotos.join(','),
 						...data
-					}).then((res = {}) => {
-						if (res.data) {
-							uni.navigateBack();
+					}).then((res) => {
+						if (res) {
+							uni.showModal({
+								title: '提示',
+								content: '修改成功',
+								showCancel:false,
+								success: (e) => {
+									uni.navigateBack();
+									uni.$emit('car');
+								}
+							})
 						} else {
 							uni.showToast({
 								title: res.msg,

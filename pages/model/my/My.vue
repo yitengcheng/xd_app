@@ -2,7 +2,7 @@
 	<view class="content">
 		<text class="iconfont icon-morentouxiang head"></text>
 		<text class="name">{{(user.user || {}).nickName}}</text>
-		
+		<uni-data-picker v-show="((user || {}).complany || []).length >= 2" v-model="complanyId" :localdata="complanys" @change="selectComplany" class="complanyPicker"></uni-data-picker>
 		<view v-for="(item,index) in data" :key="index" @click="toPage(item)">
 			<view class="item">
 				<text class="iconfont" :class="item.iconName"></text>
@@ -27,10 +27,38 @@
 					{title: '修改密码', iconName: 'icon-zhongzhimima', path: '/pages/model/login/ResetPassword'},
 					{title: '读卡器申领', iconName: 'icon-jifangmenjinkashenlingbiangeng', path: '/pages/model/my/ReaderApply'},
 				],
-				user: uni.getStorageSync('user')
+				user: uni.getStorageSync('user'),
+				complanys: [],
+				complanyId: '',
 			}
 		},
+		mounted() {
+			this.initComplany();
+		},
 		methods: {
+			initComplany() {
+				let {
+					complany
+				} = this.user;
+				if(complany){
+					complany.forEach(o => {
+						this.complanys.push({
+							text: o.complanyName,
+							value: o.id,
+							data: o,
+						});
+					});
+					this.complanyId = complany[0].id;
+				}
+			},
+			selectComplany(e) {
+				uni.setStorageSync('complanyId', e.detail.value[0].value);
+				this.$store.dispatch('CLOSE_SOCKET');
+				this.$store.dispatch('WEBSOCKET_INIT', e.detail.value[0].value);
+				uni.$emit('inCar');
+				uni.$emit('returnCar');
+				uni.$emit('car');
+			},
 			toPage(e){
 				uni.navigateTo({
 					url: e.path,

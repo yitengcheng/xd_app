@@ -18,7 +18,7 @@ request.globalRequest = (url, method, data) => {
 
 	//接口公共参数
 	const obj = {
-		complanyId: uni.getStorageSync('complanyId');
+		complanyIds: uni.getStorageSync('complanyId'),
 	}
 	let JSONParams = {
 		url: `${config.API_URL}${url}`,

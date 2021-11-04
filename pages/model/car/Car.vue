@@ -51,6 +51,9 @@
 		},
 		onLoad() {
 			this.getCarList(1);
+			this.$on('car', ()=> {
+				this.getCarList(1);
+			})
 		},
 		onReachBottom() {
 			let pageNo = this.current === 0 ? this.allPageNo : this.current === 1 ? this.forRentPageNo : this.rentOutPageNo;
