@@ -101,10 +101,10 @@
 						}).then((res = {}) => {
 							uni.hideLoading()
 							if (res.data) {
-								if (res.data) {
+								if (res.data.msg !== '没有信息') {
 									this.blackText = `${this.name}存在有履行能力而拒不履行生效法律文书确定义务的行为`
 								} else {
-									this.blackText = res.msg
+									this.blackText = res.data.msg
 								}
 								this.active = this.active + 1;
 								this.$nextTick(() => {
@@ -124,7 +124,6 @@
 							idcard: this.idCard,
 						}).then((res = {}) => {
 							uni.hideLoading()
-							console.log(res.data);
 							if (res.data) {
 								if (res.data.length > 0) {
 									this.blackListText = `此人已在平台中有${res.data.length}次不良记录`

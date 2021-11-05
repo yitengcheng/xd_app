@@ -37,9 +37,10 @@
 				<FormInput :formData="formData" name="idCard" label="身份证号" />
 				<FormInput :formData="formData" name="phone" label="手机号" />
 				<FormInput :formData="formData" name="nowAddress" label="当前居住地" />
-				<FormSwitch :formData="formData" name="preferredUse" label="代金券" @change="changePreferredUse"></FormSwitch>
+				<FormSwitch :formData="formData" name="preferredUse" label="代金券" @change="changePreferredUse">
+				</FormSwitch>
 				<FormRadio :required="false" :multiple="true" :formData="formData" name="check" :localdata="checkList"
-					label="附加核验" @change="e => $refs.form.setValue('check', e.detail.value)" />
+					label="附加核验" @change="changeCheck" />
 				<button type="primary" class="btn" @click="submit">提交</button>
 				<button type="warn" class="btn" @click="reset">重置</button>
 			</uni-forms>
@@ -180,7 +181,28 @@
 			this.getCarInfo(option.id);
 		},
 		methods: {
-			changePreferredUse(e){
+			changeCheck(e) {
+				if (this._.includes(this._.map(e.detail.data, 'text'), '电子合同 (1元/次)')) {
+					api.checkAuth(this.carInfo.complany.complanyName).then(res => {
+						if (res.data === 0) {
+							uni.showModal({
+								title: '认证提示',
+								content: `${res.msg}`,
+								showCancel: false,
+								success: () => {
+									e.detail.value.pop();
+									this.$refs.form.setValue('check', e.detail.value);
+								}
+							})
+						} else if (res.data === 2) {
+							this.$refs.form.setValue('check', e.detail.value);
+						}
+					});
+				} else {
+					this.$refs.form.setValue('check', e.detail.value);
+				}
+			},
+			changePreferredUse(e) {
 				this.$refs.form.setValue('preferredUse', e);
 			},
 			getComboxValue(e) {
@@ -219,7 +241,7 @@
 														const idcard = uni
 															.requireNativePlugin(
 																'plugin_idcardModule'
-																);
+															);
 														idcard.readIdcard({
 															mac: device
 																.deviceId
@@ -237,7 +259,7 @@
 																	.parse(
 																		e
 																		.data
-																		);
+																	);
 																this.formData
 																	.name =
 																	data
@@ -248,14 +270,14 @@
 																		'idCard',
 																		data
 																		.身份证号
-																		);
+																	);
 																this.$refs
 																	.form
 																	.setValue(
 																		'nowAddress',
 																		data
 																		.地址
-																		);
+																	);
 															}
 
 														});
@@ -268,7 +290,7 @@
 													}
 													uni.hideLoading();
 													uni
-												.closeBluetoothAdapter();
+														.closeBluetoothAdapter();
 												}
 											});
 										}
@@ -340,11 +362,17 @@
 			submit() {
 				this.$refs.form.validate().then(data => {
 					let params = {};
-					let currentCar = this._.find(this.carList, o => {return o.text === this.formData.carId});
-					if(currentCar.value !== this.oldCarId){
+					let currentCar = this._.find(this.carList, o => {
+						return o.text === this.formData.carId
+					});
+					if (currentCar.value !== this.oldCarId) {
 						params = {
 							newCarId: currentCar.value,
 							oldCarId: this.oldCarId
+						};
+					} else {
+						params = {
+							newCarId: this.oldCarId,
 						};
 					}
 					api.insertUserInfo({
@@ -368,7 +396,7 @@
 					});
 					if (checks.length === 0 && typeof this.carInfo.complany.subMchId === 'string') {
 						uni.navigateTo({
-							url: `/pages/model/InCar/Step?orderId=${this.carInfo.orderId}&idCard=${data.idCard}&name=${data.name}`
+							url: `/pages/model/InCar/Step?orderId=${this.carInfo.orderId}&idCard=${data.idCard}&name=${this.formData.name}`
 						})
 						return;
 					}
@@ -393,7 +421,7 @@
 													if (typeof this.carInfo.complany
 														.subMchId === 'string') {
 														uni.navigateTo({
-															url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}`
+															url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${this.formData.name}&orderId=${this.carInfo.orderId}`
 														});
 													} else {
 														this.payOrder(0, this._.map(
@@ -419,7 +447,8 @@
 							}
 						});
 					} else {
-						this.payOrder(this._.sum(this._.map(checks, 'value')), this._.map(checks, 'text').join(','), data);
+						this.payOrder(this._.sum(this._.map(checks, 'value')), this._.map(checks, 'text').join(
+							','), data);
 					}
 				});
 			},
@@ -430,7 +459,9 @@
 				this.$refs.form.setValue('nowAddress', '');
 			},
 			payOrder(serviceInfoMoney, serviceRemark, data) {
-				let currentCar = this._.find(this.carList, o => {return o.text === this.formData.carId});
+				let currentCar = this._.find(this.carList, o => {
+					return o.text === this.formData.carId
+				});
 				api.payOrder({
 					serviceInfoMoney,
 					openid: this.carInfo.wxOrder.openid,
@@ -447,7 +478,7 @@
 							orderInfo: info,
 							success: () => {
 								uni.navigateTo({
-									url: `/pages/model/InCar/Step?checks=${serviceRemark}&idCard=${data.idCard}&name=${data.name}&orderId=${this.carInfo.orderId}`
+									url: `/pages/model/InCar/Step?checks=${serviceRemark}&idCard=${data.idCard}&name=${this.formData.name}&orderId=${this.carInfo.orderId}`
 								});
 							},
 							fail: (error) => {

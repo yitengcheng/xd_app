@@ -8,6 +8,7 @@
 <script>
 	import config from '../../../common/config.js';
 	import uQRCode from '../../../components/uqrcode/common/uqrcode.js';
+	import api from '../../../api/index.js';
 	export default {
 		onLoad(option) {
 			this.pactId = option.pactId;

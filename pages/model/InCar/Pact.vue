@@ -8,22 +8,17 @@
 	import api from '../../../api/index.js';
 	export default {
 		onLoad(option) {
-			uni.showLoading({
-				title: '加载中'
-			});
 			api.send(option.orderId).then((res = {}) => {
 				if (res.data) {
 					this.src = res.data;
-					uni.hideLoading();
 					let timer = setInterval(()=>{
-						api.sign(option.orderId).then(res =>{
-							if((res || {}).data){
+						api.orderDetail(option.orderId).then((res = {}) => {
+							let { data } = res;
+							if (data.signStatus === 1) {
+								clearInterval(timer);
 								uni.navigateTo({
-									url: `/pages/model/InCar/PactQrcode?pactId=${res.data}&orderId=${option.orderId}`,
-									success: () => {
-										clearInterval(timer);
-									}
-								});
+									url: `/pages/model/InCar/PactQrcode?pactId=${data.contract}&orderId=${option.orderId}`
+								})
 							}
 						})
 					}, 3000);

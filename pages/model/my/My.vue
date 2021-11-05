@@ -21,8 +21,8 @@
 		data() {
 			return {
 				data: [
-					{title: '代办事项', iconName: 'icon-shangjiaguanli_daibanshixiang', path: '/pages/model/my/Todo'},
-					{title: '订单管理', iconName: 'icon-dingdanguanlix', path: '/pages/model/my/Orders'},
+					{title: '接单/通知', iconName: 'icon-shangjiaguanli_daibanshixiang', path: '/pages/model/my/Todo'},
+					{title: '历史订单', iconName: 'icon-dingdanguanlix', path: '/pages/model/my/Orders'},
 					{title: '合同模板', iconName: 'icon-shuoming', path: '/pages/model/my/ContractTemplate'},
 					{title: '修改密码', iconName: 'icon-zhongzhimima', path: '/pages/model/login/ResetPassword'},
 					{title: '身份证读卡器申领', iconName: 'icon-jifangmenjinkashenlingbiangeng', path: '/pages/model/my/ReaderApply'},
@@ -65,10 +65,19 @@
 				})
 			},
 			logout(){
+				let userName = uni.getStorageSync('userName');
+				let password = uni.getStorageSync('password');
+				uni.clearStorageSync();
+				uni.setStorageSync('userName',userName);
+				uni.setStorageSync('password',password);
 				uni.reLaunch({url: '/pages/model/login/Login'});
 			},
 			clear(){
+				let userName = uni.getStorageSync('userName');
+				let password = uni.getStorageSync('password');
 				uni.clearStorageSync();
+				uni.setStorageSync('userName',userName);
+				uni.setStorageSync('password',password);
 				uni.showToast({
 					title: '清理完毕',
 				})

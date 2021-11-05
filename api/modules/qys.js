@@ -4,9 +4,9 @@ const qys = {
 	send:(orderId)=>{
 		return request.globalRequest(`/qys/send/contract?orderId=${orderId}`, 'post');
 	},
-	sign: (orderId) =>{
-		return request.globalRequest(`/qys/sign/${orderId}`, 'get');
-	}
+	checkAuth: (name) =>{
+		return request.globalRequest(`/qys/complany/auth/result?complanyName=${name}`, 'get');
+	},
 }
 
 
