@@ -338,25 +338,20 @@
 				});
 			},
 			getIdCard(e = {}) {
-				let {
-					url
-				} = e;
-				let {
-					words_result
-				} = e.ocr;
-				if (url && !!words_result) {
+				let { url, ocr } = e;
+				if (url && !!ocr) {
 					api.insertUserInfo({
-						name: words_result.姓名.words,
-						idcard: words_result.公民身份号码.words,
-						address: words_result.住址.words,
-						sex: words_result.性别.words === '男' ? 1 : 0,
-						birthday: words_result.出生.words,
+						name: ocr.name,
+						idcard: ocr.idnumber,
+						address: ocr.address,
+						sex: ocr.gender === '男' ? 0 : 1,
+						birthday: ocr.birthday,
 						complanyId: this.carInfo.complanyId,
 						orderId: this.carInfo.orderId,
 					})
-					this.formData.name = words_result.姓名.words;
-					this.$refs.form.setValue('idCard', words_result.公民身份号码.words);
-					this.$refs.form.setValue('nowAddress', words_result.住址.words);
+					this.formData.name = ocr.name;
+					this.$refs.form.setValue('idCard',  ocr.idnumber);
+					this.$refs.form.setValue('nowAddress', ocr.address);
 				}
 			},
 			submit() {
