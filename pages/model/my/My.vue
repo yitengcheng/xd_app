@@ -2,7 +2,7 @@
 	<view class="content">
 		<text class="iconfont icon-morentouxiang head"></text>
 		<text class="name">{{(user.user || {}).nickName}}</text>
-		<uni-data-picker v-show="((user || {}).complany || []).length >= 2" v-model="complanyId" :localdata="complanys" @change="selectComplany" class="complanyPicker"></uni-data-picker>
+		<uni-data-picker v-show="((user || {}).complany || []).length >= 2" :value="complanyId" :localdata="complanys" @change="selectComplany" class="complanyPicker"></uni-data-picker>
 		<view v-for="(item,index) in data" :key="index" @click="toPage(item)">
 			<view class="item">
 				<text class="iconfont" :class="item.iconName"></text>
@@ -25,7 +25,7 @@
 					{title: '订单管理', iconName: 'icon-dingdanguanlix', path: '/pages/model/my/Orders'},
 					{title: '合同模板', iconName: 'icon-shuoming', path: '/pages/model/my/ContractTemplate'},
 					{title: '修改密码', iconName: 'icon-zhongzhimima', path: '/pages/model/login/ResetPassword'},
-					{title: '读卡器申领', iconName: 'icon-jifangmenjinkashenlingbiangeng', path: '/pages/model/my/ReaderApply'},
+					{title: '身份证读卡器申领', iconName: 'icon-jifangmenjinkashenlingbiangeng', path: '/pages/model/my/ReaderApply'},
 				],
 				user: uni.getStorageSync('user'),
 				complanys: [],
@@ -48,7 +48,7 @@
 							data: o,
 						});
 					});
-					this.complanyId = complany[0].id;
+					this.complanyId = uni.getStorageSync('complanyId');
 				}
 			},
 			selectComplany(e) {

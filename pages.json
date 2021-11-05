@@ -177,7 +177,7 @@
             "path" : "pages/model/my/ReaderApply",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "读卡器申领",
+                "navigationBarTitleText": "身份证读卡器申领",
                 "enablePullDownRefresh": false
             }
             

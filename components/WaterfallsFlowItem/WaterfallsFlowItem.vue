@@ -66,7 +66,7 @@ export default {
 .info-nickname {
     font-size: 12px;
     color: #333;
-	width: 120rpx;
+	width: 140rpx;
 }
 .item-btn {
 	width: 140rpx;

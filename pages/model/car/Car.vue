@@ -4,13 +4,13 @@
 			activeColor="#4cd964"></uni-segmented-control>
 		<view>
 			<view v-show="current === 0">
-				<WaterfallsFlow :wfList="allList" @itemTap="itemTap" @itemClick="checkIllegal"/>
+				<WaterfallsFlow :wfList="allList" @itemTap="itemTap"/>
 			</view>
 			<view v-show="current === 1">
-				<WaterfallsFlow :wfList="forRentList" @itemTap="itemTap" @itemClick="checkIllegal"/>
+				<WaterfallsFlow :wfList="forRentList" @itemTap="itemTap"/>
 			</view>
 			<view v-show="current === 2">
-				<WaterfallsFlow :wfList="rentOutList" @itemTap="itemTap" @itemClick="checkIllegal"/>
+				<WaterfallsFlow :wfList="rentOutList" @itemTap="itemTap"/>
 			</view>
 		</view>
 		<uni-fab :content="content" horizontal="right" vertical="bottom" direction="vertical" @trigger="trigger">
@@ -63,11 +63,6 @@
 			this.getCarList(1);
 		},
 		methods: {
-			checkIllegal(e){
-				api.checkIllegal({carId: e.id}).then(res => {
-					console.log(res);
-				});
-			},
 			itemTap(item) {
 				uni.navigateTo({
 					url: `/pages/model/car/CarDetail?type=detail&id=${item.carInfo.id}`,
@@ -120,7 +115,6 @@
 					pageSize: 10,
 					status,
 				}).then((res) => {
-					
 					if(res.rows.length > 0){
 						let tmp = [];
 						res.rows.forEach((item) => {
@@ -129,7 +123,6 @@
 								image: `${config.IMG_URL}${img}`,
 								nickName: item.carNum,
 								carInfo: item,
-								btnText: '违章查询',
 								id: item.id,
 							})
 						});
