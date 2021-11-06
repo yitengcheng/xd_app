@@ -11,23 +11,6 @@
 	</view>
 </template>
 <script>
-	/**
-	 * Countdown 倒计时
-	 * @description 倒计时组件
-	 * @tutorial https://ext.dcloud.net.cn/plugin?id=25
-	 * @property {String} backgroundColor 背景色
-	 * @property {String} color 文字颜色
-	 * @property {Number} day 天数
-	 * @property {Number} hour 小时
-	 * @property {Number} minute 分钟
-	 * @property {Number} second 秒
-	 * @property {Number} timestamp 时间戳
-	 * @property {Boolean} showDay = [true|false] 是否显示天数
-	 * @property {Boolean} showColon = [true|false] 是否以冒号为分隔符
-	 * @property {String} splitorColor 分割符号颜色
-	 * @event {Function} timeup 倒计时时间到触发事件
-	 * @example <uni-countdown :day="1" :hour="1" :minute="12" :second="40"></uni-countdown>
-	 */
 	export default {
 		name: 'UniCountdown',
 		props: {

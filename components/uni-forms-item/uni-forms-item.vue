@@ -19,31 +19,6 @@
 </template>
 
 <script>
-	/**
-	 * Field 输入框
-	 * @description 此组件可以实现表单的输入与校验，包括 "text" 和 "textarea" 类型。
-	 * @tutorial https://ext.dcloud.net.cn/plugin?id=21001
-	 * @property {Boolean} 	required 			是否必填，左边显示红色"*"号（默认false）
-	 * @property {String} validateTrigger = [bind|submit]	校验触发器方式 默认 submit 可选
-	 * 	@value bind 	发生变化时触发
-	 * 	@value submit 	提交时触发
-	 * @property {String } 	leftIcon 			label左边的图标，限 uni-ui 的图标名称
-	 * @property {String } 	iconColor 			左边通过icon配置的图标的颜色（默认#606266）
-	 * @property {String } 	label 				输入框左边的文字提示
-	 * @property {Number } 	labelWidth 			label的宽度，单位px（默认65）
-	 * @property {String } 	labelAlign = [left|center|right] label的文字对齐方式（默认left）
-	 * 	@value left		label 左侧显示
-	 * 	@value center	label 居中
-	 * 	@value right	label 右侧对齐
-	 * @property {String } 	labelPosition = [top|left] label的文字的位置（默认left）
-	 * 	@value top	顶部显示 label
-	 * 	@value left	左侧显示 label
-	 * @property {String } 	errorMessage 		显示的错误提示内容，如果为空字符串或者false，则不显示错误信息
-	 * @property {String } 	name 				表单域的属性名，在使用校验规则时必填
-	 */
-
-
-
 	export default {
 		name: "uniFormsItem",
 		props: {

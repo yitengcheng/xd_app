@@ -77,6 +77,12 @@
                 },
                 "push" : {
                     "unipush" : {}
+                },
+                "share" : {
+                    "weixin" : {
+                        "appid" : "wx88b68bf8aa471e62",
+                        "UniversalLinks" : ""
+                    }
                 }
             },
             "icons" : {

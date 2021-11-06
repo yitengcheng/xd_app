@@ -38,29 +38,6 @@
 </template>
 
 <script>
-	/**
-	 * DataChecklist 数据选择器
-	 * @description 通过数据渲染 checkbox 和 radio
-	 * @tutorial https://ext.dcloud.net.cn/plugin?id=xxx
-	 * @property {String} mode = [default| list | button | tag] 显示模式
-	 * @value default  	默认横排模式
-	 * @value list		列表模式
-	 * @value button	按钮模式
-	 * @value tag 		标签模式
-	 * @property {Boolean} multiple = [true|false] 是否多选
-	 * @property {Array|String|Number} value 默认值
-	 * @property {Array} localdata 本地数据 ，格式 [{text:'',value:''}]
-	 * @property {Number|String} min 最小选择个数 ，multiple为true时生效
-	 * @property {Number|String} max 最大选择个数 ，multiple为true时生效
-	 * @property {Boolean} wrap 是否换行显示
-	 * @property {String} icon = [left|right]  list 列表模式下icon显示位置
-	 * @property {Boolean} selectedColor 选中颜色
-	 * @property {Boolean} selectedTextColor 选中文本颜色，如不填写则自动显示
-	 * @value left 左侧显示
-	 * @value right 右侧显示
-	 * @event {Function} change  选中发生变化触发
-	 */
-
 	import clientdb from './clientdb.js'
 	export default {
 		name: 'uniDataChecklist',

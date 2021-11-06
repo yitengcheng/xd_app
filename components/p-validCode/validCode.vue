@@ -1,12 +1,3 @@
-<!-- 
-自定义验证码输入、密码输入使用
- 
-使用方法：
-maxlength：输入最大长度
-isPwd：是否是密码模式
-@finish：回调函数
- <validcode :maxlength="4" :isPwd="false" @finish="finish"></validcode>
- -->
 <template>
 	<view class="code-area">
 		<view class="flex-box">

@@ -12,13 +12,6 @@
 </template>
 
 <script>
-	/**
-	 * Group 分组
-	 * @description 表单字段分组
-	 * @tutorial https://ext.dcloud.net.cn/plugin?id=21002
-	 * @property {String} title 主标题
-	 * @property {Number} top 分组间隔
-	 */
 	export default {
 		name: 'uniGroup',
 		props: {

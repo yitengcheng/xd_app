@@ -5,7 +5,6 @@
 		</picker>
 	</uni-forms-item>
 </template>
-
 <script>
 export default {
 	props: {

@@ -8,18 +8,6 @@
 </template>
 
 <script>
-	/**
-	 * Drawer 抽屉
-	 * @description 抽屉侧滑菜单
-	 * @tutorial https://ext.dcloud.net.cn/plugin?id=26
-	 * @property {Boolean} mask = [true | false] 是否显示遮罩
-	 * @property {Boolean} maskClick = [true | false] 点击遮罩是否关闭
-	 * @property {Boolean} mode = [left | right] Drawer 滑出位置
-	 * 	@value left 从左侧滑出
-	 * 	@value right 从右侧侧滑出
-	 * @property {Number} width 抽屉的宽度 ，仅 vue 页面生效
-	 * @event {Function} close 组件关闭时触发事件
-	 */
 	export default {
 		name: 'UniDrawer',
 		props: {

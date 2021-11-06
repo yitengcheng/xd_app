@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="backgroud_box">
 		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="280" :rules="rules">
 			<FormUpload :readonly="disabled" :formData="formData" name="licenseFrontUrl" label="行驶证正面" :limit="1"
 				@getOcrData="getLicenseFront" url="/tool/ocr/license" :otherData="{ type: 6 }" />
@@ -63,6 +63,11 @@
 		</uni-forms>
 		<uni-fab v-show="carId" :content="content" horizontal="right" vertical="bottom" direction="vertical"
 			@trigger="trigger"></uni-fab>
+			<view class="qrcode_box" v-show="qrcodeFlag">
+				<tkiQrcode ref="qrcode" :val="qrcodeSrc" :onval="true" :size="300"></tkiQrcode>
+				<uni-data-checkbox v-model="payment" :localdata="range" @change="changePayment"></uni-data-checkbox>
+				<button @click="()=> qrcodeFlag = false" type="warn" size="mini">关闭二维码</button>
+			</view>
 	</view>
 </template>
 
@@ -73,6 +78,7 @@
 	import FormSwitch from '../../../components/form/FormSwitch.vue';
 	import FormUpload from '../../../components/form/FormUpload.vue';
 	import FormDatePicker from '../../../components/form/FormDatePicker.vue';
+	import tkiQrcode from "../../../components/tki-qrcode/tki-qrcode.vue"
 	import {
 		plateRegex,
 		integerRegex,
@@ -93,6 +99,7 @@
 			FormSwitch,
 			FormUpload,
 			FormDatePicker,
+			tkiQrcode,
 		},
 		data() {
 			return {
@@ -372,10 +379,26 @@
 						selectedIconPath: '',
 						text: '违章查询'
 					},
+					{
+						iconPath: '../../../static/img/qrcode.png',
+						selectedIconPath: '',
+						text: '二维码'
+					},
 				],
 				complany: [],
 				user: uni.getStorageSync('user'),
+				payment: '1',
 				complanyId: '',
+				carId: '',
+				qrcodeSrc: '',
+				qrcodeFlag: false,
+				range: [ {
+					value: '1',
+					text: '线上支付'
+				}, {
+					value: '2',
+					text: '线下支付'
+				}, ]
 			};
 		},
 		onLoad(option) {
@@ -402,6 +425,22 @@
 			})
 		},
 		methods: {
+			changePayment(e) {
+				this.payment = e.detail.value;
+				this.qrcodeSrc = `https://xd.qiantur.com/stage-api/applet?complanyId=${this.complanyId}=${this.carId}=${this.payment}`;
+				this.$nextTick(() => {
+					this.$refs.qrcode._makeCode();
+				})
+			},
+			showQR( ) {
+				this.qrcodeFlag = true;
+				uni.pageScrollTo({
+					scrollTop: 0,
+					duration: 200
+				});
+				this.qrcodeSrc = `https://xd.qiantur.com/stage-api/applet?complanyId=${this.complanyId}=${this.carId}=${this.payment}`;
+				this.$refs.qrcode._makeCode();
+			},
 			checkIllegal() {
 				api.checkIllegal({
 					carId: this.carId
@@ -436,6 +475,9 @@
 						break;
 					case 2:
 						this.checkIllegal();
+						break;
+					case 3:
+						this.showQR();
 						break;
 					default:
 						break;
@@ -492,6 +534,7 @@
 						});
 						this.source = data.source;
 						this.complanyId = data.complanyId;
+						this.carId = data.id;
 						this.$refs.form.setValue('carPhotos', carsPhotos);
 						this.$refs.form.setValue('licenseFrontUrl', licenseFront);
 						this.$refs.form.setValue('licenseBackUrl', licenseBack);
@@ -603,6 +646,23 @@
 </script>
 
 <style lang="scss">
+	.backgroud_box {
+		position: relative;
+		display: flex;
+	}
+	.qrcode_box {
+		background-color: rgba($color: #000000, $alpha: 0.9);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding-top: 200rpx;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0%;
+		left: 0%;
+		z-index: 999;
+	}
 	.more {
 		text-align: center;
 		margin-bottom: 20rpx;

@@ -69,7 +69,7 @@ export default {
 	width: 140rpx;
 }
 .item-btn {
-	width: 140rpx;
+	width: 120rpx;
 	height: 50rpx;
 	line-height: 50rpx;
 	font-size: 10px;

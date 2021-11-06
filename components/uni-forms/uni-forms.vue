@@ -8,28 +8,6 @@
 </template>
 
 <script>
-	/**
-	 * Forms 表单
-	 * @description 由输入框、选择器、单选框、多选框等控件组成，用以收集、校验、提交数据
-	 * @tutorial https://ext.dcloud.net.cn/plugin?id=2773
-	 * @property {Object} rules  							表单校验规则
-	 * @property {String} validateTrigger = [bind|submit]	校验触发器方式 默认 submit 可选
-	 * @value bind 	发生变化时触发
-	 * @value submit 	提交时触发
-	 * @property {String} labelPosition = [top|left]				label 位置 默认 left 可选
-	 * @value top		顶部显示 label
-	 * @value left		左侧显示 label
-	 * @property {String} labelWidth  							label 宽度，默认 65px
-	 * @property {String} labelAlign = [left|center|right]		label 居中方式  默认 left 可选
-	 * @value left		label 左侧显示
-	 * @value center	label 居中
-	 * @value right		label 右侧对齐
-	 * @property {String} errShowType = [undertext|toast|modal]	校验错误信息提示方式
-	 * @value undertext	错误信息在底部显示
-	 * @value toast		错误信息toast显示
-	 * @value modal		错误信息modal显示
-	 * @event {Function} submit 提交时触发
-	 */
 	import Vue from 'vue'
 	Vue.prototype.binddata = function(name, value, formName) {
 		if (formName) {

@@ -42,30 +42,6 @@
 <script>
   import dataPicker from "../uni-data-pickerview/uni-data-picker.js"
   import DataPickerView from "../uni-data-pickerview/uni-data-pickerview.vue"
-
-  /**
-   * uni-data-picker
-   * @description uni-data-picker
-   * @tutorial https://uniapp.dcloud.net.cn/uniCloud/uni-data-picker
-   * @property {String} popup-title 弹出窗口标题
-   * @property {Array} localdata 本地数据，参考
-   * @property {Boolean} border = [true|false] 是否有边框
-   * @property {Boolean} readonly = [true|false] 是否仅读
-   * @property {Boolean} preload = [true|false] 是否预加载数据
-   * @value true 开启预加载数据，点击弹出窗口后显示已加载数据
-   * @value false 关闭预加载数据，点击弹出窗口后开始加载数据
-   * @property {Boolean} step-searh = [true|false] 是否分布查询
-   * @value true 启用分布查询，仅查询当前选中节点
-   * @value false 关闭分布查询，一次查询出所有数据
-   * @property {String|DBFieldString} self-field 分布查询当前字段名称
-   * @property {String|DBFieldString} parent-field 分布查询父字段名称
-   * @property {String|DBCollectionString} collection 表名
-   * @property {String|DBFieldString} field 查询字段，多个字段用 `,` 分割
-   * @property {String} orderby 排序字段及正序倒叙设置
-   * @property {String|JQLString} where 查询条件
-   * @event {Function} onpopupshow 弹出的选择窗口打开时触发此事件
-   * @event {Function} onpopuphide 弹出的选择窗口关闭时触发此事件
-   */
   export default {
     name: 'UniDataPicker',
     mixins: [dataPicker],
