@@ -137,6 +137,7 @@
 		overflow: hidden;
 	}
 	.form {
+		width: 80%;
 		margin-top: 300rpx;
 		padding: 0rpx 50rpx;
 	}
