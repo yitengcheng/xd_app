@@ -25,7 +25,7 @@
 		<IdCardOcr @click="getIdCard" type="primary" />
 		<button @click="readIdcard" class="readIdcard" type="primary">身份证阅读器</button>
 		<view class="info_box">
-			<uni-forms ref="form" v-model="formData" :rules="rules">
+			<uni-forms ref="form" v-model="formData" :rules="rules" :labelWidth="100">
 				<uni-forms-item label="姓名" :name="formData.name" :required="true">
 					<Combox :value="formData.name" :candidates="candidates" :isJSON="true" keyName="name"
 						@getValue="getComboxValue" class="form_combox"></Combox>
@@ -502,7 +502,7 @@
 	}
 
 	.info_box {
-		width: 90%;
+		width: 98%;
 		display: flex;
 		flex-direction: column;
 		padding-top: 10px;

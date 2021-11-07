@@ -1,12 +1,12 @@
 <template>
 	<view class="content">
-		<text class="iconfont icon-morentouxiang head"></text>
+		<view class="t-icon t-icon-morentouxiang head"></view>
 		<text class="name">{{(user.user || {}).nickName}}</text>
 		<uni-data-picker v-show="((user || {}).complany || []).length >= 2" :value="complanyId" :localdata="complanys" @change="selectComplany" class="complanyPicker"></uni-data-picker>
 		<view v-for="(item,index) in data" :key="index" @click="toPage(item)">
 			<view class="item">
-				<text class="iconfont" :class="item.iconName"></text>
-				<text>{{item.title}}</text>
+				<view class="t-icon" :class="item.iconName"></view>
+				<text class="item_text">{{item.title}}</text>
 			</view>
 		</view>
 		<button @click="logout" type="warn" class="logout">退出登录</button>
@@ -21,11 +21,12 @@
 		data() {
 			return {
 				data: [
-					{title: '接单/通知', iconName: 'icon-shangjiaguanli_daibanshixiang', path: '/pages/model/my/Todo'},
-					{title: '历史订单', iconName: 'icon-dingdanguanlix', path: '/pages/model/my/Orders'},
-					{title: '合同模板', iconName: 'icon-shuoming', path: '/pages/model/my/ContractTemplate'},
-					{title: '修改密码', iconName: 'icon-zhongzhimima', path: '/pages/model/login/ResetPassword'},
-					{title: '身份证读卡器申领', iconName: 'icon-jifangmenjinkashenlingbiangeng', path: '/pages/model/my/ReaderApply'},
+					{title: '接单/通知', iconName: 't-icon-shangjiaguanli_daibanshixiang', path: '/pages/model/my/Todo'},
+					{title: '历史订单', iconName: 't-icon-dingdanguanlix', path: '/pages/model/my/Orders'},
+					{title: '合同模板', iconName: 't-icon-shuoming', path: '/pages/model/my/ContractTemplate'},
+					{title: '修改密码', iconName: 't-icon-zhongzhimima', path: '/pages/model/login/ResetPassword'},
+					{title: '修改公司信息', iconName: 't-icon-qiyexinxiguanli', path: '/pages/model/my/UpdateComplanyInfo'},
+					{title: '身份证读卡器申领', iconName: 't-icon-jifangmenjinkashenlingbiangeng', path: '/pages/model/my/ReaderApply'},
 				],
 				user: uni.getStorageSync('user'),
 				complanys: [],
@@ -88,7 +89,8 @@
 
 <style lang="scss">
 .head {
-	font-size: 80px;
+	width: 120rpx;
+	height: 120rpx;
 	margin-top: 100rpx;
 }
 .name {
@@ -102,6 +104,9 @@
 	flex-direction: row;
 	align-items: center;
 	border-bottom: #808080 1rpx solid;
+}
+.item_text {
+	margin-left: 30rpx;
 }
 .complany {
 	margin-top: 40rpx;

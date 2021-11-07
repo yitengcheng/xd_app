@@ -182,12 +182,21 @@
             }
             
         }
+        ,{
+            "path" : "pages/model/my/UpdateComplanyInfo",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "公司信息",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"tabBar": {
-		"color": "#7A7E83",
-		"selectedColor": "#1296db",
+		"color": "#606266",
+		"selectedColor": "#303133",
 		"borderStyle": "black",
-		"backgroundColor": "#aaaaff",
+		"backgroundColor": "#409EFF",
 		"list": [{
 				"pagePath": "pages/model/InCar/index",
 				"iconPath": "static/img/incar.png",
@@ -215,8 +224,8 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#aaaaff",
-		"backgroundColor": "#F8F8F8"
+		"navigationBarBackgroundColor": "#409EFF",
+		"backgroundColor": "#F4F4F4"
 	}
 	
 

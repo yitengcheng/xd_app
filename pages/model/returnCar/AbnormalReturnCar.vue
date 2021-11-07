@@ -57,7 +57,7 @@
 				geocode: true,
 				success:(res)=>{
 					this.address =`${res.address.country}${res.address.province}${res.address.city}${res.address.district}${res.address.street}`;
-					this.$refs.form.setValue('latlong', [res.longitude, res.latitude].toString());
+					this.$refs.form.setValue('latlong', [res.longitude, res.latitude].join(','));
 				}
 			})
 		},
@@ -66,7 +66,7 @@
 				uni.chooseLocation({
 					success: (res) => {
 						this.address = res.name;
-						this.$refs.form.setValue('latlong', [res.longitude, res.latitude].toString());
+						this.$refs.form.setValue('latlong', [res.longitude, res.latitude].join(','));
 					}
 				})
 			},

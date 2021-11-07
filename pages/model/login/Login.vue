@@ -1,5 +1,5 @@
 <template>
-	<view class="login_container">
+	<view class="content">
 		<uni-forms border v-model="formData" class="form" ref="form">
 		    <FormInput :formData="formData" name="userName" label="用户名" :inputBorder="false" :required="false"/>
 		    <FormInput :formData="formData" name="password" label="密码" type="password" :inputBorder="false" :required="false"/>
