@@ -23,6 +23,5 @@
 		flex-direction: column;
 		align-items: center;
 		overflow: hidden;
-		min-height: 1380rpx;
 	}
 </style>
