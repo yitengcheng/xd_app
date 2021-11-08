@@ -33,7 +33,7 @@
 				faceText: '',
 				blackText: '',
 				blackListText: '',
-				pactBtnText: '上传纸质合同',
+				pactBtnText: '完成交车',
 				orderId: '',
 			};
 		},
@@ -142,26 +142,41 @@
 				});
 			},
 			toPact() {
-				uni.chooseImage({
-					success: (res) => {
-						uni.showLoading({
-							mask: true,
-							title: '合同上传中'
-						})
-						uni.uploadFile({
-							url: `${config.API_URL}/system/wxorder/uploadContract/${this.orderId}`,
-							filePath: res.tempFilePaths[0],
-							name: 'file',
-							header: {
-								Authorization: 'Bearer ' + uni.getStorageSync('tonken')
-							},
-							success: (res) => {
-								uni.hideLoading();
+				uni.showModal({
+					content: '是否上传纸质合同',
+					cancelText: '直接交车',
+					confirmText: '上传纸质合同',
+					success: (e) => {
+						if(e.confirm){
+							uni.chooseImage({
+								success: (res) => {
+									uni.showLoading({
+										mask: true,
+										title: '合同上传中'
+									})
+									uni.uploadFile({
+										url: `${config.API_URL}/system/wxorder/uploadContract/${this.orderId}`,
+										filePath: res.tempFilePaths[0],
+										name: 'file',
+										header: {
+											Authorization: 'Bearer ' + uni.getStorageSync('tonken')
+										},
+										success: (res) => {
+											uni.hideLoading();
+											uni.navigateTo({
+												url: '/pages/model/InCar/Finish'
+											});
+										}
+									});
+								}
+							});
+						} else {
+							api.finishCar(this.orderId).then( res => {
 								uni.navigateTo({
 									url: '/pages/model/InCar/Finish'
 								});
-							}
-						});
+							})
+						}
 					}
 				});
 			},

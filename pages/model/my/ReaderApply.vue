@@ -31,6 +31,8 @@
 					applyNum: 0,
 					lease: 0,
 					payType: 0,
+					address: '',
+					productId: 1,
 				},
 				rules:{},
 				leaseList: [

@@ -22,6 +22,10 @@ const order = {
 	reletCar: (data) => {
 		return request.globalRequest(`/system/wxorder/renewal`, 'post', data);
 	},
+	finishCar: (data) => {
+		return request.globalRequest(`/system/wxorder/uploadContract/${data}`, 'post');
+	},
+	
 }
 
 
