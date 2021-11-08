@@ -2,7 +2,7 @@
 	<view class="content" style="justify-content: space-between;">
 		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="280" :rules="rules"class="form">
 			<FormInput :formData="formData" name="complanyName" label="公司名"/>
-			<FormInput :formData="formData" name="complanyAddress" label="公司地址"/>
+			<FormInput :formData="formData" name="businessAddress" label="公司经营地址"/>
 			<FormInput :formData="formData" name="creditCode" label="统一社会代码"/>
 			<FormInput :formData="formData" name="juridicalName" label="法人姓名"/>
 			<FormInput :formData="formData" name="juridicalZjhm" label="法人身份证"/>
@@ -17,6 +17,7 @@
 
 <script>
 	import FormInput from '../../../components/form/FormInput.vue';
+	import api from '../../../api/index.js';
 	export default {
 		components:{
 			FormInput,
@@ -26,14 +27,51 @@
 				complany: uni.getStorageSync('user').complany,
 				formData: {
 					complanyName: '',
-					complanyAddress: '',
+					businessAddress: '',
 					creditCode: '',
 					latitude: '',
 					juridicalName: '',
 					juridicalZjhm: '',
 					phoneNumber: '',
 				},
-				rules: {}
+				rules: {
+					complanyName: {
+						rules: [{
+							required: true,
+							errorMessage: '请填写公司名称'
+						}]
+					},
+					businessAddress: {
+						rules: [{
+							required: true,
+							errorMessage: '请填写公司经营地址'
+						}]
+					},
+					creditCode: {
+						rules: [{
+							required: true,
+							errorMessage: '请填写统一社会代码'
+						}]
+					},
+					juridicalName: {
+						rules: [{
+							required: true,
+							errorMessage: '请填写法人姓名'
+						}]
+					},
+					juridicalZjhm: {
+						rules: [{
+							required: true,
+							errorMessage: '请填写法人身份证'
+						}]
+					},
+					phoneNumber: {
+						rules: [{
+							required: true,
+							errorMessage: '请填写联系电话'
+						}]
+					},
+				}
 			};
 		},
 		mounted() {
@@ -42,9 +80,10 @@
 		methods:{
 			initInfo(){
 				let complany = this._.find(this.complany, o => { return o.id === uni.getStorageSync('complanyId')});
+				console.log(complany);
 				this.$nextTick(() => {
 					this.$refs.form.setValue('complanyName', complany.complanyName);
-					this.$refs.form.setValue('complanyAddress', complany.complanyAddress);
+					this.$refs.form.setValue('businessAddress', complany.businessAddress);
 					this.$refs.form.setValue('creditCode', complany.creditCode);
 					this.$refs.form.setValue('juridicalName', complany.juridicalName);
 					this.$refs.form.setValue('juridicalZjhm', complany.juridicalZjhm);
@@ -67,7 +106,19 @@
 			},
 			sumbit(){
 				this.$refs.form.validate().then(data => {
-					console.log(this.formData);
+					api.updateComplany({
+						id: uni.getStorageSync('complanyId'),
+						...this.formData
+					}).then(res => {
+						uni.showModal({
+							title: '提示',
+							content: '信息修改成功',
+							showCancel: false,
+							success: () => {
+								uni.navigateBack();
+							}
+						})
+					})
 				})
 			}
 		}

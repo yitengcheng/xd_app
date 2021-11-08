@@ -12,7 +12,10 @@ const user = {
 	},
 	resetPassword: (data) => {
 		return request.globalRequest('/system/user/resetPwd', 'put', data);
-	}
+	},
+	updateComplany: (data) => {
+		return request.globalRequest('/system/complany/app/update', 'put', data);
+	},
 }
 
 
