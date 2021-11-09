@@ -427,7 +427,7 @@
 		methods: {
 			changePayment(e) {
 				this.payment = e.detail.value;
-				this.qrcodeSrc = `https://xd.qiantur.com/stage-api/applet?complanyId=${this.complanyId}=${this.carId}=${this.payment}`;
+				this.qrcodeSrc = `${config.API_URL}/applet?complanyId=${this.complanyId}=${this.carId}=${this.payment}`;
 				this.$nextTick(() => {
 					this.$refs.qrcode._makeCode();
 				})
@@ -438,7 +438,7 @@
 					scrollTop: 0,
 					duration: 200
 				});
-				this.qrcodeSrc = `https://xd.qiantur.com/stage-api/applet?complanyId=${this.complanyId}=${this.carId}=${this.payment}`;
+				this.qrcodeSrc = `${config.API_URL}/applet?complanyId=${this.complanyId}=${this.carId}=${this.payment}`;
 				this.$refs.qrcode._makeCode();
 			},
 			checkIllegal() {
