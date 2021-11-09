@@ -2,14 +2,14 @@
 	<view class="content" style="justify-content: space-between;">
 		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="280" :rules="rules"class="form">
 			<FormInput :formData="formData" name="complanyName" label="公司名"/>
-			<FormInput :formData="formData" name="businessAddress" label="公司经营地址"/>
 			<FormInput :formData="formData" name="creditCode" label="统一社会代码"/>
 			<FormInput :formData="formData" name="juridicalName" label="法人姓名"/>
 			<FormInput :formData="formData" name="juridicalZjhm" label="法人身份证"/>
 			<FormInput :formData="formData" name="phoneNumber" label="联系电话"/>
+			<FormInput :formData="formData" name="businessAddress" label="公司经营地址" disable/>
 		</uni-forms>
 		<view class="bottom_btn">
-			<button class="btn" @click="getLatitude">重新获取坐标</button>
+			<button class="btn" @click="getLatitude">获取公司经营地址</button>
 			<button class="btn" type="primary" @click="sumbit">保存</button>
 		</view>
 	</view>
@@ -71,16 +71,25 @@
 							errorMessage: '请填写联系电话'
 						}]
 					},
+					longitude:'',
+					latitude: '',
 				}
 			};
 		},
 		mounted() {
 			this.initInfo();
+			uni.getLocation({
+				geocode: true,
+				success: (res) => {
+					this.longitude = res.longitude;
+					this.latitude = res.latitude;
+					
+				}
+			});
 		},
 		methods:{
 			initInfo(){
 				let complany = this._.find(this.complany, o => { return o.id === uni.getStorageSync('complanyId')});
-				console.log(complany);
 				this.$nextTick(() => {
 					this.$refs.form.setValue('complanyName', complany.complanyName);
 					this.$refs.form.setValue('businessAddress', complany.businessAddress);
@@ -92,17 +101,14 @@
 				});
 			},
 			getLatitude(){
-				uni.getLocation({
-					geocode: true,
+				uni.chooseLocation({
+					latitude: this.latitude,
+					longitude: this.longitude,
 					success: (res) => {
 						this.formData.latitude = `${res.longitude},${res.latitude}`;
-						uni.showModal({
-							title: '提示',
-							content: '公司坐标已重新获取，点击保存即可更新坐标',
-							showCancel: false,
-						})
-					}
-				});
+						this.$refs.form.setValue('businessAddress', res.address);
+					},
+				})
 			},
 			sumbit(){
 				this.$refs.form.validate().then(data => {
