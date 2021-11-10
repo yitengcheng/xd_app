@@ -74,9 +74,6 @@
 							}
 						});
 					},
-					fail: (error) => {
-						console.log('下载失败：', error);
-					}
 				})
 			},
 			upLoadTemplate() {

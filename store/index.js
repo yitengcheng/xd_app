@@ -15,15 +15,15 @@ const store = new Vuex.Store({
 					state.socketTask = uni.connectSocket({
 						url: `wss://xd.qiantur.com/socket/websocket/${id}`,
 						success() {
-							console.log('websocket连接成功');
+							process.env.NODE_ENV === 'development' && console.log('websocket连接成功');
 						},
 					});
 					state.socketTask.onOpen((res) => {
-						console.log('WebSocket连接正常打开中...！')
+						process.env.NODE_ENV === 'development' && console.log('WebSocket连接正常打开中...！')
 						// 注：只有连接正常打开中 ，才能正常收到消息
 						state.socketTask.onMessage((res = {}) => {
 							let data = JSON.parse(res.data);
-							console.log(data);
+							process.env.NODE_ENV === 'development' && console.log(data);
 							let {
 								type,
 								message,
@@ -157,7 +157,7 @@ const store = new Vuex.Store({
 			state.socketTask.send({
 				data,
 				async success() {
-					console.log('消息发送成功')
+					process.env.NODE_ENV === 'development' && console.log('消息发送成功')
 				},
 			})
 		},
@@ -166,10 +166,10 @@ const store = new Vuex.Store({
 			if (!state.socketTask) return
 			state.socketTask.close({
 				success(res) {
-					console.log('关闭成功', res)
+					process.env.NODE_ENV === 'development' && console.log('关闭成功', res)
 				},
 				fail(err) {
-					console.log('关闭失败', err)
+					process.env.NODE_ENV === 'development' && console.log('关闭失败', err)
 				}
 			})
 		}

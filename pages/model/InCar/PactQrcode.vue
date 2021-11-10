@@ -39,7 +39,7 @@
 					errorCorrectLevel: uQRCode.errorCorrectLevel.H
 				})
 				.then(res => {
-					console.log(res)
+					process.env.NODE_ENV === 'development' && console.log(res)
 				})
 		},
 	};

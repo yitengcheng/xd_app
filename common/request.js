@@ -32,12 +32,12 @@ request.globalRequest = (url, method, data) => {
 		sslVerify: "false",
 	}
 	// #ifdef APP-PLUS
-	console.log('request:', JSONParams);
+	process.env.NODE_ENV === 'development' && console.log('request:', JSONParams);
 	// #endif
 
 	return uni.request(JSONParams).then(res => {
 		uni.hideLoading();
-		console.log('response:', res.length > 1 ? res[1].data : res);
+		process.env.NODE_ENV === 'development' && console.log('response:', res.length > 1 ? res[1].data : res);
 		if (res[1]) {
 			let data = '';
 			// #ifdef MP-WEIXIN

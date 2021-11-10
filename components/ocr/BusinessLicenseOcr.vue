@@ -17,9 +17,6 @@ export default {
 						success(res) {
 							let result = JSON.parse(res.data);
 							this.$emit('click', result);
-						},
-						fail(error) {
-							console.log(error);
 						}
 					});
 				}

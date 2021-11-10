@@ -39,6 +39,7 @@
 					{value: 0, text: '三个月'},
 					{value: 1, text: '六个月'},
 					{value: 2, text: '一年'},
+					{value: 3, text: '二年'},
 				],
 				payTypeList: [
 					{value: 0, text: '租赁'},
