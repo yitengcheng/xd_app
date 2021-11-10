@@ -1,6 +1,7 @@
 <template>
 	<view class="backgroud_box content">
-		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="280" :rules="rules" class="form_box">
+		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="280" :rules="rules"
+			class="form_box">
 			<FormUpload :readonly="disabled" :formData="formData" name="licenseFrontUrl" label="行驶证正面" :limit="1"
 				@getOcrData="getLicenseFront" url="/tool/ocr/license" :otherData="{ type: 6 }" />
 			<FormUpload :readonly="disabled" :formData="formData" name="licenseBackUrl" label="行驶证背面" :limit="1"
@@ -65,7 +66,6 @@
 			@trigger="trigger"></uni-fab>
 	</view>
 </template>
-
 <script>
 	import FormInput from '../../../components/form/FormInput.vue';
 	import FormPicker from '../../../components/form/FormPicker.vue';
@@ -98,216 +98,214 @@
 			return {
 				rules: {
 					carPhotos: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请上传至少一张车辆照片'
-						}]
+						} ]
 					},
 					licenseFrontUrl: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请上传行驶证正面照片'
-						}]
+						} ]
 					},
 					licenseBackUrl: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请上传行驶证背面照片'
-						}]
+						} ]
 					},
 					source: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请选择车辆来源'
-						}]
+						} ]
 					},
 					operatorId: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请选择gps厂商'
-						}]
+						} ]
 					},
 					carNum: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请输入车牌号'
 						}, {
 							pattern: plateRegex,
 							errorMessage: '请输入正确的车牌号'
-						}]
+						} ]
 					},
 					carBrand: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请输入车辆品牌'
-						}]
+						} ]
 					},
 					model: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请输入车辆型号'
-						}]
+						} ]
 					},
 					type: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请选择车辆类型'
-						}]
+						} ]
 					},
 					color: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请输入车辆颜色'
-						}]
+						} ]
 					},
 					frameNum: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请输入车架号号'
-						}]
+						} ]
 					},
 					engineNum: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请输入发动机号'
-						}]
+						} ]
 					},
 					maxManned: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请输入荷载人数'
-						}]
+						} ]
 					},
 					fuelType: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请选择燃油编号'
-						}]
+						} ]
 					},
 					thirdLiabilityInsurance: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请输入第三者责任险'
 						}, {
 							pattern: integerRegex,
 							errorMessage: '请输入正确的三责险金额'
-						}]
+						} ]
 					},
 					thirdNoDeductible: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请选择第三者责任险是否不计免赔'
-						}]
+						} ]
 					},
 					lossInsurance: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请选择机动车损失险'
-						}]
+						} ]
 					},
 					lossNoDeductible: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请选择机动车损失险是否不计免赔'
-						}]
+						} ]
 					},
 					price: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请输入车辆价值'
 						}, {
 							pattern: positiveRegex,
 							errorMessage: '请输入正确的车辆价值'
-						}]
+						} ]
 					},
 					unitPrice: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请输入租车单价'
 						}, {
 							pattern: positiveRegex,
 							errorMessage: '请输入租车单价'
-						}]
+						} ]
 					},
 					name: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请输入姓名'
 						}, {
 							maxLength: 60,
 							errorMessage: '车主姓名长度不能超过60个字符'
-						}]
+						} ]
 					},
 					cardId: {
-						rules: [{
-								required: true,
-								errorMessage: '请输入车主身份证'
-							},
-							{
-								validateFunction: (rule, value, data, callback) => {
-									if (value.length !== 15 || value.length !== 18) {
-										callback('身份证长度有误');
-									}
-									if (value.length === 15 && !card15.test(value)) {
-										callback('请输入正确的身份证');
-									} else if (value.length === 18 && !card18.test(value)) {
-										callback('请输入正确的身份证');
-									}
-									return true;
+						rules: [ {
+							required: true,
+							errorMessage: '请输入车主身份证'
+						}, {
+							validateFunction: ( rule, value, data, callback ) => {
+								if ( value.length !== 15 || value.length !== 18 ) {
+									callback( '身份证长度有误' );
 								}
+								if ( value.length === 15 && !card15.test( value ) ) {
+									callback( '请输入正确的身份证' );
+								} else if ( value.length === 18 && !card18.test( value ) ) {
+									callback( '请输入正确的身份证' );
+								}
+								return true;
 							}
-						]
+						} ]
 					},
 					phoneNum: {
-						rules: [{
+						rules: [ {
 							required: true,
 							errorMessage: '请输入车主电话号码'
 						}, {
 							pattern: phoneRegex,
 							errorMessage: '请输入正确的车辆价值'
-						}]
+						} ]
 					},
 					bondMoney: {
-						rules: [{
+						rules: [ {
 							pattern: positiveRegex,
 							errorMessage: '请输入正确的租车保证金'
-						}]
+						} ]
 					},
 					violationBondMoney: {
-						rules: [{
+						rules: [ {
 							pattern: positiveRegex,
 							errorMessage: '请输入正确的违章保证金'
-						}]
+						} ]
 					},
 					strongEndTime: {
-						rules: [{
+						rules: [ {
 							pattern: dateFormatRegex,
 							errorMessage: '请输入正确的交强险到期时间'
-						}]
+						} ]
 					},
 					businessEndTime: {
-						rules: [{
+						rules: [ {
 							pattern: dateFormatRegex,
 							errorMessage: '请输入正确的商业险到期时间'
-						}]
+						} ]
 					},
 					annualReview: {
-						rules: [{
+						rules: [ {
 							pattern: dateFormatRegex,
 							errorMessage: '请输入正确的年审到期时间'
-						}]
+						} ]
 					},
 					maxMileage: {
-						rules: [{
+						rules: [ {
 							pattern: integerRegex,
 							errorMessage: '请输入正确的每日平均里程'
-						}]
+						} ]
 					},
 					maxMileagePrice: {
-						rules: [{
+						rules: [ {
 							pattern: positiveRegex,
 							errorMessage: '请输入正确的超过里程每公里收取金额'
-						}]
+						} ]
 					}
 				},
 				formData: {
@@ -357,29 +355,25 @@
 				licenseFrontUrl: '',
 				licenseBackUrl: '',
 				moreTitle: '展开更多',
-				content: [{
-						iconPath: '../../../static/img/goToTop.png',
-						selectedIconPath: '',
-						text: '回到顶部'
-					},
-					{
-						iconPath: '../../../static/img/edit.png',
-						selectedIconPath: '',
-						text: '编辑'
-					},
-					{
-						iconPath: '../../../static/img/weizhang.png',
-						selectedIconPath: '',
-						text: '违章查询'
-					},
-					{
-						iconPath: '../../../static/img/qrcode.png',
-						selectedIconPath: '',
-						text: '二维码'
-					},
-				],
+				content: [ {
+					iconPath: '../../../static/img/goToTop.png',
+					selectedIconPath: '',
+					text: '回到顶部'
+				}, {
+					iconPath: '../../../static/img/edit.png',
+					selectedIconPath: '',
+					text: '编辑'
+				}, {
+					iconPath: '../../../static/img/weizhang.png',
+					selectedIconPath: '',
+					text: '违章查询'
+				}, {
+					iconPath: '../../../static/img/qrcode.png',
+					selectedIconPath: '',
+					text: '分享车辆'
+				}, ],
 				complany: [],
-				user: uni.getStorageSync('user'),
+				user: uni.getStorageSync( 'user' ),
 				payment: '1',
 				complanyId: '',
 				carId: '',
@@ -387,92 +381,89 @@
 				complanyName: '',
 			};
 		},
-		onLoad(option) {
-			uni.setNavigationBarTitle({
+		onLoad( option ) {
+			uni.setNavigationBarTitle( {
 				title: option.type === 'add' ? '添加车辆' : '车辆详情'
-			});
+			} );
 			this.disabled = option.type === 'add' ? false : true;
 			this.getGpsList();
-			this.dictInit('car_type', 'sources_vehicle', 'fuel_number', 'insurance_status').then(() => {
-				this.carType = uni.getStorageSync('car_type');
-				this.sourceType = uni.getStorageSync('sources_vehicle');
-				this.gasolineType = uni.getStorageSync('fuel_number');
-				this.lossInsuranceType = uni.getStorageSync('insurance_status');
-			});
+			this.dictInit( 'car_type', 'sources_vehicle', 'fuel_number', 'insurance_status' ).then( () => {
+				this.carType = uni.getStorageSync( 'car_type' );
+				this.sourceType = uni.getStorageSync( 'sources_vehicle' );
+				this.gasolineType = uni.getStorageSync( 'fuel_number' );
+				this.lossInsuranceType = uni.getStorageSync( 'insurance_status' );
+			} );
 			this.carId = option.id;
 		},
 		mounted() {
-			this.carId && this.getCarInfo(this.carId);
-			(this.user.complany || []).length > 1 && this.user.complany.forEach(o => {
-				this.complany.push({
+			this.carId && this.getCarInfo( this.carId );
+			( this.user.complany || [] ).length > 1 && this.user.complany.forEach( o => {
+				this.complany.push( {
 					value: o.id,
 					text: o.complanyName
-				});
-			})
+				} );
+			} )
 		},
 		methods: {
-			changePayment(e) {
-				this.payment = e.detail.value;
-				
-			},
-			share(){
-				uni.showModal({
-					title: '支付方式',
-					content: '请选择支付方式',
-					confirmText: '线上支付',
-					cancelText: '线下支付',
-					success: (e) => {
-						let payment = '';
-						if(e.confirm){
+			share() {
+				uni.showActionSheet( {
+					itemList: [ '线上支付', '线下支付' ],
+					success: ( e ) => {
+						console.log( e )
+						let payment = undefined;
+						if ( e.tapIndex === 0 ) {
 							payment = '1';
-						} else {
+						} else if ( e.tapIndex === 1 ) {
 							payment = '2';
 						}
-						uni.share({
-							provider: 'weixin',
-							type: 5,
-							scene: 'WXSceneSession',
-							imageUrl: '/static/logo.png',
-							title: `欢迎进入${this.complanyName}`,
-							miniProgram: {
-								id: 'gh_8e6352992afc',
-								path: `/pages/index/Index?complanyId=${this.complanyId}&carId=${this.carId}&payment=${payment}`,
-								type: 0,
-								webUrl: 'http://uniapp.dcloud.io'
-							},
-						})
+						if ( payment ) {
+							uni.share( {
+								provider: 'weixin',
+								type: 5,
+								scene: 'WXSceneSession',
+								imageUrl: '/static/logo.png',
+								title: `欢迎进入${this.complanyName}`,
+								miniProgram: {
+									id: 'gh_8e6352992afc',
+									path: `/pages/index/Index?complanyId=${this.complanyId}&carId=${this.carId}&payment=${payment}`,
+									type: 0,
+									webUrl: 'http://uniapp.dcloud.io'
+								},
+							} )
+						}
 					}
-				})
-				
+				} );
 			},
 			checkIllegal() {
-				api.checkIllegal({
+				api.checkIllegal( {
 					carId: this.carId
-				}).then(res => {
-					let { data } = res.data;
-					uni.showModal({
+				} ).then( res => {
+					let {
+						data
+					} = res.data;
+					uni.showModal( {
 						title: '违章提示',
 						content: `${data.car_no}有${data.vio_total}条违章尚未处理！`,
 						showCancel: false
-					})
-				});
+					} )
+				} );
 			},
-			changeStrongEndTime(e) {
-				this.$refs.form.setValue('strongEndTime', e);
+			changeStrongEndTime( e ) {
+				this.$refs.form.setValue( 'strongEndTime', e );
 			},
-			changeBusinessEndTime(e) {
-				this.$refs.form.setValue('businessEndTime', e);
+			changeBusinessEndTime( e ) {
+				this.$refs.form.setValue( 'businessEndTime', e );
 			},
-			changeAnnualReview(e) {
-				this.$refs.form.setValue('annualReview', e);
+			changeAnnualReview( e ) {
+				this.$refs.form.setValue( 'annualReview', e );
 			},
-			trigger(e) {
-				switch (e.index) {
+			trigger( e ) {
+				switch ( e.index ) {
 					case 0:
-						uni.pageScrollTo({
+						uni.pageScrollTo( {
 							scrollTop: 0,
 							duration: 200
-						});
+						} );
 						break;
 					case 1:
 						this.disabled = false;
@@ -488,157 +479,156 @@
 				}
 			},
 			getGpsList() {
-				api.gpsList().then((res = {}) => {
+				api.gpsList().then( ( res = {} ) => {
 					let {
 						data
 					} = res;
 					let tmp = [];
-					if (data) {
-						data.forEach(item => {
-							tmp.push({
+					if ( data ) {
+						data.forEach( item => {
+							tmp.push( {
 								value: item.id,
 								text: item.complanyName
-							});
-						});
+							} );
+						} );
 						this.gpsVendorType = tmp;
 					}
-				});
+				} );
 			},
-			getCarInfo(id) {
-				api.carInfo(id).then((res = {}) => {
+			getCarInfo( id ) {
+				api.carInfo( id ).then( ( res = {} ) => {
 					let {
 						data
 					} = res;
-					if (data) {
-						let files = data.carPhotos.split(',');
+					if ( data ) {
+						let files = data.carPhotos.split( ',' );
 						let carsPhotos = [];
 						let licenseBack = [];
 						let licenseFront = [];
-						files.forEach((item, index) => {
-							let extname = item.substring(item.lastIndexOf('.') + 1);
-							let name = item.substring(item.lastIndexOf('/') + 1);
-							carsPhotos.push({
+						files.forEach( ( item, index ) => {
+							let extname = item.substring( item.lastIndexOf( '.' ) + 1 );
+							let name = item.substring( item.lastIndexOf( '/' ) + 1 );
+							carsPhotos.push( {
 								name,
 								extname,
 								url: `${config.IMG_URL}${item}`
-							});
-						});
-						licenseBack.push({
-							name: data.licenseBackUrl.substring(data.licenseBackUrl.lastIndexOf('/') + 1),
-							extname: data.licenseBackUrl.substring(data.licenseBackUrl.lastIndexOf('.') +
-								1),
+							} );
+						} );
+						licenseBack.push( {
+							name: data.licenseBackUrl.substring( data.licenseBackUrl.lastIndexOf( '/' ) +
+								1 ),
+							extname: data.licenseBackUrl.substring( data.licenseBackUrl.lastIndexOf(
+								'.' ) + 1 ),
 							url: `${config.IMG_URL}${data.licenseBackUrl}`
-						});
-						licenseFront.push({
-							name: data.licenseFrontUrl.substring(data.licenseFrontUrl.lastIndexOf('/') +
-								1),
-							extname: data.licenseFrontUrl.substring(data.licenseFrontUrl.lastIndexOf('.') +
-								1),
+						} );
+						licenseFront.push( {
+							name: data.licenseFrontUrl.substring( data.licenseFrontUrl.lastIndexOf( '/' ) +
+								1 ),
+							extname: data.licenseFrontUrl.substring( data.licenseFrontUrl.lastIndexOf(
+								'.' ) + 1 ),
 							url: `${config.IMG_URL}${data.licenseFrontUrl}`
-						});
+						} );
 						this.source = data.source;
 						this.complanyId = data.complanyId;
 						this.complanyName = data.complany.complanyName;
 						this.carId = data.id;
-						this.$refs.form.setValue('carPhotos', carsPhotos);
-						this.$refs.form.setValue('licenseFrontUrl', licenseFront);
-						this.$refs.form.setValue('licenseBackUrl', licenseBack);
-						this.$refs.form.setValue('source', data.source);
-						this.$refs.form.setValue('operatorId', data.operatorId);
-						this.$refs.form.setValue('carNum', data.carNum);
-						this.$refs.form.setValue('carBrand', data.carBrand);
-						this.$refs.form.setValue('model', data.model);
-						this.$refs.form.setValue('type', data.type);
-						this.$refs.form.setValue('color', data.color);
-						this.$refs.form.setValue('frameNum', data.frameNum);
-						this.$refs.form.setValue('engineNum', data.engineNum);
-						this.$refs.form.setValue('maxManned', data.maxManned);
-						this.$refs.form.setValue('fuelType', data.fuelType);
-						this.$refs.form.setValue('thirdLiabilityInsurance', data.thirdLiabilityInsurance);
-						this.$refs.form.setValue('thirdNoDeductible', data.thirdNoDeductible);
-						this.$refs.form.setValue('lossInsurance', data.lossInsurance);
-						this.$refs.form.setValue('lossNoDeductible', data.lossNoDeductible);
-						this.$refs.form.setValue('price', data.price);
-						this.$refs.form.setValue('unitPrice', data.unitPrice);
-						this.$refs.form.setValue('name', data.name);
-						this.$refs.form.setValue('phoneNum', data.phoneNum);
-						this.$refs.form.setValue('bondMoney', data.bondMoney);
-						this.$refs.form.setValue('violationBondMoney', data.violationBondMoney);
-						this.$refs.form.setValue('strongEndTime', data.strongEndTime);
-						this.$refs.form.setValue('businessEndTime', data.businessEndTime);
-						this.$refs.form.setValue('annualReview', data.annualReview);
-						this.$refs.form.setValue('maxMileage', data.maxMileage);
-						this.$refs.form.setValue('maxMileagePrice', data.maxMileagePrice);
-						this.$refs.form.setValue('remark', data.remark);
+						this.$refs.form.setValue( 'carPhotos', carsPhotos );
+						this.$refs.form.setValue( 'licenseFrontUrl', licenseFront );
+						this.$refs.form.setValue( 'licenseBackUrl', licenseBack );
+						this.$refs.form.setValue( 'source', data.source );
+						this.$refs.form.setValue( 'operatorId', data.operatorId );
+						this.$refs.form.setValue( 'carNum', data.carNum );
+						this.$refs.form.setValue( 'carBrand', data.carBrand );
+						this.$refs.form.setValue( 'model', data.model );
+						this.$refs.form.setValue( 'type', data.type );
+						this.$refs.form.setValue( 'color', data.color );
+						this.$refs.form.setValue( 'frameNum', data.frameNum );
+						this.$refs.form.setValue( 'engineNum', data.engineNum );
+						this.$refs.form.setValue( 'maxManned', data.maxManned );
+						this.$refs.form.setValue( 'fuelType', data.fuelType );
+						this.$refs.form.setValue( 'thirdLiabilityInsurance', data.thirdLiabilityInsurance );
+						this.$refs.form.setValue( 'thirdNoDeductible', data.thirdNoDeductible );
+						this.$refs.form.setValue( 'lossInsurance', data.lossInsurance );
+						this.$refs.form.setValue( 'lossNoDeductible', data.lossNoDeductible );
+						this.$refs.form.setValue( 'price', data.price );
+						this.$refs.form.setValue( 'unitPrice', data.unitPrice );
+						this.$refs.form.setValue( 'name', data.name );
+						this.$refs.form.setValue( 'phoneNum', data.phoneNum );
+						this.$refs.form.setValue( 'bondMoney', data.bondMoney );
+						this.$refs.form.setValue( 'violationBondMoney', data.violationBondMoney );
+						this.$refs.form.setValue( 'strongEndTime', data.strongEndTime );
+						this.$refs.form.setValue( 'businessEndTime', data.businessEndTime );
+						this.$refs.form.setValue( 'annualReview', data.annualReview );
+						this.$refs.form.setValue( 'maxMileage', data.maxMileage );
+						this.$refs.form.setValue( 'maxMileagePrice', data.maxMileagePrice );
+						this.$refs.form.setValue( 'remark', data.remark );
 					}
-				});
+				} );
 			},
 			submit() {
-				this.$refs.form
-					.validate()
-					.then(data => {
-						let func = this.carId ? api.updateCar : api.addCar;
-						data.complanyId = data.complanyId ? data.complanyId : this.complanyId;
-						delete data.carPhotos;
-						delete data.licenseFrontUrl;
-						delete data.licenseBackUrl;
-						let carPhotos = this.$refs.carPhotos.getFileList();
-						func({
-							id: this.carId,
-							licenseFrontUrl: this.licenseFrontUrl,
-							licenseBackUrl: this.licenseBackUrl,
-							carPhotos: carPhotos.join(','),
-							...data
-						}).then((res) => {
-							if (res) {
-								uni.showModal({
-									title: '提示',
-									content: '修改成功',
-									showCancel: false,
-									success: (e) => {
-										uni.navigateBack();
-										uni.$emit('car');
-									}
-								})
-							} else {
-								uni.showToast({
-									title: res.msg,
-									icon: 'none'
-								});
-							}
-						});
-					});
+				this.$refs.form.validate().then( data => {
+					let func = this.carId ? api.updateCar : api.addCar;
+					data.complanyId = data.complanyId ? data.complanyId : this.complanyId;
+					delete data.carPhotos;
+					delete data.licenseFrontUrl;
+					delete data.licenseBackUrl;
+					let carPhotos = this.$refs.carPhotos.getFileList();
+					func( {
+						id: this.carId,
+						licenseFrontUrl: this.licenseFrontUrl,
+						licenseBackUrl: this.licenseBackUrl,
+						carPhotos: carPhotos.join( ',' ),
+						...data
+					} ).then( ( res ) => {
+						if ( res ) {
+							uni.showModal( {
+								title: '提示',
+								content: '修改成功',
+								showCancel: false,
+								success: ( e ) => {
+									uni.navigateBack();
+									uni.$emit( 'car' );
+								}
+							} )
+						} else {
+							uni.showToast( {
+								title: res.msg,
+								icon: 'none'
+							} );
+						}
+					} );
+				} );
 			},
 			reset() {
 				this.$refs.form.resetFields();
 			},
-			sourceChange(e) {
+			sourceChange( e ) {
 				this.source = e.value;
-				this.$refs.form.setValue('source', e.value);
+				this.$refs.form.setValue( 'source', e.value );
 			},
-			getLicenseFront(e = {}) {
+			getLicenseFront( e = {} ) {
 				let {
 					url,
 					ocr
 				} = e;
-				if (url && !!ocr) {
+				if ( url && !!ocr ) {
 					this.licenseFrontUrl = url;
-					this.$refs.form.setValue('engineNum', ocr.engineNumber);
-					this.$refs.form.setValue('carNum', ocr.plateNumber);
-					this.$refs.form.setValue('carBrand', ocr.model);
-					this.$refs.form.setValue('type', ocr.vehicleType);
-					this.$refs.form.setValue('frameNum', ocr.vin);
+					this.$refs.form.setValue( 'engineNum', ocr.engineNumber );
+					this.$refs.form.setValue( 'carNum', ocr.plateNumber );
+					this.$refs.form.setValue( 'carBrand', ocr.model );
+					this.$refs.form.setValue( 'type', ocr.vehicleType );
+					this.$refs.form.setValue( 'frameNum', ocr.vin );
 				}
 			},
-			getLicenseBack(e = {}) {
+			getLicenseBack( e = {} ) {
 				let {
 					url,
 					ocr
 				} = e;
-				if (url && !!ocr) {
+				if ( url && !!ocr ) {
 					this.licenseBackUrl = url;
-					this.$refs.form.setValue('maxManned', ocr.approvedPassengerCapacity);
-					this.$refs.form.setValue('fuelType', ocr.energyType);
+					this.$refs.form.setValue( 'maxManned', ocr.approvedPassengerCapacity );
+					this.$refs.form.setValue( 'fuelType', ocr.energyType );
 				}
 			},
 			showMoreItems() {
@@ -649,13 +639,13 @@
 		}
 	};
 </script>
-
 <style lang="scss">
 	.backgroud_box {
 		position: relative;
 		display: flex;
 		overflow-y: auto;
 	}
+
 	.qrcode_box {
 		background-color: rgba($color: #000000, $alpha: 0.9);
 		display: flex;
@@ -669,6 +659,7 @@
 		left: 0%;
 		z-index: 999;
 	}
+
 	.more {
 		text-align: center;
 		margin-bottom: 20rpx;
@@ -684,10 +675,12 @@
 		margin-bottom: 20rpx;
 		margin-top: 20rpx;
 	}
+
 	.bottomBtn {
 		flex: 1;
 		margin: 0 10px 0 10px;
 	}
+
 	.form_box {
 		width: 90%;
 	}
