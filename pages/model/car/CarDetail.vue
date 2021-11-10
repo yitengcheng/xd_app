@@ -1,6 +1,6 @@
 <template>
-	<view class="backgroud_box">
-		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="280" :rules="rules">
+	<view class="backgroud_box content">
+		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="280" :rules="rules" class="form_box">
 			<FormUpload :readonly="disabled" :formData="formData" name="licenseFrontUrl" label="行驶证正面" :limit="1"
 				@getOcrData="getLicenseFront" url="/tool/ocr/license" :otherData="{ type: 6 }" />
 			<FormUpload :readonly="disabled" :formData="formData" name="licenseBackUrl" label="行驶证背面" :limit="1"
@@ -63,11 +63,6 @@
 		</uni-forms>
 		<uni-fab v-show="carId" :content="content" horizontal="right" vertical="bottom" direction="vertical"
 			@trigger="trigger"></uni-fab>
-			<view class="qrcode_box" v-show="qrcodeFlag">
-				<tkiQrcode ref="qrcode" :val="qrcodeSrc" :onval="true" :size="300"></tkiQrcode>
-				<uni-data-checkbox v-model="payment" :localdata="range" @change="changePayment"></uni-data-checkbox>
-				<button @click="()=> qrcodeFlag = false" type="warn" size="mini">关闭二维码</button>
-			</view>
 	</view>
 </template>
 
@@ -78,7 +73,6 @@
 	import FormSwitch from '../../../components/form/FormSwitch.vue';
 	import FormUpload from '../../../components/form/FormUpload.vue';
 	import FormDatePicker from '../../../components/form/FormDatePicker.vue';
-	import tkiQrcode from "../../../components/tki-qrcode/tki-qrcode.vue"
 	import {
 		plateRegex,
 		integerRegex,
@@ -99,7 +93,6 @@
 			FormSwitch,
 			FormUpload,
 			FormDatePicker,
-			tkiQrcode,
 		},
 		data() {
 			return {
@@ -390,15 +383,8 @@
 				payment: '1',
 				complanyId: '',
 				carId: '',
-				qrcodeSrc: '',
-				qrcodeFlag: false,
-				range: [ {
-					value: '1',
-					text: '线上支付'
-				}, {
-					value: '2',
-					text: '线下支付'
-				}, ]
+				scrollY: true,
+				complanyName: '',
 			};
 		},
 		onLoad(option) {
@@ -427,19 +413,37 @@
 		methods: {
 			changePayment(e) {
 				this.payment = e.detail.value;
-				this.qrcodeSrc = `${config.API_URL}/applet?complanyId=${this.complanyId}=${this.carId}=${this.payment}`;
-				this.$nextTick(() => {
-					this.$refs.qrcode._makeCode();
-				})
+				
 			},
-			showQR( ) {
-				this.qrcodeFlag = true;
-				uni.pageScrollTo({
-					scrollTop: 0,
-					duration: 200
-				});
-				this.qrcodeSrc = `${config.API_URL}/applet?complanyId=${this.complanyId}=${this.carId}=${this.payment}`;
-				this.$refs.qrcode._makeCode();
+			share(){
+				uni.showModal({
+					title: '支付方式',
+					content: '请选择支付方式',
+					confirmText: '线上支付',
+					cancelText: '线下支付',
+					success: (e) => {
+						let payment = '';
+						if(e.confirm){
+							payment = '1';
+						} else {
+							payment = '2';
+						}
+						uni.share({
+							provider: 'weixin',
+							type: 5,
+							scene: 'WXSceneSession',
+							imageUrl: '/static/logo.png',
+							title: `欢迎进入${this.complanyName}`,
+							miniProgram: {
+								id: 'gh_8e6352992afc',
+								path: `/pages/index/Index?complanyId=${this.complanyId}&carId=${this.carId}&payment=${payment}`,
+								type: 0,
+								webUrl: 'http://uniapp.dcloud.io'
+							},
+						})
+					}
+				})
+				
 			},
 			checkIllegal() {
 				api.checkIllegal({
@@ -477,7 +481,7 @@
 						this.checkIllegal();
 						break;
 					case 3:
-						this.showQR();
+						this.share();
 						break;
 					default:
 						break;
@@ -534,6 +538,7 @@
 						});
 						this.source = data.source;
 						this.complanyId = data.complanyId;
+						this.complanyName = data.complany.complanyName;
 						this.carId = data.id;
 						this.$refs.form.setValue('carPhotos', carsPhotos);
 						this.$refs.form.setValue('licenseFrontUrl', licenseFront);
@@ -649,13 +654,14 @@
 	.backgroud_box {
 		position: relative;
 		display: flex;
+		overflow-y: auto;
 	}
 	.qrcode_box {
 		background-color: rgba($color: #000000, $alpha: 0.9);
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		padding-top: 200rpx;
+		padding-top: 100rpx;
 		position: absolute;
 		width: 100%;
 		height: 100%;
@@ -681,5 +687,8 @@
 	.bottomBtn {
 		flex: 1;
 		margin: 0 10px 0 10px;
+	}
+	.form_box {
+		width: 90%;
 	}
 </style>

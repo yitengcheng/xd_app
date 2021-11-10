@@ -14,12 +14,11 @@
 		flex-direction: column;
 		align-items: center;
 		overflow: hidden;
-		min-height: 1440rpx;
 		width: 100%;
 	}
-	#id {
+	page {
 		display: flex;
-		height: 100%;
+		min-height: 100%;
 		width: 100%;
 	}
 </style>
