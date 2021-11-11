@@ -1,5 +1,5 @@
 <template>
-	<view class="content">
+	<view class="content" style="align-items: center;">
 		<swiper class="swiper_box">
 			<swiper-item v-for="(item, index) in orderInfo.carPhotos" :key="index">
 				<image :src="item" class="swiper_img" mode="aspectFill"></image>
@@ -48,7 +48,7 @@
 					if (data) {
 						let tmp = [];
 						data.car.carPhotos.split(',').forEach(o => {
-							tmp.push(`${config.IMG_URL}${o}`);
+							o ? tmp.push(`${config.IMG_URL}${o}`) : tmp.push('/static/img/defalut.png');
 						});
 						delete res.data.car.carPhotos;
 						this.orderInfo = {

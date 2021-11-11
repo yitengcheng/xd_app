@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="content">
 		<uni-list>
 			<uni-list-item v-for="item in orders" :key="item.orderId" :thumb="item.thumb" :title="item.title"
 				:note="item.note" :rightText="item.rightText" :clickable="true" @click="clickItem(item.data)"></uni-list-item>
@@ -45,7 +45,10 @@
 									thumb: carPhoto,
 									title: o.car.carNum,
 									note: `交车时间：${this.dayjs(o.wantCarTime).format('YYYY年MM月DD日')}`,
-									rightText: `${o.payStatus === 'NOTPAY' ? '未付款' : o.payStatus === 'SUCCESS' ? '付款成功' : o.payStatus === 'REFUNDED' ? '退款成功' : '未知状态'}`,
+									rightText: `${o.payStatus === 'SUCCESS' ? '支付成功' : o.payStatus ===
+										'NOTPAY' ? "等待付款" : o.payStatus === 'REFUNDED' ? '退款完成' : o
+										.payStatus === 'CLOSED' ? '订单关闭' : o.payStatus ===
+										'REFUSE' ? '已拒绝' : o.payStatus}`,
 								});
 							});
 							this.orders = tmp;

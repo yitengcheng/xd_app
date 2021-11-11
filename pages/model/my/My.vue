@@ -1,5 +1,5 @@
 <template>
-	<view class="content">
+	<view class="content" style="align-items: center;">
 		<view class="t-icon t-icon-morentouxiang head"></view>
 		<text class="name">{{(user.user || {}).nickName}}</text>
 		<uni-data-picker v-show="((user || {}).complany || []).length >= 2" :value="complanyId" :localdata="complanys" @change="selectComplany" class="complanyPicker"></uni-data-picker>
@@ -27,6 +27,7 @@
 					{title: '修改密码', iconName: 't-icon-zhongzhimima', path: '/pages/model/login/ResetPassword'},
 					{title: '修改公司信息', iconName: 't-icon-qiyexinxiguanli', path: '/pages/model/my/UpdateComplanyInfo'},
 					{title: '身份证读卡器申领', iconName: 't-icon-jifangmenjinkashenlingbiangeng', path: '/pages/model/my/ReaderApply'},
+					{title: '硬件设备', iconName: 't-icon-dianzishebeishezhi', path: '/pages/model/my/ReaderApply'},
 				],
 				user: uni.getStorageSync('user'),
 				complanys: [],

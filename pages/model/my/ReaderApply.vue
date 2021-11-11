@@ -16,6 +16,7 @@
 	import FormInput from '../../../components/form/FormInput.vue';
 	import FormRadio from '../../../components/form/FormRadio.vue';
 	import { integerRegex } from '../../../common/regex.js';
+	import api from '../../../api/index.js';
 	export default {
 		components:{
 			FormPicker,
@@ -34,6 +35,7 @@
 					payType: 0,
 					address: '',
 					productId: 1,
+					flag: 1,
 				},
 				rules:{
 					complanyId: {
@@ -93,8 +95,27 @@
 			},
 			apply(){
 				this.$refs.form.validate().then(data => {
-					console.log(data);
-					api.applyReader().then()
+					api.applyReader(this.formData).then((res) => {
+						if(res.data){
+							uni.requestPayment({
+								provider: 'wxpay',
+								orderInfo: res.data,
+								success: () => {
+									uni.showModal({
+										title: '提示',
+										content: '预定成功',
+										showCancel: false,
+									})
+								},
+								fail: (error) => {
+									uni.showModal({
+										title: error.errMsg,
+										icon: 'none',
+									});
+								}
+							});
+						}
+					});
 				});
 			},
 		}
