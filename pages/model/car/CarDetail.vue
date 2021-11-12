@@ -636,6 +636,7 @@
 		position: relative;
 		display: flex;
 		overflow-y: auto;
+		align-items: center;
 	}
 
 	.qrcode_box {
