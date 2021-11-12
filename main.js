@@ -3,6 +3,7 @@ import _ from 'lodash';
 import dayjs from 'dayjs';
 import dictRequest from 'common/dict.js';
 import store from 'store';
+import uView from "uview-ui";
 
 /**
  * 用于初始化字典，返回Promise实例
@@ -28,6 +29,7 @@ Vue.prototype.store = store
 import Vue from 'vue'
 Vue.config.productionTip = false;
 App.mpType = 'app'
+Vue.use(uView);
 const app = new Vue({
     ...App,
 	store

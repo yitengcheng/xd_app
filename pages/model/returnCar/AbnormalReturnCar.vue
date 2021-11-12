@@ -57,7 +57,7 @@
 				geocode: true,
 				success:(res)=>{
 					this.address =`${res.address.country}${res.address.province}${res.address.city}${res.address.district}${res.address.street}`;
-					this.$refs.form.setValue('latlong', [res.longitude, res.latitude].join(','));
+					this.formData.latlong = [res.longitude, res.latitude].join(',');
 				}
 			})
 		},
@@ -66,12 +66,12 @@
 				uni.chooseLocation({
 					success: (res) => {
 						this.address = res.name;
-						this.$refs.form.setValue('latlong', [res.longitude, res.latitude].join(','));
+						this.formData.latlong = [res.longitude, res.latitude].join(',');
 					}
 				})
 			},
 			sumbit(){
-				this.$refs.form.setValue('photos',this.$refs.upload.getFileList());
+				this.formData.photos = this.$refs.upload.getFileList();
 				this.$refs.form.validate().then(res => {
 					let photos = res.photos.join(',');
 					delete res.photos;

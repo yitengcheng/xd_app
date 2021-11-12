@@ -1,5 +1,5 @@
 <template>
-	<view class="content" style="justify-content: space-between;">
+	<view class="content" style="justify-content: space-between; align-items: center;">
 		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="280" :rules="rules"class="form">
 			<FormInput :formData="formData" name="complanyName" label="公司名"/>
 			<FormInput :formData="formData" name="creditCode" label="统一社会代码"/>
@@ -91,12 +91,12 @@
 			initInfo(){
 				let complany = this._.find(this.complany, o => { return o.id === uni.getStorageSync('complanyId')});
 				this.$nextTick(() => {
-					this.$refs.form.setValue('complanyName', complany.complanyName);
-					this.$refs.form.setValue('businessAddress', complany.businessAddress);
-					this.$refs.form.setValue('creditCode', complany.creditCode);
-					this.$refs.form.setValue('juridicalName', complany.juridicalName);
-					this.$refs.form.setValue('juridicalZjhm', complany.juridicalZjhm);
-					this.$refs.form.setValue('phoneNumber', complany.phoneNumber);
+					this.formData.complanyName = complany.complanyName;
+					this.formData.businessAddress = complany.businessAddress;
+					this.formData.creditCode = complany.creditCode;
+					this.formData.juridicalName = complany.juridicalName;
+					this.formData.juridicalZjhm = complany.juridicalZjhm;
+					this.formData.phoneNumber = complany.phoneNumber;
 					this.formData.latitude = complany.latitude;
 				});
 			},
@@ -106,7 +106,7 @@
 					longitude: this.longitude,
 					success: (res) => {
 						this.formData.latitude = `${res.longitude},${res.latitude}`;
-						this.$refs.form.setValue('businessAddress', res.address);
+						this.formData.businessAddress = res.address;
 					},
 				})
 			},

@@ -1,7 +1,8 @@
 <template>
-	<view>
-		<uni-segmented-control :current="current" :values="items" @clickItem="onClickItem" styleType="text"
-			activeColor="#4cd964"></uni-segmented-control>
+	<view class="content">
+		<u-sticky>
+			<u-subsection :current="current" :list="items" @change="onClickItem"></u-subsection>
+		</u-sticky>
 		<view>
 			<view v-show="current === 0">
 				<WaterfallsFlow :wfList="allList" @itemTap="itemTap"/>
@@ -66,7 +67,7 @@
 				} )
 			},
 			onClickItem( e ) {
-				this.current = e.currentIndex;
+				this.current = e;
 				this.$nextTick( () => {
 					this.getCarList( 1 );
 				} )

@@ -2,9 +2,9 @@
 	<view class="content" style="align-items: center;">
 		<view class="t-icon t-icon-morentouxiang head"></view>
 		<text class="name">{{(user.user || {}).nickName}}</text>
-		<uni-data-picker v-show="((user || {}).complany || []).length >= 2" :value="complanyId" :localdata="complanys" @change="selectComplany" class="complanyPicker"></uni-data-picker>
-		<view v-for="(item,index) in data" :key="index" @click="toPage(item)">
-			<view class="item">
+		<uni-data-picker v-show="((user || {}).complany || []).length >= 2" :value="complanyId" :localdata="complanys" @change="selectComplany"></uni-data-picker>
+		<view class="menus_box">
+			<view v-for="(item,index) in data" :key="index" @click="toPage(item)" class="item_row">
 				<view class="t-icon" :class="item.iconName"></view>
 				<text class="item_text">{{item.title}}</text>
 			</view>
@@ -16,7 +16,6 @@
 </template>
 
 <script>
-	import uQRCode from '../../../components/uqrcode/common/uqrcode.js'
 	export default {
 		data() {
 			return {
@@ -25,9 +24,10 @@
 					{title: '历史订单', iconName: 't-icon-dingdanguanlix', path: '/pages/model/my/Orders'},
 					{title: '合同模板', iconName: 't-icon-shuoming', path: '/pages/model/my/ContractTemplate'},
 					{title: '修改密码', iconName: 't-icon-zhongzhimima', path: '/pages/model/login/ResetPassword'},
-					{title: '修改公司信息', iconName: 't-icon-qiyexinxiguanli', path: '/pages/model/my/UpdateComplanyInfo'},
-					{title: '身份证读卡器申领', iconName: 't-icon-jifangmenjinkashenlingbiangeng', path: '/pages/model/my/ReaderApply'},
-					{title: '硬件设备', iconName: 't-icon-dianzishebeishezhi', path: '/pages/model/my/ReaderApply'},
+					{title: '公司信息', iconName: 't-icon-qiyexinxiguanli', path: '/pages/model/my/UpdateComplanyInfo'},
+					{title: '硬件申领', iconName: 't-icon-jifangmenjinkashenlingbiangeng', path: '/pages/model/my/ReaderApply'},
+					{title: '硬件设备', iconName: 't-icon-dianzishebeishezhi', path: '/pages/model/my/Equipment'},
+					{title: '硬件订单', iconName: 't-icon-caigoudingdan', path: '/pages/model/my/EquipmentOrder'},
 				],
 				user: uni.getStorageSync('user'),
 				complanys: [],
@@ -98,16 +98,26 @@
 	margin-top: 80rpx;
 	margin-bottom: 80rpx;
 }
-.item {
-	height: 45px;
-	width: 730rpx;
+.menus_box {
+	margin-top: 20rpx;
 	display: flex;
 	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	width: 100%;
+}
+.item_row {
+	height: 180rpx;
+	width: 180rpx;
+	display: flex;
+	flex-direction: column;
 	align-items: center;
-	border-bottom: #808080 1rpx solid;
+	justify-content: center;
+	border: #409EFF 1rpx solid;
+	
 }
 .item_text {
-	margin-left: 30rpx;
+	
 }
 .complany {
 	margin-top: 40rpx;

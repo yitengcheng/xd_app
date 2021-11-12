@@ -122,7 +122,7 @@ export default {
 				success: (res) => {
 					this.complanyAdName = res.name;
 					let latlon = this._.ceil(res.longitude, 5)  + ',' + this._.ceil(res.latitude, 5);
-					this.$refs.form.setValue('latitude', latlon);
+					this.formData.latitude = latlon;
 				}
 			})
 		},
@@ -130,15 +130,15 @@ export default {
 			let { url, ocr } = e;
 			if (url && !!ocr) {
 				this.photoComplanyCode = url;
-				this.$refs.form.setValue('complanyName', ocr.name);
-				this.$refs.form.setValue('creditCode', ocr.registerNumber);
-				this.$refs.form.setValue('nature', ocr.business);
-				this.$refs.form.setValue('complanyYxq', ocr.validPeriod);
-				this.$refs.form.setValue('complanyAddress', ocr.address);
-				this.$refs.form.setValue('juridiclName', ocr.legalPerson);
-				this.$refs.form.setValue('complanyType', ocr.type);
-				this.$refs.form.setValue('capital', ocr.capital);
-				this.$refs.form.setValue('establishTime', ocr.establishDate);
+				this.formData.complanyName = ocr.name;
+				this.formData.creditCode = ocr.registerNumber;
+				this.formData.nature = ocr.business;
+				this.formData.complanyYxq = ocr.validPeriod;
+				this.formData.complanyAddress = ocr.address;
+				this.formData.juridiclName = ocr.legalPerson;
+				this.formData.complanyType = ocr.type;
+				this.formData.capital = ocr.capital;
+				this.formData.establishTime = ocr.establishDate;
 			}
 			this.$nextTick(() => {
 				this.changeFlag();
@@ -148,7 +148,7 @@ export default {
 			let { url, ocr } = e;
 			if (url && !!ocr) {
 				this.idcardFront = url;
-				this.$refs.form.setValue('juridicalZjhm', ocr.idnumber);
+				this.formData.juridicalZjhm = ocr.idnumber;
 				this.idCard = {
 					address: ocr.address,
 					idcard: ocr.idnumber,
@@ -178,7 +178,7 @@ export default {
 			});
 		},
 		onChange(e) {
-			this.$refs.form.setValue('complanyAddressId', e[e.length - 1].value);
+			this.formData.complanyAddressId = e[e.length - 1].value;
 		},
 		submit() {
 			this.$refs.form.validate().then(res => {

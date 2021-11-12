@@ -8,28 +8,28 @@
 				@getOcrData="getLicenseBack" url="/tool/ocr/license" :otherData="{ type: 7 }" />
 			<FormUpload ref="carPhotos" :readonly="disabled" :formData="formData" name="carPhotos" label="车辆图片" />
 			<FormPicker v-show="(complany || []).length > 1" :disabled="disabled" :formData="formData" name="complanyId"
-				:localdata="complany" label="所属公司" @change="e => $refs.form.setValue('complanyId', e.value)" />
+				:localdata="complany" label="所属公司" @change="e => formData.complanyId = e.value" />
 			<FormPicker :disabled="disabled" :formData="formData" name="source" :localdata="sourceType" label="车辆来源"
 				@change="sourceChange" />
 			<FormPicker :disabled="disabled" :formData="formData" name="operatorId" :localdata="gpsVendorType"
-				label="GPS厂商" @change="e => $refs.form.setValue('operatorId', e.value)" />
+				label="GPS厂商" @change="e => formData.operatorId = e.value" />
 			<FormInput :disabled="disabled" :formData="formData" name="carNum" label="车牌号" />
 			<FormInput :disabled="disabled" :formData="formData" name="carBrand" label="车辆品牌" />
 			<FormInput :disabled="disabled" :formData="formData" name="model" label="车辆型号" />
 			<FormPicker :disabled="disabled" :formData="formData" name="type" :localdata="carType" label="车辆类型"
-				@change="e => $refs.form.setValue('type', e.value)" />
+				@change="e => formData.type = e.value" />
 			<FormInput :disabled="disabled" :formData="formData" name="color" label="车身颜色" />
 			<FormInput :disabled="disabled" :formData="formData" name="frameNum" label="车架号" />
 			<FormInput :disabled="disabled" :formData="formData" name="engineNum" label="发动机号" />
 			<FormInput :disabled="disabled" :formData="formData" name="maxManned" label="荷载人数" />
 			<FormPicker :disabled="disabled" :formData="formData" name="fuelType" label="燃油编号" :localdata="gasolineType"
-				@change="e => $refs.form.setValue('fuelType', e.value)" />
+				@change="e => formData.fuelType = e.value" />
 			<FormInput :disabled="disabled" :formData="formData" name="thirdLiabilityInsurance"
 				:candidates="['30', '50', '100']" label="第三者责任险(万元)" />
 			<FormSwitch :disabled="disabled" :formData="formData" name="thirdNoDeductible" type="checkbox"
 				label="第三者责任险是否不计免赔" />
 			<FormPicker :disabled="disabled" :formData="formData" name="lossInsurance" :localdata="lossInsuranceType"
-				label="机动车损失险" @change="e => $refs.form.setValue('lossInsurance', e.value)" />
+				label="机动车损失险" @change="e =>formData.lossInsurance = e.value" />
 			<FormSwitch :disabled="disabled" :formData="formData" name="lossNoDeductible" type="checkbox"
 				label="机动车损失险是否不计免赔" />
 			<FormInput :disabled="disabled" :formData="formData" name="price" label="车辆价值(元)" />
@@ -409,7 +409,6 @@
 				uni.showActionSheet( {
 					itemList: [ '线上支付', '线下支付' ],
 					success: ( e ) => {
-						console.log( e )
 						let payment = undefined;
 						if ( e.tapIndex === 0 ) {
 							payment = '1';
@@ -449,13 +448,13 @@
 				} );
 			},
 			changeStrongEndTime( e ) {
-				this.$refs.form.setValue( 'strongEndTime', e );
+				this.formData.strongEndTime = e;
 			},
 			changeBusinessEndTime( e ) {
-				this.$refs.form.setValue( 'businessEndTime', e );
+				this.formData.businessEndTime = e;
 			},
 			changeAnnualReview( e ) {
-				this.$refs.form.setValue( 'annualReview', e );
+				this.formData.annualReview = e;
 			},
 			trigger( e ) {
 				switch ( e.index ) {
@@ -532,36 +531,35 @@
 						this.complanyId = data.complanyId;
 						this.complanyName = data.complany.complanyName;
 						this.carId = data.id;
-						this.$refs.form.setValue( 'carPhotos', carsPhotos );
-						this.$refs.form.setValue( 'licenseFrontUrl', licenseFront );
-						this.$refs.form.setValue( 'licenseBackUrl', licenseBack );
-						this.$refs.form.setValue( 'source', data.source );
-						this.$refs.form.setValue( 'operatorId', data.operatorId );
-						this.$refs.form.setValue( 'carNum', data.carNum );
-						this.$refs.form.setValue( 'carBrand', data.carBrand );
-						this.$refs.form.setValue( 'model', data.model );
-						this.$refs.form.setValue( 'type', data.type );
-						this.$refs.form.setValue( 'color', data.color );
-						this.$refs.form.setValue( 'frameNum', data.frameNum );
-						this.$refs.form.setValue( 'engineNum', data.engineNum );
-						this.$refs.form.setValue( 'maxManned', data.maxManned );
-						this.$refs.form.setValue( 'fuelType', data.fuelType );
-						this.$refs.form.setValue( 'thirdLiabilityInsurance', data.thirdLiabilityInsurance );
-						this.$refs.form.setValue( 'thirdNoDeductible', data.thirdNoDeductible );
-						this.$refs.form.setValue( 'lossInsurance', data.lossInsurance );
-						this.$refs.form.setValue( 'lossNoDeductible', data.lossNoDeductible );
-						this.$refs.form.setValue( 'price', data.price );
-						this.$refs.form.setValue( 'unitPrice', data.unitPrice );
-						this.$refs.form.setValue( 'name', data.name );
-						this.$refs.form.setValue( 'phoneNum', data.phoneNum );
-						this.$refs.form.setValue( 'bondMoney', data.bondMoney );
-						this.$refs.form.setValue( 'violationBondMoney', data.violationBondMoney );
-						this.$refs.form.setValue( 'strongEndTime', data.strongEndTime );
-						this.$refs.form.setValue( 'businessEndTime', data.businessEndTime );
-						this.$refs.form.setValue( 'annualReview', data.annualReview );
-						this.$refs.form.setValue( 'maxMileage', data.maxMileage );
-						this.$refs.form.setValue( 'maxMileagePrice', data.maxMileagePrice );
-						this.$refs.form.setValue( 'remark', data.remark );
+						this.formData.carPhotos = carsPhotos;
+						this.formData.licenseFrontUrl = licenseFront;
+						this.formData.licenseBackUrl = licenseBack;
+						this.formData.source = data.source;
+						this.formData.operatorId = data.operatorId;
+						this.formData.carNum = data.carNum;
+						this.formData.carBrand = data.carBrand;
+						this.formData.type = data.type;
+						this.formData.color = data.color;
+						this.formData.frameNum = data.frameNum;
+						this.formData.engineNum = data.engineNum;
+						this.formData.maxManned = data.maxManned;
+						this.formData.fuelType = data.fuelType;
+						this.formData.thirdLiabilityInsurance = data.thirdLiabilityInsurance;
+						this.formData.thirdNoDeductible = data.thirdNoDeductible;
+						this.formData.lossInsurance = data.lossInsurance;
+						this.formData.lossNoDeductible = data.lossNoDeductible;
+						this.formData.price = data.price;
+						this.formData.unitPrice = data.unitPrice;
+						this.formData.name = data.name;
+						this.formData.phoneNum = data.phoneNum;
+						this.formData.bondMoney = data.bondMoney;
+						this.formData.violationBondMoney = data.violationBondMoney;
+						this.formData.strongEndTime = data.strongEndTime;
+						this.formData.businessEndTime = data.businessEndTime;
+						this.formData.annualReview = data.annualReview;
+						this.formData.maxMileage = data.maxMileage;
+						this.formData.maxMileagePrice = data.maxMileagePrice;
+						this.formData.remark = data.remark;
 					}
 				} );
 			},
@@ -604,31 +602,25 @@
 			},
 			sourceChange( e ) {
 				this.source = e.value;
-				this.$refs.form.setValue( 'source', e.value );
+				this.formData.source = e.value;
 			},
 			getLicenseFront( e = {} ) {
-				let {
-					url,
-					ocr
-				} = e;
+				let { url, ocr } = e;
 				if ( url && !!ocr ) {
 					this.licenseFrontUrl = url;
-					this.$refs.form.setValue( 'engineNum', ocr.engineNumber );
-					this.$refs.form.setValue( 'carNum', ocr.plateNumber );
-					this.$refs.form.setValue( 'carBrand', ocr.model );
-					this.$refs.form.setValue( 'type', ocr.vehicleType );
-					this.$refs.form.setValue( 'frameNum', ocr.vin );
+					this.formData.engineNum = ocr.engineNumber;
+					this.formData.carNum = ocr.plateNumber;
+					this.formData.carBrand = ocr.model;
+					this.formData.type = ocr.vehicleType;
+					this.formData.frameNum = ocr.vin;
 				}
 			},
 			getLicenseBack( e = {} ) {
-				let {
-					url,
-					ocr
-				} = e;
+				let { url, ocr } = e;
 				if ( url && !!ocr ) {
 					this.licenseBackUrl = url;
-					this.$refs.form.setValue( 'maxManned', ocr.approvedPassengerCapacity );
-					this.$refs.form.setValue( 'fuelType', ocr.energyType );
+					this.formData.maxManned = ocr.approvedPassengerCapacity;
+					this.formData.fuelType = ocr.energyType;
 				}
 			},
 			showMoreItems() {

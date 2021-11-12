@@ -29,13 +29,13 @@
 			uni.getStorage({
 				key: 'userName',
 				success: (res) => {
-					this.$refs.form.setValue('userName',res.data);
+					this.formData.userName = res?.data;
 				}
 			});
 			uni.getStorage({
 				key: 'password',
 				success: (res) => {
-					this.$refs.form.setValue('password',res.data);
+					this.formData.password = res?.data;
 				}
 			});
 			this.appVersion = plus.runtime.versionCode

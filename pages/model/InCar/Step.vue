@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<uni-steps :active="active" :options="options" direction="column"></uni-steps>
+		<u-steps :current="active" :list="options" direction="column"></u-steps>
 		<view class="info_box">
 			<text v-show="!!licenseText" class="info_text">驾照存分：{{licenseText}}</text>
 			<text v-show="!!zdryText" class="info_text">重点人员核查：{{zdryText}}</text>
@@ -9,7 +9,7 @@
 			<text v-show="!!blackListText" class="info_text">平台黑名单记录：{{blackListText}}</text>
 		</view>
 		<button v-for="(item,index) in options" :key="index" type="primary" class="btn" v-show="active + 1 === index"
-			@click="validation(item.title)">{{item.title === '电子合同' ? '电子合同签订' : item.title}}</button>
+			@click="validation(item.name)">{{item.name === '电子合同' ? '电子合同签订' : item.name}}</button>
 		<view v-if="pactFlag" class="pactBtn">
 			<button type="primary" @click="toPact">{{pactBtnText}}</button>
 		</view>
@@ -44,7 +44,7 @@
 			this.orderId = option.orderId;
 			checks.forEach(o => {
 				this.options.push({
-					title: o.substr(0, o.indexOf(" ")),
+					name: o.substr(0, o.indexOf(" ")),
 				})
 			});
 			if (!checks[0]) {
@@ -57,7 +57,7 @@
 		methods: {
 			autoCheck() {
 				this.options.forEach(o => {
-					if (o.title === '重点人员查询') {
+					if (o.name === '重点人员查询') {
 						uni.showLoading({
 							mask: true,
 							title: '查询中'
@@ -73,7 +73,7 @@
 							});
 						});
 					}
-					if (o.title === '驾照存分查询') {
+					if (o.name === '驾照存分查询') {
 						uni.showLoading({
 							mask: true,
 							title: '查询中'
@@ -81,8 +81,7 @@
 						api.checkLicense(this.idCard).then((res = {}) => {
 							uni.hideLoading()
 							this.active = this.active + 1;
-							this.licenseText = (res.data || {}).data ? `已被扣除${res.data.data}分` : (res
-								.data || {}).msg;
+							this.licenseText = res.data?.msg ?? `已被扣除${res.data.data}分`;
 							this.$nextTick(() => {
 								if (this.active === this.options.length - 1) {
 									this.pactFlag = true;
@@ -90,7 +89,7 @@
 							});
 						});
 					}
-					if (o.title === '老赖查询') {
+					if (o.name === '老赖查询') {
 						uni.showLoading({
 							mask: true,
 							title: '查询中'
@@ -115,7 +114,7 @@
 							}
 						});
 					}
-					if (o.title === '黑名单校验') {
+					if (o.name === '黑名单校验') {
 						uni.showLoading({
 							mask: true,
 							title: '查询中'

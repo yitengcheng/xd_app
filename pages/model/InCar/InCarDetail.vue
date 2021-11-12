@@ -152,9 +152,7 @@
 				complanyIds: this._.map(user.complany, 'id').join(',')
 			}).then((res) => {
 				if (res.data) {
-					let {
-						data
-					} = res;
+					let { data } = res;
 					data.forEach(car => {
 						this.carList.push({
 							value: car.id,
@@ -165,9 +163,7 @@
 			});
 			api.getUserByComplany(this._.map(user.complany, 'id').join(',')).then((res) => {
 				if ((res.data || []).length > 0) {
-					let {
-						data
-					} = res;
+					let { data } = res;
 					data.forEach(o => {
 						this.candidates.push({
 							name: o.name,
@@ -191,28 +187,28 @@
 								showCancel: false,
 								success: () => {
 									e.detail.value.pop();
-									this.$refs.form.setValue('check', e.detail.value);
+									this.formData.check = e.detail.value;
 								}
 							})
 						} else if (res.data === 2) {
-							this.$refs.form.setValue('check', e.detail.value);
+							this.formData.check = e.detail.value;
 						}
 					});
 				} else {
-					this.$refs.form.setValue('check', e.detail.value);
+					this.formData.check = e.detail.value;
 				}
 			},
 			changePreferredUse(e) {
-				this.$refs.form.setValue('preferredUse', e);
+				this.formData.preferredUse = e
 			},
 			getComboxValue(e) {
-				this.formData.name = this.candidates[e].name || '';
-				this.$refs.form.setValue('idCard', this.candidates[e].idcard || '');
-				this.$refs.form.setValue('phone', this.candidates[e].phoneNumber || '');
-				this.$refs.form.setValue('nowAddress', this.candidates[e].nowAddress || '');
+				this.formData.name = this.candidates[e]?.name ?? '';
+				this.formData.idCard = this.candidates[e]?.idCard ?? '';
+				this.formData.phone = this.candidates[e]?.phone ?? '';
+				this.formData.nowAddress = this.candidates[e]?.nowAddress ?? '';
 			},
 			getCarValue(e) {
-				this.formData.carId = this.carList[e].text || '';
+				this.formData.carId = this.carList[e]?.text ?? '';
 			},
 			readIdcard() {
 				if (uni.getSystemInfoSync().platform == "android") {
@@ -232,56 +228,21 @@
 											uni.stopBluetoothDevicesDiscovery({
 												success: () => {
 													let device = devices[0];
-													if (this._.includes(this._
-															.map(this.carInfo
-																.complany
-																.macInfo,
-																'macAddress'),
-															device.deviceId)) {
-														const idcard = uni
-															.requireNativePlugin(
-																'plugin_idcardModule'
-															);
-														idcard.readIdcard({
-															mac: device
-																.deviceId
-														}, (e) => {
-															if (e.data
-																.length <
-																20) {
+													if (this._.includes(this._.map(this.carInfo.complany.macInfo, 'macAddress'), device.deviceId)) {
+														const idcard = uni.requireNativePlugin('plugin_idcardModule');
+														idcard.readIdcard({ mac: device.deviceId }, (e) => {
+															if (e.data.length < 20) {
 																uni.showToast({
 																	title: '识别失败，请重新点击识别按钮',
 																	icon: 'none',
 																});
 															} else {
-																let data =
-																	JSON
-																	.parse(
-																		e
-																		.data
-																	);
-																this.formData
-																	.name =
-																	data
-																	.姓名;
-																this.$refs
-																	.form
-																	.setValue(
-																		'idCard',
-																		data
-																		.身份证号
-																	);
-																this.$refs
-																	.form
-																	.setValue(
-																		'nowAddress',
-																		data
-																		.地址
-																	);
+																let data = JSON.parse(e?.data);
+																this.formData.name = data?.姓名;
+																this.formData.idCard = data?.身份证号;
+																this.formData.nowAddress = data?.地址;
 															}
-
 														});
-
 													} else {
 														uni.showToast({
 															title: `未授权设备`,
@@ -289,8 +250,7 @@
 														})
 													}
 													uni.hideLoading();
-													uni
-														.closeBluetoothAdapter();
+													uni.closeBluetoothAdapter();
 												}
 											});
 										}
@@ -327,13 +287,15 @@
 							carPhotos: tmp,
 							...res.data
 						};
-						this.customer = res.data.customer || {};
-						this.formData.name = (res.data.customer || {}).name;
-						this.formData.carId = res.data.carNum || '';
-						this.$refs.form.setValue('idCard', (res.data.customer || {}).idcard);
-						this.$refs.form.setValue('phone', (res.data.customer || {}).phoneNumber);
-						this.$refs.form.setValue('nowAddress', (res.data.customer || {}).nowAddress);
+						this.carList.push({ value: res.data.id, text: res.data.carNum });
+						this.customer = res.data.customer ?? {};
+						this.formData.name = res.data.customer?.name;
+						this.formData.carId = res.data.carNum ?? '';
+						this.formData.idCard = res.data.customer?.idcard;
+						this.formData.phone = res.data.customer?.phoneNumber;
+						this.formData.nowAddress = res.data.customer?.nowAddress;
 						this.oldCarId = res.data.id;
+						this.carList = this._.uniqBy(this.carList, 'text');
 					}
 				});
 			},
@@ -350,8 +312,8 @@
 						orderId: this.carInfo.orderId,
 					})
 					this.formData.name = ocr.name;
-					this.$refs.form.setValue('idCard',  ocr.idnumber);
-					this.$refs.form.setValue('nowAddress', ocr.address);
+					this.formData.idCard = ocr.idnumber;
+					this.formData.nowAddress = ocr.address;
 				}
 			},
 			submit() {
@@ -370,19 +332,20 @@
 							newCarId: this.oldCarId,
 						};
 					}
+					
 					api.insertUserInfo({
 						name: this.formData.name,
-						idcard: data.idCard,
-						phoneNumber: data.phoneNumber,
-						orderId: data.orderId,
-						nowAddress: data.nowAddress,
+						idcard: this.formData.idCard,
+						phoneNumber: this.formData.phoneNumber,
+						orderId: this.formData.orderId,
+						nowAddress: this.formData.nowAddress,
 						complanyId: this.carInfo.complanyId,
 						orderId: this.carInfo.orderId,
 						...params,
 					});
 					let checks = [];
 					this.checkList.forEach(o => {
-						data.check.forEach(item => {
+						this.formData.check.forEach(item => {
 							o.value === item && checks.push({
 								value: o.value * 1,
 								text: o.text
@@ -391,11 +354,11 @@
 					});
 					if (checks.length === 0 && typeof this.carInfo.complany.subMchId === 'string') {
 						uni.navigateTo({
-							url: `/pages/model/InCar/Step?orderId=${this.carInfo.orderId}&idCard=${data.idCard}&name=${this.formData.name}`
+							url: `/pages/model/InCar/Step?orderId=${this.carInfo.orderId}&idCard=${this.formData.idCard}&name=${this.formData.name}`
 						})
 						return;
 					}
-					if (data.preferredUse) {
+					if (this.formData.preferredUse) {
 						api.checkService({
 							complanyId: this.carInfo.complany.id,
 							money: this._.sum(this._.map(checks, 'value')),
@@ -409,19 +372,16 @@
 										success: (e) => {
 											api.deduct({
 												complanyId: this.carInfo.complany.id,
-												money: this._.sum(this._.map(checks,
-													'value')),
+												money: this._.sum(this._.map(checks,'value')),
 											}).then(result => {
 												if (result) {
 													if (typeof this.carInfo.complany
 														.subMchId === 'string') {
 														uni.navigateTo({
-															url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${data.idCard}&name=${this.formData.name}&orderId=${this.carInfo.orderId}`
+															url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idCard=${this.formData.idCard}&name=${this.formData.name}&orderId=${this.carInfo.orderId}`
 														});
 													} else {
-														this.payOrder(0, this._.map(
-																checks, 'text')
-															.join(','), data);
+														this.payOrder(0, this._.map(checks, 'text').join(','), this.formData);
 													}
 												}
 											});
@@ -432,9 +392,7 @@
 										title: `剩余代金券${res.msg}元不足以支付本次费用${this._.sum(this._.map(checks, 'value'))}元`,
 										success: (e) => {
 											if (e.confirm) {
-												this.payOrder(this._.sum(this._.map(checks,
-													'value')), this._.map(checks,
-													'text').join(','), data);
+												this.payOrder(this._.sum(this._.map(checks,'value')), this._.map(checks,'text').join(','), this.formData);
 											}
 										}
 									})
@@ -442,16 +400,15 @@
 							}
 						});
 					} else {
-						this.payOrder(this._.sum(this._.map(checks, 'value')), this._.map(checks, 'text').join(
-							','), data);
+						this.payOrder(this._.sum(this._.map(checks, 'value')), this._.map(checks, 'text').join(','), this.formData);
 					}
 				});
 			},
 			reset() {
 				this.formData.name = '';
-				this.$refs.form.setValue('idCard', '');
-				this.$refs.form.setValue('phone', '');
-				this.$refs.form.setValue('nowAddress', '');
+				this.formData.idCard = '';
+				this.formData.phone = '';
+				this.formData.nowAddress = '';
 			},
 			payOrder(serviceInfoMoney, serviceRemark, data) {
 				let currentCar = this._.find(this.carList, o => {

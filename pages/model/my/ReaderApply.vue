@@ -1,10 +1,10 @@
 <template>
-	<view class="content">
+	<view class="content" style="align-items: center;">
 		<uni-forms ref="form" v-model="formData" :rules="rules" :label-width="100" class="form_box">
 			<FormPicker v-show="((user || {}).complany || []).length >= 2" label="公司" name="complanyId" :localdata="complanys" :formData="formData"></FormPicker>
 			<FormRadio label="购买/租赁" :localdata="payTypeList" @change="changePay" name="payType" :formData="formData" :required="false"></FormRadio>
 			<FormInput label="台数" name="applyNum" :formData="formData" type="number"></FormInput>
-			<FormPicker v-show="payType !== 1" label="租期" name="lease" :localdata="leaseList" :formData="formData"></FormPicker>
+			<FormPicker v-show="payType !== 0" label="租期" name="leaseTerm" :localdata="leaseTermList" :formData="formData"></FormPicker>
 			<FormInput label="收货地址" name="address" :formData="formData"></FormInput>
 		</uni-forms>
 		<button type="primary" class="submitBtn" @click="apply">提交</button>
@@ -31,8 +31,8 @@
 				formData: {
 					complanyId: '',
 					applyNum: '',
-					lease: 3,
-					payType: 0,
+					leaseTerm: 3,
+					payType: 1,
 					address: '',
 					productId: 1,
 					flag: 1,
@@ -60,15 +60,15 @@
 						}]
 					},
 				},
-				leaseList: [
+				leaseTermList: [
 					{value: 3, text: '三个月'},
 					{value: 6, text: '六个月'},
 					{value: 12, text: '一年'},
 					{value: 24, text: '二年'},
 				],
 				payTypeList: [
-					{value: 0, text: '租赁'},
-					{value: 1, text: '购买'},
+					{value: 1, text: '租赁'},
+					{value: 0, text: '购买'},
 				]
 			};
 		},
@@ -77,7 +77,7 @@
 		},
 		methods:{
 			changePay(e){
-				this.$refs.form.setValue('payType', e.detail.value)
+				this.formData.payType = e.detail.value;
 				this.payType = e.detail.value;
 			},
 			initComplany() {
@@ -90,7 +90,7 @@
 							value: o.id,
 						});
 					});
-					this.$refs.form.setValue('complanyId', uni.getStorageSync('complanyId'));
+					this.formData.complanyId = uni.getStorageSync('complanyId');
 				}
 			},
 			apply(){
@@ -105,6 +105,11 @@
 										title: '提示',
 										content: '预定成功',
 										showCancel: false,
+										success: (e) => {
+											if(e.confirm){
+												uni.navigateBack();
+											}
+										}
 									})
 								},
 								fail: (error) => {

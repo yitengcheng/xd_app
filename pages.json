@@ -1,9 +1,6 @@
 {
 	"easycom": {
-		"autoscan": true,
-		"custom": { 
-			"uni-(.*)": "@/components/uni-$1/uni-$1.vue"
-		}
+		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
 	},
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
@@ -187,6 +184,24 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "公司信息",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/model/my/Equipment",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "设备管理",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+        ,{
+            "path" : "pages/model/my/EquipmentOrder",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "硬件订单",
                 "enablePullDownRefresh": false
             }
             

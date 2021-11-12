@@ -1,6 +1,8 @@
 <template>
-	<scroll-view>
-		<uni-easyinput v-model="keyword" placeholder="请输入关键字搜索" suffixIcon="search" @iconClick="getData(1)"/>
+	<view class="content">
+		<view>
+			<uni-easyinput v-model="keyword" placeholder="请输入关键字搜索" suffixIcon="search" @iconClick="getData(1)"/>
+		</view>
 		<uni-list :border="false">
 			<uni-list-item
 				v-for="(item, index) in data"
@@ -15,7 +17,7 @@
 				@click="clickItem(item)"
 			/>
 		</uni-list>
-	</scroll-view>
+	</view>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-	<uni-forms ref="form" v-model="formData">
+	<uni-forms ref="form" v-model="formData" class="content">
 		<FormInput label="原始密码" :formData="formData" name="oldPassword" type="password"/>
 		<FormInput label="新密码" :formData="formData" name="newPassword1" type="password"/>
 		<FormInput label="新密码" :formData="formData" name="newPassword2" placeholder="请再次输入新密码" type="password"/>

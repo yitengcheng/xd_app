@@ -11,7 +11,7 @@ const store = new Vuex.Store({
 	mutations: {
 		WEBSOCKET_INIT(state, id) {
 			state.time = setInterval(()=> {
-				if((state.socketTask || {}).readyState !== 1){
+				if(state.socketTask?.readyState !== 1){
 					state.socketTask = uni.connectSocket({
 						url: `wss://xd.qiantur.com/socket/websocket/${id}`,
 						success() {
