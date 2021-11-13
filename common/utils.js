@@ -1,3 +1,4 @@
+import config from "./config.js"
 /**
  * 拼接对象为请求字符串
  * 对于需要编码的文本（比如说中文）我们要进行编码
@@ -23,4 +24,19 @@ export function convertSerialize(data){
         list.push(`${ele}=${data[ele]}`)
     })
     return list.join('&');
+}
+
+// 整理照片回显格式
+export function formattingPhoto(url){
+	let result;
+	if(url){
+		result = {
+			name: url?.substring( url?.lastIndexOf( '/' ) +
+				1 ),
+			extname: url?.substring( url?.lastIndexOf(
+				'.' ) + 1 ),
+			url: `${config.IMG_URL}${url}`
+		};
+	}
+	return result
 }

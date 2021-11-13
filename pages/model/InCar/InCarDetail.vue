@@ -22,10 +22,12 @@
 			<text>身份证号：{{ customer.idcard || '无' }}</text>
 			<text>手机号：{{ customer.phoneNumber || '无' }}</text>
 		</view>
-		<IdCardOcr @click="getIdCard" type="primary" />
 		<button @click="readIdcard" class="readIdcard" type="primary">身份证阅读器</button>
 		<view class="info_box">
 			<uni-forms ref="form" v-model="formData" :rules="rules" :labelWidth="100">
+				<FormUpload :formData="formData" name="idcardFront" label="身份证" :limit="1" @getOcrData="getIdCard" url="/tool/ocr/idcard?type=2" :required="false"></FormUpload>
+				<FormUpload :formData="formData" name="licenseMainUrl" label="驾照主页" :limit="1" @getOcrData="getLicenseMain" url="/tool/ocr/driving?type=8" :required="false"></FormUpload>
+				<FormUpload :formData="formData" name="licenseViceUrl" label="驾照副页" :limit="1" @getOcrData="getLicenseVice" url="/tool/ocr/driving?type=9" :required="false"></FormUpload>
 				<uni-forms-item label="姓名" :name="formData.name" :required="true">
 					<Combox :value="formData.name" :candidates="candidates" :isJSON="true" keyName="name"
 						@getValue="getComboxValue" class="form_combox"></Combox>
@@ -37,7 +39,7 @@
 				<FormInput :formData="formData" name="idCard" label="身份证号" />
 				<FormInput :formData="formData" name="phone" label="手机号" />
 				<FormInput :formData="formData" name="nowAddress" label="当前居住地" />
-				<FormSwitch :formData="formData" name="preferredUse" label="代金券" @change="changePreferredUse">
+				<FormSwitch :formData="formData" name="preferredUse" label="代金券" @change="changePreferredUse" :required="false">
 				</FormSwitch>
 				<FormRadio :required="false" :multiple="true" :formData="formData" name="check" :localdata="checkList"
 					label="附加核验" @change="changeCheck" />
@@ -57,6 +59,8 @@
 	import Combox from '../../../components/cuihai-combox/cuihai-combox.vue';
 	import FormPicker from '../../../components/form/FormPicker.vue';
 	import FormSwitch from '../../../components/form/FormSwitch.vue';
+	import FormUpload from '../../../components/form/FormUpload.vue';
+	import { formattingPhoto } from '../../../common/utils.js';
 	import {
 		card15,
 		card18,
@@ -70,6 +74,7 @@
 			Combox,
 			FormPicker,
 			FormSwitch,
+			FormUpload,
 		},
 		data() {
 			return {
@@ -85,6 +90,9 @@
 					check: [],
 					carId: '',
 					preferredUse: false,
+					idcardFront: [],
+					licenseMainUrl: [],
+					licenseViceUrl: [],
 				},
 				checkList: [],
 				rules: {
@@ -136,11 +144,14 @@
 							pattern: phoneRegex,
 							errorMessage: '请输入正确的电话号码'
 						}]
-					}
+					},
 				},
 				current: 0,
 				candidates: [],
 				oldCarId: '',
+				idcardFront: '',
+				licenseMainUrl: '',
+				licenseViceUrl: '',
 			};
 		},
 		onLoad(option) {
@@ -289,6 +300,12 @@
 						};
 						this.carList.push({ value: res.data.id, text: res.data.carNum });
 						this.customer = res.data.customer ?? {};
+						this.idcardFront = res.data?.customer?.idcardFront;
+						this.licenseMainUrl = res.data?.customer?.licenseMainUrl;
+						this.licenseViceUrl = res.data?.customer?.licenseViceUrl;
+						this.formData.licenseMainUrl.push(formattingPhoto(res.data?.customer?.licenseMainUrl));
+						this.formData.licenseViceUrl.push(formattingPhoto(res.data?.customer?.licenseViceUrl))
+						this.formData.idcardFront.push(formattingPhoto(res.data?.customer?.idcardFront));
 						this.formData.name = res.data.customer?.name;
 						this.formData.carId = res.data.carNum ?? '';
 						this.formData.idCard = res.data.customer?.idcard;
@@ -302,18 +319,49 @@
 			getIdCard(e = {}) {
 				let { url, ocr } = e;
 				if (url && !!ocr) {
+					this.formData.idcardFront.length > 0 ? this.formData.idcardFront[0] = formattingPhoto(url) : this.formData.idcardFront.push(formattingPhoto(url));
+					this.idcardFront = url;
 					api.insertUserInfo({
 						name: ocr.name,
 						idcard: ocr.idnumber,
 						address: ocr.address,
+						nowAddress: ocr.address,
 						sex: ocr.gender === '男' ? 0 : 1,
 						birthday: ocr.birthday,
 						complanyId: this.carInfo.complanyId,
 						orderId: this.carInfo.orderId,
+						idcardFront: url,
 					})
 					this.formData.name = ocr.name;
 					this.formData.idCard = ocr.idnumber;
 					this.formData.nowAddress = ocr.address;
+				}
+			},
+			getLicenseMain(e = {}) {
+				let { url, ocr } = e;
+				if (url && !!ocr) {
+					this.formData.licenseMainUrl.length > 0 ? this.formData.licenseMainUrl[0] = formattingPhoto(url) : this.formData.licenseMainUrl.push(formattingPhoto(url));
+					this.licenseMainUrl = url;
+					api.insertUserInfo({
+						licenseMainUrl: url,
+						receiveCarTime: ocr.issueDate,
+						invalidCarTime: [this.dayjs(ocr.startDate).format('YYYY-MM-DD'), this.dayjs(ocr.endDate).format('YYYY-MM-DD')].join(','),
+						complanyId: this.carInfo.complanyId,
+						orderId: this.carInfo.orderId,
+					});
+				}
+			},
+			getLicenseVice(e = {}) {
+				let { url, ocr } = e;
+				if (url && !!ocr) {
+					this.formData.licenseViceUrl.length > 0 ? this.formData.licenseViceUrl[0] = formattingPhoto(url) : this.formData.licenseViceUrl.push(formattingPhoto(url));
+					this.licenseViceUrl = url;
+					api.insertUserInfo({
+						licenseViceUrl: url,
+						archivesNum: ocr.archiveNumber,
+						complanyId: this.carInfo.complanyId,
+						orderId: this.carInfo.orderId,
+					});
 				}
 			},
 			submit() {
@@ -332,7 +380,6 @@
 							newCarId: this.oldCarId,
 						};
 					}
-					
 					api.insertUserInfo({
 						name: this.formData.name,
 						idcard: this.formData.idCard,
@@ -409,6 +456,9 @@
 				this.formData.idCard = '';
 				this.formData.phone = '';
 				this.formData.nowAddress = '';
+				this.formData.idcardFront = [];
+				this.formData.licenseMainUrl = [];
+				this.formData.licenseViceUrl = [];
 			},
 			payOrder(serviceInfoMoney, serviceRemark, data) {
 				let currentCar = this._.find(this.carList, o => {

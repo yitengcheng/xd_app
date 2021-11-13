@@ -64,6 +64,11 @@
 		</uni-forms>
 		<uni-fab v-show="carId" :content="content" horizontal="right" vertical="bottom" direction="vertical"
 			@trigger="trigger"></uni-fab>
+		<view v-if="showQR" class="qrcode_box">
+			<Qrcode ref="qrcode" :size="400" :val="val" :onval="true" background="#FFFFFF" foreground="#000000"></Qrcode>
+			<uni-data-checkbox style="margin-top: 50rpx;" v-model="payment" :localdata="paymentList" @change="changePayment"></uni-data-checkbox>
+			<u-button style="margin-top: 50rpx;" @click="() => showQR = false" type="error">关闭二维码</u-button>
+		</view>
 	</view>
 </template>
 <script>
@@ -73,6 +78,8 @@
 	import FormSwitch from '../../../components/form/FormSwitch.vue';
 	import FormUpload from '../../../components/form/FormUpload.vue';
 	import FormDatePicker from '../../../components/form/FormDatePicker.vue';
+	import Qrcode from '../../../components/tki-qrcode/tki-qrcode.vue';
+	import { formattingPhoto } from '../../../common/utils.js'
 	import {
 		plateRegex,
 		integerRegex,
@@ -93,6 +100,7 @@
 			FormSwitch,
 			FormUpload,
 			FormDatePicker,
+			Qrcode,
 		},
 		data() {
 			return {
@@ -368,9 +376,13 @@
 					selectedIconPath: '',
 					text: '违章查询'
 				}, {
-					iconPath: '../../../static/img/qrcode.png',
+					iconPath: '../../../static/img/wechat.png',
 					selectedIconPath: '',
 					text: '分享车辆'
+				}, {
+					iconPath: '../../../static/img/qrcode.png',
+					selectedIconPath: '',
+					text: '二维码'
 				}, ],
 				complany: [],
 				user: uni.getStorageSync( 'user' ),
@@ -379,6 +391,13 @@
 				carId: '',
 				scrollY: true,
 				complanyName: '',
+				showQR: false,
+				paymentList: [
+					{value: '1', text: '线上支付'},
+					{value: '2', text: '线下支付'},
+				],
+				paymentQR: '1',
+				val:'',
 			};
 		},
 		onLoad( option ) {
@@ -447,6 +466,22 @@
 					} )
 				} );
 			},
+			showQrCode(){
+				this.showQR = true;
+				uni.pageScrollTo({
+					scrollTop: 0,
+					duration: 200,
+				})
+				this.$nextTick(() => {
+					this.val = `${config.API_URL}/applet?complanyId=${this.complanyId}=${this.carId}=${this.paymentQR}`;
+				})
+			},
+			changePayment(e){
+				this.paymentQR = e.detail.value;
+				this.$nextTick(() => {
+					this.val = `${config.API_URL}/applet?complanyId=${this.complanyId}=${this.carId}=${this.paymentQR}`;
+				})
+			},
 			changeStrongEndTime( e ) {
 				this.formData.strongEndTime = e;
 			},
@@ -472,6 +507,9 @@
 						break;
 					case 3:
 						this.share();
+						break;
+					case 4:
+						this.showQrCode();
 						break;
 					default:
 						break;
@@ -505,28 +543,10 @@
 						let licenseBack = [];
 						let licenseFront = [];
 						files.forEach( ( item, index ) => {
-							let extname = item.substring( item.lastIndexOf( '.' ) + 1 );
-							let name = item.substring( item.lastIndexOf( '/' ) + 1 );
-							carsPhotos.push( {
-								name,
-								extname,
-								url: `${config.IMG_URL}${item}`
-							} );
+							carsPhotos.push(formattingPhoto(item));
 						} );
-						licenseBack.push( {
-							name: data.licenseBackUrl.substring( data.licenseBackUrl.lastIndexOf( '/' ) +
-								1 ),
-							extname: data.licenseBackUrl.substring( data.licenseBackUrl.lastIndexOf(
-								'.' ) + 1 ),
-							url: `${config.IMG_URL}${data.licenseBackUrl}`
-						} );
-						licenseFront.push( {
-							name: data.licenseFrontUrl.substring( data.licenseFrontUrl.lastIndexOf( '/' ) +
-								1 ),
-							extname: data.licenseFrontUrl.substring( data.licenseFrontUrl.lastIndexOf(
-								'.' ) + 1 ),
-							url: `${config.IMG_URL}${data.licenseFrontUrl}`
-						} );
+						licenseBack.push(formattingPhoto(data.licenseBackUrl));
+						licenseFront.push(formattingPhoto(data.licenseFrontUrl));
 						this.source = data.source;
 						this.complanyId = data.complanyId;
 						this.complanyName = data.complany.complanyName;
