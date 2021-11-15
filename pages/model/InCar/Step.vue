@@ -1,5 +1,5 @@
 <template>
-	<view class="content">
+	<view class="content" style="margin: 10px;">
 		<u-steps :current="active" :list="options" direction="column"></u-steps>
 		<view class="info_box">
 			<text v-show="!!licenseText" class="info_text">驾照存分：{{licenseText}}</text>

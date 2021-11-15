@@ -110,7 +110,7 @@
 									data: {user: info.user, complany: info.complany},
 									success: () => {
 										uni.switchTab({
-											url: '/pages/model/InCar/index'
+											url: '/pages/model/my/Orders'
 										});
 									}
 								});

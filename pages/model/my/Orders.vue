@@ -17,6 +17,11 @@
 				orders: [],
 			};
 		},
+		onLoad() {
+			uni.$on('orders', ()=>{
+				this.initOrders(1);
+			});
+		},
 		onReachBottom() {
 			this.initOrders();
 		},
@@ -34,6 +39,7 @@
 					pageNum,
 					pageSize: 10,
 				}).then((res = {}) => {
+					uni.stopPullDownRefresh();
 					if ((res.rows || []).length > 0) {
 						if (pageNum === 1) {
 							let tmp = []
@@ -61,7 +67,10 @@
 									thumb: carPhoto,
 									title: o.car.carNum,
 									note: `交车时间：${this.dayjs(o.wantCarTime).format('YYYY年MM月DD日')}`,
-									rightText: `${o.payStatus === 'NOTPAY' ? '未付款' : o.payStatus === 'SUCCESS' ? '付款成功' : o.payStatus === 'REFUNDED' ? '退款成功' : '未知状态'}`,
+									rightText: `${o.payStatus === 'SUCCESS' ? '支付成功' : o.payStatus ===
+										'NOTPAY' ? "等待付款" : o.payStatus === 'REFUNDED' ? '退款完成' : o
+										.payStatus === 'CLOSED' ? '订单关闭' : o.payStatus ===
+										'REFUSE' ? '已拒绝' : o.payStatus}`,
 								});
 							})
 						}
@@ -70,8 +79,9 @@
 				});
 			},
 			clickItem(e){
+				let type = (e.payStatus === 'CLOSED' || e.payStatus === 'REFUSE') ? '3' : e.comfirStatus ? '2' : '1';
 				uni.navigateTo({
-					url: `/pages/model/my/OrderDetail?id=${e.orderId}&type=0&`
+					url: `/pages/model/my/OrderDetail?id=${e.orderId}&type=${type}`
 				})
 			}
 		}

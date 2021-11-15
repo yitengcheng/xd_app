@@ -1,8 +1,8 @@
 import request from '../../common/request.js'
 
 const qys = {
-	send:(orderId)=>{
-		return request.globalRequest(`/qys/send/contract?orderId=${orderId}`, 'post');
+	send:(data)=>{
+		return request.globalRequest(`/qys/send/contract`, 'post', data);
 	},
 	checkAuth: (name) =>{
 		return request.globalRequest(`/qys/complany/auth/result?complanyName=${name}`, 'get');

@@ -16,9 +16,10 @@
 			<text>预计还车时间：{{dayjs(orderInfo.estimateReturnTime).format('YYYY-MM-DD HH:mm:ss')}}</text>
 			<text>交车地点：{{orderInfo.address}}</text>
 			<text>还车地点：{{orderInfo.returnAddress}}</text>
-			<button v-show="type === '1'" @click="orderHandle(1)" class="btn">确认接单</button>
+			<button v-show="type === '1'" @click="orderHandle(1)" class="btn" type="primary">确认接单</button>
 			<button v-show="type === '1'" @click="orderHandle(2)" class="btn">放弃接单</button>
-			<button v-show="type === '2'" @click="orderHandle(3)" class="btn">确认退款</button>
+			<button v-show="type === '2'" @click="orderHandle(4)" class="btn" type="primary">交车</button>
+			<button v-show="type === '2'" @click="orderHandle(3)" class="btn" type="warn">确认退款</button>
 		</view>
 	</view>
 </template>
@@ -35,7 +36,7 @@
 			};
 		},
 		onLoad(option) {
-			this.type = option.type; // 0 列表进入 1 新订单确认或取消 2 退款确认
+			this.type = option.type; // 0 列表进入 1 新订单确认或取消 2 退款确认 3交车
 			this.handleId = option.handleId;
 			this.initOrderDetail(option.id);
 		},
@@ -51,6 +52,9 @@
 							o ? tmp.push(`${config.IMG_URL}${o}`) : tmp.push('/static/img/defalut.png');
 						});
 						delete res.data.car.carPhotos;
+						if(res?.data?.comfirStatus && this.type !== '3'){
+							this.type = '2';
+						}
 						this.orderInfo = {
 							carPhotos: tmp,
 							...res.data
@@ -59,22 +63,40 @@
 				});
 			},
 			orderHandle(type) {
-				// 1 确认接单 2 取消接单 3 确认退款
+				// 1 确认接单 2 取消接单 3 确认退款 
 				let func = type === 1 ? api.orderConfirm : (type === 2 && typeof this.orderInfo.complany.subMchId ===
-						'string') ? api.orderCannel : (type === 2 && typeof this.orderInfo.complany.subMchId !==
+					'string') ? api.orderCannel : (type === 2 && typeof this.orderInfo.complany.subMchId !==
 					'string') ? api.handleRead : type === 3 ? api.orderCannel : undefined;
+				if(type === 4){
+					uni.navigateTo({
+						url: `/pages/model/InCar/InCarDetail?id=${this.orderInfo.car.id}`
+					});
+					return;
+				}
 				func({
 					orderId: this.orderInfo.orderId,
 					handleId: this.handleId,
 				}).then((res) => {
 					if (res) {
+						uni.$emit('orders');
+						this.initOrderDetail(this.orderInfo.orderId);
 						uni.showToast({
 							title: '操作成功',
 							icon: 'success'
 						});
-						uni.reLaunch({
-							url: '/pages/model/InCar/index'
-						});
+						if(type === 1){
+							uni.showModal({
+								title: '提示',
+								content: '现在是否交车',
+								success: (e) => {
+									if(e.confirm){
+										uni.navigateTo({
+											url: `/pages/model/InCar/InCarDetail?id=${this.orderInfo.car.id}`
+										})
+									}
+								}
+							})
+						}
 					}
 				})
 			}
@@ -102,5 +124,6 @@
 
 	.btn {
 		margin-top: 30rpx;
+		width: 80%;
 	}
 </style>

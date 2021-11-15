@@ -12,9 +12,12 @@
 			<text>车牌颜色：{{ carInfo.color || '无' }}</text>
 			<text>车主姓名：{{ carInfo.name || '无' }}</text>
 			<text>车主联系方式：{{ carInfo.phoneNum || '无' }}</text>
-			<text>租车单价：{{ carInfo.unitPrice || '无' }} 元/天</text>
+			<text>租车单价：{{ ((carInfo || {}).wxOrder || {}).unitPrice || '无' }} 元/天</text>
+			<text>租车保证金：{{ ((carInfo || {}).wxOrder || {}).bondMoney || '无' }} 元</text>
+			<text>违章保证金：{{ ((carInfo || {}).wxOrder || {}).violationBondMoney || '无' }} 元</text>
 			<text>超过里程收取金额：{{ carInfo.maxMileagePrice || '无' }} 每日</text>
-			<text>预约租车时间：{{ (carInfo.wxOrder || {}).wantCarTime || '无' }}至{{ (carInfo.wxOrder || {}).estimateReturnTime || '无' }}</text>
+			<text>租车时间：{{ ((carInfo || {}).wxOrder || {}).wantCarTime || '无' }}至{{ ((carInfo || {}).wxOrder || {}).estimateReturnTime || '无' }}</text>
+			<text>租车天数：{{ ((carInfo || {}).wxOrder || {}).rentCarDays }} 天</text>
 		</view>
 		<view class="info_box">
 			<text>租车人信息</text>

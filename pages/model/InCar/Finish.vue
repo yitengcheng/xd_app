@@ -1,5 +1,5 @@
 <template>
-	<view class="content">
+	<view class="content" style="align-items: center;">
 		<image src="../../../static/img/finish.png"></image>
 		<view @click="toIndex">请将{{plateNo}}车辆交于客户</view>
 	</view>

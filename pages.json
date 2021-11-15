@@ -138,7 +138,7 @@
             "path" : "pages/model/my/Todo",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "待办事项",
+                "navigationBarTitleText": "订单管理",
                 "enablePullDownRefresh": true
             }
             
@@ -213,10 +213,10 @@
 		"borderStyle": "black",
 		"backgroundColor": "#409EFF",
 		"list": [{
-				"pagePath": "pages/model/InCar/index",
+				"pagePath": "pages/model/my/Orders",
 				"iconPath": "static/img/incar.png",
 				"selectedIconPath": "static/img/incar_active.png",
-				"text": "交车"
+				"text": "订单"
 			}, {
 				"pagePath": "pages/model/returnCar/index",
 				"iconPath": "static/img/returnCar.png",

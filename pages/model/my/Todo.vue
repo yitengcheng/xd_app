@@ -33,9 +33,7 @@
 					pageSize: 10,
 				}).then((res = {}) => {
 					if ((res.rows || []).length > 0) {
-						let {
-							rows
-						} = res;
+						let { rows } = res;
 						if (pageNum === 1) {
 							let tmp = [];
 							rows.forEach(o => {
@@ -91,26 +89,19 @@
 						});
 					});
 				}
-				if(item.handle){
-					uni.showToast({
-						title: '事项已处理，无需重复处理',
-						icon: 'error',
-					});
-					return;
-				}
 				switch (item.type) {
 					case 'NEWORDER': // 新的订单-确认
-						uni.redirectTo({
+						uni.navigateTo({
 							url: `/pages/model/my/OrderDetail?id=${item.orderId}&type=1&handleId=${item.id}`
 						});
 						break;
 					case 'VIEWORDER': // 新线下订单-确认
-						uni.redirectTo({
+						uni.navigateTo({
 							url: `/pages/model/my/OrderDetail?id=${item.orderId}&type=1&handleId=${item.id}`
 						});
 						break;
 					case 'APPLYREFUNDED': // 申请退款通知
-						uni.redirectTo({
+						uni.navigateTo({
 							url: `/pages/model/my/OrderDetail?id=${item.orderId}&type=2&handleId=${item.id}`
 						});
 						break;
