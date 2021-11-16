@@ -7,17 +7,8 @@
 			"path": "pages/model/login/Login",
 			"style": {
 				"navigationBarTitleText": "登录",
-				"enablePullDownRefresh": false,
-				"app-plus": {
-					"titleNView": {
-						"buttons": [{
-							"text": "注册",
-							"fontSize": "16"
-						}]
-					}
-				}
+				"enablePullDownRefresh": false
 			}
-
 		},
 		{
 			"path": "pages/model/InCar/index",
@@ -31,6 +22,7 @@
 			"path": "pages/model/my/My",
 			"style": {
 				"navigationBarTitleText": "我的",
+				"navigationBarBackgroundColor":"#FFD101",
 				"enablePullDownRefresh": false
 			}
 
@@ -73,6 +65,7 @@
 			"path": "pages/model/car/Car",
 			"style": {
 				"navigationBarTitleText": "车辆",
+				"navigationBarBackgroundColor":"#FFD101",
 				"enablePullDownRefresh": true
 			}
 
@@ -138,7 +131,7 @@
             "path" : "pages/model/my/Todo",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "订单管理",
+                "navigationBarTitleText": "接单/通知",
                 "enablePullDownRefresh": true
             }
             
@@ -211,7 +204,7 @@
 		"color": "#606266",
 		"selectedColor": "#303133",
 		"borderStyle": "black",
-		"backgroundColor": "#409EFF",
+		"backgroundColor": "#FFFFFF",
 		"list": [{
 				"pagePath": "pages/model/my/Orders",
 				"iconPath": "static/img/incar.png",
@@ -239,7 +232,7 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#409EFF",
+		"navigationBarBackgroundColor": "#FFFFFF",
 		"backgroundColor": "#F4F4F4"
 	}
 	

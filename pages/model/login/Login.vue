@@ -1,11 +1,18 @@
 <template>
-	<view class="content" style="align-items: center;">
+	<view class="content" style="align-items: center;background-color: #FFFFFF;">
+		<view class="page_title">
+			<text class="page_title_text">您好，</text>
+			<text class="page_title_text">欢迎来到优行小滴</text>
+		</view>
 		<uni-forms border v-model="formData" class="form" ref="form">
-		    <FormInput :formData="formData" name="userName" label="用户名" :inputBorder="false" :required="false"/>
-		    <FormInput :formData="formData" name="password" label="密码" type="password" :inputBorder="false" :required="false"/>
-			<button type="primary" class="login" @click="login">登录</button>
-			<button type="warn" @click="forgetPassword">忘记密码</button>
+		    <FormInput :formData="formData" name="userName" label="" :inputBorder="false" :required="false" placeholder="请输入手机号"/>
+		    <FormInput :formData="formData" name="password" label="" type="password" :inputBorder="false" :required="false" placeholder="请输入密码"/>
 		</uni-forms>
+		<view class="login_option">
+			<!-- <view @click="forgetPassword">忘记密码?</view> -->
+			<view @click="register">快速注册</view>
+		</view>
+		<u-button type="primary" class="login" @click="login">账号登录</u-button>
 	</view>
 </template>
 
@@ -44,6 +51,11 @@
 			forgetPassword(){
 				uni.navigateTo({
 					url:'/pages/model/login/ForgetPassword'
+				})
+			},
+			register(e){
+				uni.navigateTo({
+					url: '/pages/model/login/Register'
 				})
 			},
 			login(){
@@ -124,24 +136,43 @@
 				});
 			}
 		},
-		onNavigationBarButtonTap(e){
-			uni.navigateTo({
-				url: '/pages/model/login/Register'
-			})
-		}
+		
 	}
 </script>
 
 <style lang="scss">
-	.login_container {
-		overflow: hidden;
+	.page_title {
+		width: 80%;
+		display: flex;
+		flex-direction: column;
+		margin-top: 122rpx;
+		margin-bottom: 60rpx;
+	}
+	.page_title_text {
+		height: 62rpx;
+		font-size: 24px;
+		font-family: Microsoft YaHei;
+		font-weight: bold;
+		line-height: 62rpx;
+		color: #333333;
 	}
 	.form {
 		width: 80%;
-		margin-top: 300rpx;
-		padding: 0rpx 50rpx;
+		border-bottom: 1px #eee solid;
+	}
+	.login_option {
+		width: 80%;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		margin-top: 19rpx;
+		font-size: 12px;
+		font-family: Microsoft YaHei;
+		font-weight: 400;
+		color: #FFD101;
 	}
 	.login {
-		margin: 30rpx 0rpx;
+		margin-top: 60rpx;
+		width: 80%;
 	}
 </style>

@@ -1,6 +1,6 @@
 <template>
-	<view>
-		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="280" :rules="rules">
+	<view class="content" style="align-items: center;background-color: #FFFFFF;">
+		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="280" :rules="rules" class="form_box">
 			<FormUpload :formData="formData" name="photoComplanyCode" label="营业执照" :limit="1" @getOcrData="getComplantInfo" url="/tool/ocr/complany" />
 			<FormUpload :formData="formData" name="idcardFront" label="法人身份证正面" :limit="1" @getOcrData="getIdcardFront" url="/tool/ocr/idcard?type=2" />
 			<FormUpload :formData="formData" name="idcardBack" label="法人身份证背面" :limit="1" @getOcrData="getIdcardBack" url="/tool/ocr/idcard?type=3" />
@@ -24,8 +24,8 @@
 				<text>公司坐标：</text>
 				<text>{{complanyAdName}}</text>
 			</view>
-			<button v-show="flag === 3" @click="submit" type="primary" class="submitBtn">注册</button>
-			<button v-show="flag === 3" @click="reset" type="warn">重置</button>
+			<u-button v-show="flag === 3" @click="submit" type="primary" class="submitBtn">注册</u-button>
+			<u-button v-show="flag === 3" @click="reset" type="warn">重置</u-button>
 		</uni-forms>
 	</view>
 </template>
@@ -220,6 +220,10 @@ export default {
 .submitBtn {
 	margin-top: 20rpx;
 	margin-bottom: 20rpx;
+}
+.form_box {
+	width: 90%;
+	margin-bottom: 40rpx;
 }
 .form_item {
 	display: flex;

@@ -1,6 +1,8 @@
 <template>
 	<uni-forms-item :label="label" :required="required" :name="name">
-		<uni-file-picker v-model="formData[name]" v-bind="$attrs" @select="upload"></uni-file-picker>
+		<uni-file-picker v-model="formData[name]" v-bind="$attrs" @select="upload">
+			<slot></slot>
+		</uni-file-picker>
 	</uni-forms-item>
 </template>
 

@@ -1,17 +1,34 @@
 <template>
 	<view class="content" style="align-items: center;">
-		<view class="t-icon t-icon-morentouxiang head"></view>
-		<text class="name">{{(user.user || {}).nickName}}</text>
-		<uni-data-picker v-show="((user || {}).complany || []).length >= 2" :value="complanyId" :localdata="complanys" @change="selectComplany"></uni-data-picker>
-		<view class="menus_box">
-			<view v-for="(item,index) in data" :key="index" @click="toPage(item)" class="item_row">
-				<view class="t-icon" :class="item.iconName"></view>
-				<text class="item_text">{{item.title}}</text>
+		<view class="page_top">
+			<u-image :width="106" :height="106" src="/static/img/head.png"></u-image>
+			<view class="page_top_info">
+				<text class="name" @click="() => show = true">{{complanyName}}</text>
+				<text style="font-size: 14px;">ID：{{ _.random(100000000, 999999999, false) || 'youxingxiaodi'}}</text>
 			</view>
 		</view>
-		<button @click="logout" type="warn" class="logout">退出登录</button>
-		<button @click="clear" type="warn" class="logout">清理本地缓存</button>
+		<view class="menus_box">
+			<view v-for="(item,index) in data" :key="index" @click="toPage(item)" class="item_row" :style="{borderBottom: index === (data.length - 1) ? '' : '1px solid #E0E0E0'}">
+				<view style="display: flex; flex-direction: row;flex: 1;align-items: center;">
+					<view class="item_img">
+						<u-image :src="item.icon" width="20px" height="20px"></u-image>
+					</view>
+					<text class="item_text">{{item.title}}</text>
+				</view>
+				<u-icon name="arrow-right" color="#999999"></u-icon>
+			</view>
+		</view>
 		<text class="complany">贵州小滴科技有限公司 版权所有</text>
+		<u-popup v-model="show" mode="bottom">
+			<view class="popup_box">
+				<view class="popup_box_title">请选择</view>
+				<view class="line"></view>
+				<view v-for="(complany, index) in complanys" class="popup_box_info" @click="selectComplany(index)">
+					<view class="popup_box_info_name">{{complany.text}}</view>
+					<view class="line" ></view>
+				</view>
+			</view>
+		</u-popup>
 	</view>
 </template>
 
@@ -20,18 +37,19 @@
 		data() {
 			return {
 				data: [
-					{title: '接单/通知', iconName: 't-icon-shangjiaguanli_daibanshixiang', path: '/pages/model/my/Todo'},
-					{title: '历史订单', iconName: 't-icon-dingdanguanlix', path: '/pages/model/my/Orders'},
-					{title: '合同模板', iconName: 't-icon-shuoming', path: '/pages/model/my/ContractTemplate'},
-					{title: '修改密码', iconName: 't-icon-zhongzhimima', path: '/pages/model/login/ResetPassword'},
-					{title: '公司信息', iconName: 't-icon-qiyexinxiguanli', path: '/pages/model/my/UpdateComplanyInfo'},
-					{title: '硬件申领', iconName: 't-icon-jifangmenjinkashenlingbiangeng', path: '/pages/model/my/ReaderApply'},
-					{title: '硬件设备', iconName: 't-icon-dianzishebeishezhi', path: '/pages/model/my/Equipment'},
-					{title: '硬件订单', iconName: 't-icon-caigoudingdan', path: '/pages/model/my/EquipmentOrder'},
+					{title: '接单/通知',  icon: '/static/img/notice.png', path: '/pages/model/my/Todo'},
+					{title: '历史订单',  icon: '/static/img/', path: '/pages/model/my/Orders'},
+					{title: '合同模板',  icon: '/static/img/', path: '/pages/model/my/ContractTemplate'},
+					{title: '修改密码',  icon: '/static/img/', path: '/pages/model/login/ResetPassword'},
+					{title: '公司信息',  icon: '/static/img/', path: '/pages/model/my/UpdateComplanyInfo'},
+					{title: '清理缓存',  icon: '/static/img/', func: 'clear'},
+					{title: '退出登录',  icon: '/static/img/', func: 'logout'},
 				],
 				user: uni.getStorageSync('user'),
 				complanys: [],
 				complanyId: '',
+				complanyName: '',
+				show: false,
 			}
 		},
 		mounted() {
@@ -39,9 +57,7 @@
 		},
 		methods: {
 			initComplany() {
-				let {
-					complany
-				} = this.user;
+				let { complany } = this.user;
 				if(complany){
 					complany.forEach(o => {
 						this.complanys.push({
@@ -50,21 +66,30 @@
 							data: o,
 						});
 					});
+					this.complanys = this._.uniqBy(this.complanys, 'value');
 					this.complanyId = uni.getStorageSync('complanyId');
+					this.complanyName = this._.find(complany, o => { return o.id === uni.getStorageSync('complanyId')}).complanyName;
 				}
 			},
 			selectComplany(e) {
-				uni.setStorageSync('complanyId', e.detail.value[0].value);
+				uni.setStorageSync('complanyId', this.complanys[e].value);
 				this.$store.dispatch('CLOSE_SOCKET');
-				this.$store.dispatch('WEBSOCKET_INIT', e.detail.value[0].value);
+				this.$store.dispatch('WEBSOCKET_INIT', this.complanys[e].value);
+				this.show = false;
+				this.initComplany();
 				uni.$emit('inCar');
 				uni.$emit('returnCar');
 				uni.$emit('car');
 			},
 			toPage(e){
-				uni.navigateTo({
-					url: e.path,
-				})
+				if(e?.path){
+					uni.navigateTo({
+						url: e.path,
+					})
+				} else {
+					this[e?.func]();
+				}
+				
 			},
 			logout(){
 				let userName = uni.getStorageSync('userName');
@@ -89,43 +114,79 @@
 </script>
 
 <style lang="scss">
-.head {
-	width: 120rpx;
-	height: 120rpx;
-	margin-top: 100rpx;
-}
-.name {
-	margin-top: 80rpx;
-	margin-bottom: 80rpx;
-}
-.menus_box {
-	margin-top: 20rpx;
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	justify-content: center;
-	width: 100%;
-}
-.item_row {
-	height: 180rpx;
-	width: 180rpx;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	border: #409EFF 1rpx solid;
-	
-}
-.item_text {
-	
-}
-.complany {
-	margin-top: 40rpx;
-	font-size: 12px;
-	color: #bebebe;
-}
-.logout {
-	margin-top: 100rpx;
-	width: 60%;
-}
+	.page_top {
+		width: 100%;
+		background-color: #FFD101;
+		border-radius: 0px 0px 40px 40px;
+		display: flex;
+		flex-direction: row;
+		padding: 50rpx 40px;
+	}
+	.page_top_info {
+		display: flex;
+		flex-direction: column;
+		margin-left: 10px;
+		justify-content: center;
+	}
+	.name {
+		font-size: 17px;
+		font-family: PingFangSC-Medium;
+		color: #333333;
+	}
+	.line {
+		height: 1px;
+		width: 100%;
+		background-color: #888888;
+	}
+	.popup_box {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+	}
+	.popup_box_title {
+		font-size: 16px;
+		font-weight: 700;
+		margin-bottom: 10px;
+		margin-top: 10px;
+	}
+	.popup_box_info {
+		width: 100%;
+		height: 45px;
+		display: flex;
+		flex-direction: column;
+	}
+	.popup_box_info_name {
+		flex: 1;
+		line-height: 44px;
+		margin-left: 10px;
+	}
+	.menus_box {
+		display: flex;
+		flex-direction: column;
+		width: 90%;
+		margin-top: 26px;
+	}
+	.item_row {
+		height: 58px;
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+	.item_img {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 30px;
+		height: 30px;
+		border-radius: 50%;
+		background-color: #333333;
+		margin-right: 15px;
+	}
+	.complany {
+		margin-top: 40rpx;
+		font-size: 12px;
+		color: #bebebe;
+	}
 </style>

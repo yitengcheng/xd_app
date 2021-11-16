@@ -4,8 +4,11 @@
         <view class="item-info" >
 			<image :src="(item|| {}).avatar" mode="aspectFill" class="info-avatar"/>
 			<view class="info_box">
-				<view class="info-nickname" >{{ (item|| {}).nickName }}</view>
-				<button v-if="item.btnText" type="primary" @click="click(item)" class="item-btn" size="mini">{{item.btnText}}</button>
+				<view class="info_top">
+					<view class="info-nickname" >{{ (item|| {}).nickName }}</view>
+					<view class="info-to">＞</view>
+				</view>
+				<view class="info-plate" v-if="item.plate">{{ (item|| {}).plate }}</view>
 			</view>
         </view>
     </view>
@@ -47,6 +50,7 @@ export default {
     display: flex;
     align-items: center;
     padding: 5px;
+	width: 100%;
 }
 
 .info-avatar {
@@ -58,20 +62,36 @@ export default {
 
 .info_box {
 	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.info_top {
+	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
-	align-items: center;
+	padding-right: 10px;
 }
 
 .info-nickname {
-    font-size: 12px;
-    color: #333;
-	width: 140rpx;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: bold;
+    color: #333333;
+	
 }
-.item-btn {
-	width: 120rpx;
-	height: 50rpx;
-	line-height: 50rpx;
+.info-to {
+	font-size: 14px;
+	color: #999999;
+	font-weight: bold;
+}
+.info-plate {
+	background-color: #FFD101;
+	border-radius: 2px;
+	padding: 3px;
+	color: #333333;
 	font-size: 10px;
+	width: 60px;
+	text-align: center;
 }
 </style>

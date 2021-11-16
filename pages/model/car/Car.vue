@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<u-sticky>
-			<u-subsection :current="current" :list="items" @change="onClickItem"></u-subsection>
+			<u-tabs-swiper :current="current" :list="items" @change="onClickItem" active-color="#FFD101" inactive-color="#666666" :is-scroll="false"></u-tabs-swiper>
 		</u-sticky>
 		<view>
 			<view v-show="current === 0">
@@ -29,7 +29,11 @@
 		data() {
 			return {
 				current: 1,
-				items: [ '全部车辆', '待租车辆', '在租车辆' ],
+				items: [
+					{name: '全部车辆'},
+					{name: '待租车辆'},
+					{name: '在租车辆'},
+				],
 				allList: [],
 				forRentList: [],
 				rentOutList: [],
@@ -113,13 +117,14 @@
 					pageSize: 10,
 					status,
 				} ).then( ( res ) => {
-					if ( res.rows.length > 0 ) {
+					if ( res?.rows.length > 0 ) {
 						let tmp = [];
 						res.rows.forEach( ( item ) => {
 							let img = item.carPhotos.split( ',' )[ 0 ];
 							tmp.push( {
 								image: `${config.IMG_URL}${img}`,
-								nickName: item.carNum,
+								nickName: item.carBrand,
+								plate: item.carNum,
 								carInfo: item,
 								id: item.id,
 							} )

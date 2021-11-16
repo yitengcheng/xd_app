@@ -1,5 +1,6 @@
 <template>
 	<view class="backgroud_box content">
+		<u-image :src="(photo[0] || {}).url" class="title_img" width="100%" height="300rpx"></u-image>
 		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="280" :rules="rules"
 			class="form_box">
 			<FormUpload :readonly="disabled" :formData="formData" name="licenseFrontUrl" label="行驶证正面" :limit="1"
@@ -58,8 +59,8 @@
 				<uni-icons :type="iconType"></uni-icons>
 			</view>
 			<view class="btnGrup" v-show="!disabled">
-				<button @click="submit" type="primary" class="bottomBtn">保存</button>
-				<button @click="reset" type="warn" class="bottomBtn">重置</button>
+				<u-button @click="submit" type="primary" class="bottomBtn">保存</u-button>
+				<u-button @click="reset" type="warn" class="bottomBtn">重置</u-button>
 			</view>
 		</uni-forms>
 		<uni-fab v-show="carId" :content="content" horizontal="right" vertical="bottom" direction="vertical"
@@ -398,6 +399,7 @@
 				],
 				paymentQR: '1',
 				val:'',
+				photo: [],
 			};
 		},
 		onLoad( option ) {
@@ -545,10 +547,11 @@
 						files.forEach( ( item, index ) => {
 							carsPhotos.push(formattingPhoto(item));
 						} );
+						this.photo = carsPhotos;
 						licenseBack.push(formattingPhoto(data.licenseBackUrl));
 						licenseFront.push(formattingPhoto(data.licenseFrontUrl));
 						this.source = data.source;
-						this.complanyId = data.complanyId;
+						this.complanyId = data.complany.id;
 						this.complanyName = data.complany.complanyName;
 						this.carId = data.id;
 						this.formData.carPhotos = carsPhotos;
@@ -580,23 +583,24 @@
 						this.formData.maxMileage = data.maxMileage;
 						this.formData.maxMileagePrice = data.maxMileagePrice;
 						this.formData.remark = data.remark;
+						this.formData.complanyId = data.complany.id;
 					}
 				} );
 			},
 			submit() {
 				this.$refs.form.validate().then( data => {
 					let func = this.carId ? api.updateCar : api.addCar;
-					data.complanyId = data.complanyId ? data.complanyId : this.complanyId;
-					delete data.carPhotos;
-					delete data.licenseFrontUrl;
-					delete data.licenseBackUrl;
+					this.formData.complanyId = this.formData.complanyId ? this.formData.complanyId : this.complanyId;
+					delete this.formData.carPhotos;
+					delete this.formData.licenseFrontUrl;
+					delete this.formData.licenseBackUrl;
 					let carPhotos = this.$refs.carPhotos.getFileList();
 					func( {
 						id: this.carId,
 						licenseFrontUrl: this.licenseFrontUrl,
 						licenseBackUrl: this.licenseBackUrl,
 						carPhotos: carPhotos.join( ',' ),
-						...data
+						...this.formData
 					} ).then( ( res ) => {
 						if ( res ) {
 							uni.showModal( {
@@ -658,6 +662,11 @@
 		overflow-y: auto;
 		align-items: center;
 	}
+	
+	.title_img {
+		width: 100%;
+		height: 300rpx;
+	}
 
 	.qrcode_box {
 		background-color: rgba($color: #000000, $alpha: 0.9);
@@ -695,6 +704,9 @@
 	}
 
 	.form_box {
-		width: 90%;
+		width: 95%;
+		background-color: #FFFFFF;
+		border-radius: 10px;
+		padding: 5px;
 	}
 </style>
