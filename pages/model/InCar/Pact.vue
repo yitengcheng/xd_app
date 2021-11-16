@@ -115,7 +115,7 @@
 	};
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.tips_box {
 		display: flex;
 		flex-direction: column;

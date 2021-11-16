@@ -127,7 +127,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.item_box {
 		width: 100%;
 		display: flex;

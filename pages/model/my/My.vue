@@ -113,7 +113,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.page_top {
 		width: 100%;
 		background-color: #FFD101;

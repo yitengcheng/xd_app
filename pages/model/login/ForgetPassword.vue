@@ -28,7 +28,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.page_title {
 		margin-top: 123rpx;
 		width: 80%;

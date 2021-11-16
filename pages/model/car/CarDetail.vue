@@ -655,7 +655,7 @@
 		}
 	};
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 	.backgroud_box {
 		position: relative;
 		display: flex;

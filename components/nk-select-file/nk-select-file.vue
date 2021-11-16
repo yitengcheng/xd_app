@@ -467,7 +467,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .file-outerBox{
 	width: 100%;
 	height: 100vh;

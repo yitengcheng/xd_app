@@ -104,7 +104,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.swiper_box {
 		width: 100%;
 		height: 300rpx;

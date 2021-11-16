@@ -216,7 +216,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .submitBtn {
 	margin-top: 20rpx;
 	margin-bottom: 20rpx;

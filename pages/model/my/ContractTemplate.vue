@@ -99,7 +99,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.btn {
 		width: 60%;
 		margin-top: 50rpx;

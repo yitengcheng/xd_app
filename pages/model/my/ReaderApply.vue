@@ -127,7 +127,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .submitBtn {
 	width: 60%;
 }

@@ -1,5 +1,5 @@
 <template>
-	<uni-forms-item :label="label" :required="required" :name="name">
+	<uni-forms-item :label="label" :required="required" :name="name" :decoration="decoration">
 		<picker class="picker_box" v-bind="$attrs" v-model="formData[name]" :range="localdata" range-key="text" @change="change">
 			<view class="uni-input">{{ (localdata[index] || {}).text || this.holder }}</view>
 		</picker>
@@ -15,6 +15,10 @@ export default {
 		required: {
 			type: Boolean,
 			default: true
+		},
+		decoration: {
+			type: Boolean,
+			default: false
 		},
 		name: {
 			type: String,
@@ -66,7 +70,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.picker_box {
 		border: 1px solid rgb(229, 229, 229);
 		height: 35px;

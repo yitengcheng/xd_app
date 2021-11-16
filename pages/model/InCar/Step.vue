@@ -280,7 +280,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.checkBox {
 		margin-bottom: 50rpx;
 	}

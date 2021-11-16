@@ -1,5 +1,5 @@
 <template>
-	<uni-forms-item :label="label" :required="required" :name="name">
+	<uni-forms-item :label="label" :required="required" :name="name" :decoration="decoration">
 		<switch  v-model="formData[name]" v-bind="$attrs" :checked="formData[name]" @change="change"></switch>
 	</uni-forms-item>
 </template>
@@ -14,6 +14,10 @@ export default {
 		required: {
 			type: Boolean,
 			default: true
+		},
+		decoration: {
+			type: Boolean,
+			default: false
 		},
 		name: {
 			type: String,
@@ -34,4 +38,4 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped></style>

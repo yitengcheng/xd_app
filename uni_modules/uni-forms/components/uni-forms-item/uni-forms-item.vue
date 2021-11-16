@@ -4,10 +4,10 @@
 			<view class="uni-forms-item__inner" :class="['is-direction-' + labelPos]">
 				<view class="uni-forms-item__label" :style="{ width: labelWid , justifyContent: justifyContent }">
 					<slot name="left">
-						<text v-if="required" class="is-required">*</text>
+						<view v-if="decoration" class="decoration"></view>
 						<uni-icons v-if="leftIcon" class="label-icon" size="16" :type="leftIcon" :color="iconColor" />
 						<text class="label-text">{{ label }}</text>
-
+						<text v-if="required" class="is-required">*</text>
 						<view v-if="label" class="label-seat"></view>
 					</slot>
 				</view>
@@ -56,6 +56,11 @@ export default {
 	props: {
 		// 自定义内容
 		custom: {
+			type: Boolean,
+			default: false
+		},
+		// 装饰线
+		decoration: {
 			type: Boolean,
 			default: false
 		},
@@ -380,6 +385,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+	.decoration {
+		width: 3px;
+		height: 50%;
+		background-color: #FFD101;
+		margin-right: 5px;
+	}
 .uni-forms-item {
 	position: relative;
 	padding: 0px;
@@ -429,6 +440,7 @@ export default {
 	.label-text {
 		font-size: 14px;
 		color: #333;
+		font-weight: bold;
 	}
 	.label-seat {
 		margin-right: 5px;

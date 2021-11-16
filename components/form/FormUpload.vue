@@ -1,5 +1,5 @@
 <template>
-	<uni-forms-item :label="label" :required="required" :name="name">
+	<uni-forms-item :label="label" :required="required" :name="name" :decoration="decoration">
 		<uni-file-picker v-model="formData[name]" v-bind="$attrs" @select="upload">
 			<slot></slot>
 		</uni-file-picker>
@@ -17,6 +17,10 @@ export default {
 		required: {
 			type: Boolean,
 			default: true
+		},
+		decoration: {
+			type: Boolean,
+			default: false
 		},
 		name: {
 			type: String,
@@ -82,4 +86,4 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped></style>

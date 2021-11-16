@@ -1,16 +1,16 @@
 <template>
-	<view class="content" style="justify-content: space-between; align-items: center;">
+	<view class="content" style="justify-content: space-between; align-items: center;background-color: #FFFFFF;">
 		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="280" :rules="rules"class="form">
-			<FormInput :formData="formData" name="complanyName" label="公司名"/>
-			<FormInput :formData="formData" name="creditCode" label="统一社会代码"/>
-			<FormInput :formData="formData" name="juridicalName" label="法人姓名"/>
-			<FormInput :formData="formData" name="juridicalZjhm" label="法人身份证"/>
-			<FormInput :formData="formData" name="phoneNumber" label="联系电话"/>
-			<FormInput :formData="formData" name="businessAddress" label="公司经营地址" disable/>
+			<FormInput :decoration="true" :formData="formData" name="complanyName" label="公司名"/>
+			<FormInput :decoration="true" :formData="formData" name="creditCode" label="统一社会代码"/>
+			<FormInput :decoration="true" :formData="formData" name="juridicalName" label="法人姓名"/>
+			<FormInput :decoration="true" :formData="formData" name="juridicalZjhm" label="法人身份证"/>
+			<FormInput :decoration="true" :formData="formData" name="phoneNumber" label="联系电话"/>
+			<FormInput :decoration="true" :formData="formData" name="businessAddress" label="公司经营地址" disable/>
 		</uni-forms>
 		<view class="bottom_btn">
-			<button class="btn" @click="getLatitude">获取公司经营地址</button>
-			<button class="btn" type="primary" @click="sumbit">保存</button>
+			<u-button class="btn" @click="getLatitude">获取公司经营地址</u-button>
+			<u-button class="btn" type="primary" @click="sumbit">保存</u-button>
 		</view>
 	</view>
 </template>
@@ -131,7 +131,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .form {
 	width: 90%;
 }

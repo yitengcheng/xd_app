@@ -140,7 +140,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.page_title {
 		width: 80%;
 		display: flex;

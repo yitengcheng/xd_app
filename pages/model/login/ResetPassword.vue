@@ -1,11 +1,17 @@
 <template>
-	<uni-forms ref="form" v-model="formData" class="content">
-		<FormInput label="原始密码" :formData="formData" name="oldPassword" type="password"/>
-		<FormInput label="新密码" :formData="formData" name="newPassword1" type="password"/>
-		<FormInput label="新密码" :formData="formData" name="newPassword2" placeholder="请再次输入新密码" type="password"/>
-		<button type="primary" class="btn" @click="submit">提交</button>
-		<button type="warn" class="btn" @click="reset">重置</button>
-	</uni-forms>
+	<view class="content" style="align-items: center;background-color: #FFFFFF;">
+		<view class="page_title">设置新密码</view>
+		<uni-forms border ref="form" v-model="formData" class="form_box">
+			<FormInput :formData="formData" name="oldPassword" type="password" placeholder="请输入旧密码" :inputBorder="false" :required="false"/>
+			<FormInput :formData="formData" name="newPassword1" type="password" placeholder="请输入新密码" :inputBorder="false" :required="false"/>
+			<FormInput :formData="formData" name="newPassword2" placeholder="请再次输入新密码" type="password" :inputBorder="false" :required="false"/>
+		</uni-forms>
+		<view class="btn_box">
+			<u-button type="primary" class="btn" @click="submit">提交</u-button>
+			<u-button type="warn" class="btn" @click="reset">重置</u-button>
+		</view>
+		
+	</view>
 </template>
 
 <script>
@@ -76,10 +82,27 @@
 	}
 </script>
 
-<style lang="scss">
-.btn {
-	width: 60%;
-	margin-top: 20rpx;
-	margin-bottom: 20rpx;
-}
+<style lang="scss" scoped>
+	.page_title {
+		width: 90%;
+		font-size: 24px;
+		font-family: Microsoft YaHei;
+		font-weight: 400;
+		color: #333333;
+		margin-top: 35px;
+	}
+	.form_box {
+		width: 90%;
+		margin-top: 60px;
+		border-bottom: 1px #eee solid;
+	}
+	.btn_box {
+		width: 100%;
+		margin-top: 50px;
+	}
+	.btn {
+		width: 90%;
+		margin-top: 20rpx;
+		margin-bottom: 20rpx;
+	}
 </style>

@@ -111,7 +111,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .submitBtn{
 	margin-top: 50rpx;
 }
