@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<u-sticky>
-			<u-tabs-swiper :current="current" :list="items" @change="onClickItem" active-color="#FFD101" inactive-color="#666666" :is-scroll="false"></u-tabs-swiper>
+			<u-tabs :current="current" :list="items" @change="onClickItem" lineColor="#FFD101" :activeStyle="{color: '#FFD101'}" :is-scroll="false"></u-tabs>
 		</u-sticky>
 		<view>
 			<view v-show="current === 0">

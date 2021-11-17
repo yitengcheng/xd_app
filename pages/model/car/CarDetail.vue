@@ -4,10 +4,10 @@
 		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="280" :rules="rules"
 			class="form_box">
 			<FormUpload :readonly="disabled" :formData="formData" name="licenseFrontUrl" label="行驶证正面" :limit="1"
-				@getOcrData="getLicenseFront" url="/tool/ocr/license" :otherData="{ type: 6 }" />
+				@getOcrData="getLicenseFront" url="/tool/ocr/license" :otherData="{ type: 6 }" :decoration="true"/>
 			<FormUpload :readonly="disabled" :formData="formData" name="licenseBackUrl" label="行驶证背面" :limit="1"
-				@getOcrData="getLicenseBack" url="/tool/ocr/license" :otherData="{ type: 7 }" />
-			<FormUpload ref="carPhotos" :readonly="disabled" :formData="formData" name="carPhotos" label="车辆图片" />
+				@getOcrData="getLicenseBack" url="/tool/ocr/license" :otherData="{ type: 7 }" :decoration="true"/>
+			<FormUpload ref="carPhotos" :readonly="disabled" :formData="formData" name="carPhotos" label="车辆图片" :decoration="true"/>
 			<FormPicker v-show="(complany || []).length > 1" :disabled="disabled" :formData="formData" name="complanyId"
 				:localdata="complany" label="所属公司" @change="e => formData.complanyId = e.value" />
 			<FormPicker :disabled="disabled" :formData="formData" name="source" :localdata="sourceType" label="车辆来源"

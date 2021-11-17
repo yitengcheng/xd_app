@@ -6,9 +6,14 @@
 			<view class="info_box">
 				<view class="info_top">
 					<view class="info-nickname" >{{ (item|| {}).nickName }}</view>
-					<view class="info-to">＞</view>
+					<u-icon class="info-to" name="arrow-right" size="24"></u-icon>
 				</view>
 				<view class="info-plate" v-if="item.plate">{{ (item|| {}).plate }}</view>
+				<view class="info-price" v-if="item.price">
+					<span style="font-size: 8px;">¥</span>
+					{{ (item|| {}).price }}
+					<span v-if="item.unit" style="font-size: 8px;color: #333333;">{{item.unit}}</span>
+				</view>
 			</view>
         </view>
     </view>
@@ -81,9 +86,7 @@ export default {
 	
 }
 .info-to {
-	font-size: 14px;
 	color: #999999;
-	font-weight: bold;
 }
 .info-plate {
 	background-color: #FFD101;
@@ -93,5 +96,10 @@ export default {
 	font-size: 10px;
 	width: 60px;
 	text-align: center;
+}
+.info-price {
+	color: #FF4343;
+	font-size: 18px;
+	font-family: 'MicrosoftYaHei';
 }
 </style>

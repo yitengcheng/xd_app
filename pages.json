@@ -1,6 +1,6 @@
 {
 	"easycom": {
-		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+		"^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue"
 	},
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
@@ -105,6 +105,7 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "待还车辆",
+				"navigationBarBackgroundColor":"#FFD101",
                 "enablePullDownRefresh": true
             }
             
@@ -164,10 +165,11 @@
             
         }
         ,{
-            "path" : "pages/model/my/ReaderApply",
+            "path" : "pages/model/mall/Apply",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "身份证读卡器申领",
+                "navigationBarTitleText": "租赁/购买",
+				"navigationBarBackgroundColor":"#FFD101",
                 "enablePullDownRefresh": false
             }
             
@@ -189,13 +191,23 @@
                 "enablePullDownRefresh": true
             }
             
-        }
-        ,{
-            "path" : "pages/model/my/EquipmentOrder",
+        },
+		{
+            "path" : "pages/model/mall/EquipmentOrder",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "硬件订单",
                 "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/model/mall/Mall",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "商城",
+				"navigationBarBackgroundColor":"#FFD101",
+                "enablePullDownRefresh": true
             }
             
         }
@@ -215,7 +227,14 @@
 				"iconPath": "static/img/returnCar.png",
 				"selectedIconPath": "static/img/returnCar_active.png",
 				"text": "还车"
-			}, {
+			}, 
+			{
+			    "pagePath" : "pages/model/mall/Mall",
+			    "iconPath": "static/img/mall.png",
+			    "selectedIconPath": "static/img/mall_active.png",
+			    "text": "商城"
+			},
+			{
 				"pagePath": "pages/model/car/Car",
 				"iconPath": "static/img/car.png",
 				"selectedIconPath": "static/img/car_active.png",
