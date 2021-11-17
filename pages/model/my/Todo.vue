@@ -1,10 +1,19 @@
 <template>
-	<uni-list class="content">
-		<uni-list-item v-for="item in toDos" :key="item.id" :title="typeTile(item.type)" :note="item.message"
-			:rightText="dayjs(item.createTime).format('YYYY-MM-DD')" :show-badge="!item.handle " badge-text="*"
-			:clickable="true" @click="haveRead(item)">
-		</uni-list-item>
-	</uni-list>
+	<view class="content" style="align-items: center;">
+		<view class="toDo_box" v-for="(toDo,index) in toDos" :key="index">
+			<view class="toDo_img">
+				<u-image src="/static/img/notice.png" width="19" height="19"></u-image>
+			</view>
+			<view class="toDo_info">
+				<view class="toDo_info_text">{{typeTile(toDo.type)}}</view>
+				<view class="toDo_info_msg">{{toDo.message}}</view>
+			</view>
+			<view>
+				<u-button type="primary" class="toDo_btn">查看</u-button>
+				<view class="toDo_info_msg">{{dayjs(toDo.createTime).format('YYYY-MM-DD')}}</view>
+			</view>
+		</view>
+	</view>
 </template>
 
 <script>
@@ -57,10 +66,10 @@
 			typeTile(type) {
 				switch (type) {
 					case 'NEWORDER': // 新的订单-确认
-						return '新的订单-确认'
+						return '新的订单（确认）'
 						break;
 					case 'VIEWORDER': // 新的订单-线下支付
-						return '新的订单-线下支付'
+						return '新的订单（线下支付）'
 						break;
 					case 'REFUNDED': // 已退款通知
 						return '已退款通知'
@@ -112,5 +121,55 @@
 </script>
 
 <style lang="scss" scoped>
-
+.toDo_box {
+	display: flex;
+	flex-direction: row;
+	width: 85%;
+	border-radius: 10px;
+	background-color: #FFFFFF;
+	align-items: center;
+	justify-content: space-around;
+	padding: 30px 15px;
+	margin-top: 10px;
+}
+.toDo_img {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: #FFD101;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-right: 15px;
+}
+.toDo_info {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	flex: 1;
+}
+.toDo_info_text {
+	font-size: 14px;
+	font-family: Microsoft YaHei;
+	font-weight: bold;
+	color: #333333;
+	margin-bottom: 15px;
+}
+.toDo_info_msg {
+	font-size: 10px;
+	font-family: Microsoft YaHei;
+	font-weight: 400;
+	color: #333333;
+}
+.toDo_btn {
+	width: 50px;
+	height: 20px;
+	background: #FFD101;
+	border-radius: 25px;
+	font-size: 12px;
+	font-family: Microsoft YaHei;
+	font-weight: 400;
+	color: #333333;
+	margin-bottom: 15px;
+}
 </style>

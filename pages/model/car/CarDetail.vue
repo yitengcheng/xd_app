@@ -1,6 +1,6 @@
 <template>
 	<view class="backgroud_box content">
-		<u-image :src="(photo[0] || {}).url" class="title_img" width="100%" height="300rpx"></u-image>
+		<u-image :src="(photo[0] || {}).url" class="title_img" width="100%" height="300rpx" :showError="false"></u-image>
 		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="280" :rules="rules"
 			class="form_box">
 			<FormUpload :readonly="disabled" :formData="formData" name="licenseFrontUrl" label="行驶证正面" :limit="1"

@@ -43,7 +43,7 @@
 			<uni-datetime-picker ref="pickerDate" class="reletDate" v-if="hasRelet" type="date" :value="reletDate" :start="dayjs().format('YYYY-MM-DD')" @change="changeDate"></uni-datetime-picker>
 			<view v-if="!hasRelet" class="margin_box">
 				<text>【已扣除租车保证金】</text>
-				<u-input v-model="margin" placeholder="请输入已扣除租车保证金" type="number" border="bottom" shape="circle" inputAlign="right"></u-input>
+				<u-input v-model="deductBondMoney" placeholder="请输入已扣除租车保证金" type="number" border="bottom" shape="circle" inputAlign="right"></u-input>
 				<text>元</text>
 			</view>
 		</view>
@@ -79,7 +79,7 @@
 				current: 0,
 				hasRelet: false,
 				reletDate: '',
-				margin: 0,
+				deductBondMoney: 0,
 			};
 		},
 		onLoad(option) {
@@ -168,23 +168,41 @@
 				});
 			},
 			normalReturnCar() {
-				api.updateCarStatus({
-					id: this.carInfo.id,
-					status: 0
-				}).then((res = {}) => {
-					uni.showToast({
-						title: '还车成功',
-						icon: 'success',
-						success: () => {
-							uni.switchTab({
-								url: '/pages/model/car/Car',
-								success: () => {
-									uni.$emit('returnCar')
-								}
-							});
-						}
+				if(this.deductBondMoney * 1 > this.carInfo?.wxOrder?.bondMoney * 1){
+					uni.showModal({
+						title: '提示',
+						content: '扣除的租车保证金已超过已缴纳的租车保证金，请确认后重新输入',
+						showCancel:false,
 					});
-				});
+					return;
+				} else {
+					uni.showModal({
+						title: '提示',
+						content: `请退${this.carInfo?.wxOrder?.bondMoney * 1 - this.deductBondMoney * 1}元的租车保证金`,
+						success: (e) => {
+							if(e.confirm) {
+								api.updateCarStatus({
+									id: this.carInfo.id,
+									deductBondMoney: this.deductBondMoney,
+									status: 0
+								}).then((res = {}) => {
+									uni.showToast({
+										title: '还车成功',
+										icon: 'success',
+										success: () => {
+											uni.switchTab({
+												url: '/pages/model/car/Car',
+												success: () => {
+													uni.$emit('returnCar')
+												}
+											});
+										}
+									});
+								});
+							}
+						},
+					});
+				}
 			},
 			abnormalReturnCar() {
 				uni.navigateTo({

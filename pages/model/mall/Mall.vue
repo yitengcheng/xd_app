@@ -1,5 +1,6 @@
 <template>
 	<view class="content">
+		<u-swiper :list="list" :circular="true"></u-swiper>
 		<WaterfallsFlow :wfList="productList" @itemTap="itemTap"></WaterfallsFlow>
 	</view>
 </template>
@@ -16,6 +17,7 @@
 			return {
 				pageNum: 1,
 				productList: [],
+				list:[]
 			};
 		},
 		mounted() {

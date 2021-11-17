@@ -6,7 +6,7 @@
 		</view>
 		<view v-for="(car, index) in data" :key="index" class="car_box">
 			<u-image :showError="false" :src="car.carPhoto" width="80" height="55" shape="square"></u-image>
-			<view class="car_box_info">
+			<view class="car_box_info" style="flex: 1;">
 				<view class="car_box_info_title">{{car.carBrand}}</view>
 				<view class="car_box_info_plate">{{car.carNum}}</view>
 			</view>

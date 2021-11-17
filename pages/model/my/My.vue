@@ -1,7 +1,7 @@
 <template>
 	<view class="content" style="align-items: center;">
 		<view class="page_top">
-			<u-image :width="106" :height="106" src="/static/img/head.png"></u-image>
+			<u-image width="106rpx" height="106rpx" src="/static/img/head.png"></u-image>
 			<view class="page_top_info">
 				<text class="name" @click="() => show = true">{{complanyName}}</text>
 				<text style="font-size: 14px;">ID：{{ _.random(100000000, 999999999, false) || 'youxingxiaodi'}}</text>
@@ -117,10 +117,10 @@
 	.page_top {
 		width: 100%;
 		background-color: #FFD101;
-		border-radius: 0px 0px 40px 40px;
+		border-radius: 0px 0px 60px 60px;
 		display: flex;
 		flex-direction: row;
-		padding: 50rpx 40px;
+		padding: 15px 0px 60px 15px;
 	}
 	.page_top_info {
 		display: flex;
