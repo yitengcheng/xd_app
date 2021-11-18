@@ -8,7 +8,7 @@
 		</uni-forms>
 		<view class="btn_box">
 			<u-button type="primary" class="btn" @click="submit">提交</u-button>
-			<u-button type="warn" class="btn" @click="reset">重置</u-button>
+			<u-button type="error" class="btn" @click="reset">重置</u-button>
 		</view>
 		
 	</view>
