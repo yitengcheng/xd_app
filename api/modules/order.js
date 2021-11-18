@@ -25,6 +25,9 @@ const order = {
 	finishCar: (data) => {
 		return request.globalRequest(`/system/wxorder/uploadContract`, 'post', data);
 	},
+	newOrders: (data) => {
+		return request.globalRequest(`/main/app/order`, 'post', data);
+	},
 	
 }
 

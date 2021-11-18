@@ -1,8 +1,6 @@
 <template>
 	<view class="content">
-		<u-sticky>
-			<u-tabs :current="current" :list="items" @change="onClickItem" lineColor="#FFD101" :activeStyle="{color: '#FFD101'}" :is-scroll="false"></u-tabs>
-		</u-sticky>
+		<u-tabs sticky :current="current" :list="items" @click="onClickItem" lineColor="#FFD101" :activeStyle="{color: '#FFD101'}" :is-scroll="false"></u-tabs>
 		<view>
 			<view v-show="current === 0">
 				<WaterfallsFlow :wfList="allList" @itemTap="itemTap"/>
@@ -28,10 +26,10 @@
 		},
 		data() {
 			return {
-				current: 1,
+				current: 0,
 				items: [
-					{name: '全部车辆'},
 					{name: '待租车辆'},
+					{name: '全部车辆'},
 					{name: '在租车辆'},
 				],
 				allList: [],
@@ -71,7 +69,7 @@
 				} )
 			},
 			onClickItem( e ) {
-				this.current = e;
+				this.current = e.index;
 				this.$nextTick( () => {
 					this.getCarList( 1 );
 				} )
@@ -111,7 +109,7 @@
 			},
 			getCarList( pageNo ) {
 				let pageNum = pageNo || this.judgePageNo();
-				let status = this.current === 0 ? undefined : this.current === 1 ? 0 : 1;
+				let status = this.current === 0 ? 0 : this.current === 1 ? undefined : 1;
 				api.carList( {
 					pageNum,
 					pageSize: 10,

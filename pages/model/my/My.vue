@@ -39,13 +39,13 @@
 			return {
 				data: [
 					{title: '接单/通知',  icon: '/static/img/my_notice.png', path: '/pages/model/my/Todo'},
-					{title: '历史订单',  icon: '/static/img/history_orders.png', path: '/pages/model/my/Orders'},
+					{title: '历史订单',  icon: '/static/img/history_orders.png', path: '/pages/model/my/HistoryOrders'},
 					{title: '合同模板',  icon: '/static/img/pact.png', path: '/pages/model/my/ContractTemplate'},
 					{title: '修改密码',  icon: '/static/img/modify_password.png', path: '/pages/model/login/ResetPassword'},
 					{title: '公司信息',  icon: '/static/img/company_info.png', path: '/pages/model/my/UpdateComplanyInfo'},
 					{title: '硬件设备',  icon: '/static/img/devices.png', path: '/pages/model/my/Equipment'},
 					{title: '硬件订单',  icon: '/static/img/indent.png', path: '/pages/model/mall/EquipmentOrder'},
-					{title: '清理缓存',  icon: '/static/img/', func: 'clear'},
+					{title: '清理缓存',  icon: '/static/img/clear.png', func: 'clear'},
 					{title: '退出登录',  icon: '/static/img/logout.png', func: 'logout'},
 				],
 				user: uni.getStorageSync('user'),

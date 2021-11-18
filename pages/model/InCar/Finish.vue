@@ -21,9 +21,9 @@
 		methods:{
 			toIndex(){
 				uni.switchTab({
-					url: '/pages/model/InCar/index',
+					url: '/pages/model/my/Orders',
 					success: () => {
-						uni.$emit('inCar');
+						uni.$emit('order');
 					}
 				});
 			},

@@ -1,6 +1,6 @@
 <template>
-	<view>
-		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="320">
+	<view class="content" style="align-items: center;">
+		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="320" class="form_box">
 			<FormUpload ref="upload" :formData="formData" name="photos" label="异常车辆照片" :limit="8" :required="false"/>
 			<FormInput :formData="formData" name="deductBondMoney" label="已扣除租车保证金" type="number" :required="false"></FormInput>
 			<FormInput :formData="formData" name="remark" label="异常车辆说明" type="textarea" :required="false"></FormInput>
@@ -9,8 +9,8 @@
 			<FormRadio v-if="blackFlag" :formData="formData" name="hideInfo" label="是否隐藏公司信息" :required="false"></FormRadio>
 			<FormInput v-if="blackFlag" :formData="formData" name="cause" label="拉黑原因" :required="false" type="textarea" autoHeight ></FormInput>
 			<text>还车地点: {{address}}</text>
-			<button type="primary" class="submitBtn" @click="sumbit">提交</button>
 		</uni-forms>
+		<u-button type="primary" class="submitBtn" @click="sumbit">提交</u-button>
 	</view>
 </template>
 
@@ -134,7 +134,15 @@
 </script>
 
 <style lang="scss" scoped>
+	.form_box {
+		width: 90%;
+		background-color: #FFFFFF;
+		border-radius: 10px;
+		margin-top: 10px;
+		padding: 10px;
+	}
 .submitBtn{
+	width: 90%;
 	margin-top: 50rpx;
 }
 </style>

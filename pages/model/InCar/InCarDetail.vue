@@ -37,7 +37,7 @@
 			<text>【身份证号】{{ customer.idcard || '无' }}</text>
 			<text>【手机号】{{ customer.phoneNumber || '无' }}</text>
 		</view>
-		<button @click="readIdcard" class="readIdcard" type="primary">身份证阅读器</button>
+		<button ></button>
 		<view class="info_box">
 			<view class="info_title">
 				<view class="adorn"></view>
@@ -45,6 +45,7 @@
 			</view>
 			<view class="line"></view>
 			<uni-forms ref="form" v-model="formData" :rules="rules" :labelWidth="100">
+				<u-button @click="readIdcard" class="readIdcard" type="primary">身份证阅读器</u-button>
 				<FormUpload :formData="formData" name="idcardFront" label="身份证" :limit="1" @getOcrData="getIdCard" url="/tool/ocr/idcard?type=2"></FormUpload>
 				<FormUpload :formData="formData" name="licenseMainUrl" label="驾照主页" :limit="1" @getOcrData="getLicenseMain" url="/tool/ocr/driving?type=8"></FormUpload>
 				<FormUpload :formData="formData" name="licenseViceUrl" label="驾照副页" :limit="1" @getOcrData="getLicenseVice" url="/tool/ocr/driving?type=9"></FormUpload>
@@ -644,10 +645,6 @@
 	.btn {
 		margin-bottom: 10px;
 		width: 90%;
-	}
-
-	.readIdcard {
-		margin-top: 20rpx;
 	}
 
 	.form_combox {

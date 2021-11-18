@@ -56,9 +56,7 @@
 			autoCheck() {
 				this.options.forEach(o => {
 					if (o.name === '重点人员查询') {
-						
 						api.checkZtryService(this.idCard).then((res = {}) => {
-							
 							this.active = this.active + 1;
 							o.desc = res.data.msg;
 							this.$nextTick(() => {
@@ -71,7 +69,7 @@
 					if (o.name === '一人多租') {
 						api.checkLease(this.idCard).then((res = {}) => {
 							this.active = this.active + 1;
-							o.desc = `租车未还${res.data}`;
+							o.desc = `租车未还${res.data}辆车`;
 							this.$nextTick(() => {
 								if (this.active === this.options.length - 1) {
 									this.pactFlag = true;

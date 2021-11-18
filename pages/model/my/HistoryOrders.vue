@@ -45,7 +45,7 @@
 		methods: {
 			initOrders(pageNum) {
 				let status = this.current === 0 ? undefined : this.current === 1 ? 0 : 1;
-				api.newOrders({
+				api.orders({
 					pageNum,
 					pageSize: 10,
 				}).then((res = {}) => {
@@ -75,7 +75,7 @@
 			clickItem(e){
 				let type = (e.payStatus === 'CLOSED' || e.payStatus === 'REFUSE') ? '3' : e.comfirStatus ? '2' : '1';
 				uni.navigateTo({
-					url: `/pages/model/my/OrderDetail?id=${e.orderId}&type=${type}`
+					url: `/pages/model/my/OrderDetail?id=${e.orderId}`
 				})
 			}
 		}

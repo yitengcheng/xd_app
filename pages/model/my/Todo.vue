@@ -9,7 +9,7 @@
 				<view class="toDo_info_msg">{{toDo.message}}</view>
 			</view>
 			<view>
-				<u-button type="primary" class="toDo_btn">查看</u-button>
+				<u-button type="primary" class="toDo_btn" @click="haveRead(toDo)">查看</u-button>
 				<view class="toDo_info_msg">{{dayjs(toDo.createTime).format('YYYY-MM-DD')}}</view>
 			</view>
 		</view>

@@ -6,21 +6,25 @@
 			</swiper-item>
 		</swiper>
 		<view class="info_box">
-			<text>订单信息</text>
-			<text>总金额：{{orderInfo.totalMoney/100 || 0}}</text>
-			<text>支付状态：{{orderInfo.payStatus === 'NOTPAY' ? '未付款' : orderInfo.payStatus === 'SUCCESS' ? '付款成功' : orderInfo.payStatus === 'REFUNDED' ? '退款成功' : orderInfo.payStatus === '到店付款' ? '到店付款' : '未知状态'}}</text>
-			<text>租赁费用：{{orderInfo.shouldMoney/100 || 0}}</text>
-			<text>保险费用：{{orderInfo.insureMoney/100 || 0}}</text>
-			<text>平台费用：{{orderInfo.serviceMoney/100 || 0}}</text>
-			<text>预计交车时间：{{dayjs(orderInfo.wantCarTime).format('YYYY-MM-DD HH:mm:ss')}}</text>
-			<text>预计还车时间：{{dayjs(orderInfo.estimateReturnTime).format('YYYY-MM-DD HH:mm:ss')}}</text>
-			<text>交车地点：{{orderInfo.address}}</text>
-			<text>还车地点：{{orderInfo.returnAddress}}</text>
-			<button v-show="type === '1'" @click="orderHandle(1)" class="btn" type="primary">确认接单</button>
-			<button v-show="type === '1'" @click="orderHandle(2)" class="btn">放弃接单</button>
-			<button v-show="type === '2'" @click="orderHandle(4)" class="btn" type="primary">交车</button>
-			<button v-show="type === '2'" @click="orderHandle(3)" class="btn" type="warn">确认退款</button>
+			<view class="info_title">
+				<view class="adorn"></view>
+				<text>订单信息</text>
+			</view>
+			<view class="line"></view>
+			<text>【总金额】{{orderInfo.totalMoney/100 || 0}}</text>
+			<text>【支付状态】{{orderInfo.payStatus === 'NOTPAY' ? '未付款' : orderInfo.payStatus === 'SUCCESS' ? '付款成功' : orderInfo.payStatus === 'REFUNDED' ? '退款成功' : orderInfo.payStatus === '到店付款' ? '到店付款' : '未知状态'}}</text>
+			<text>【租赁费用】{{orderInfo.shouldMoney/100 || 0}}</text>
+			<text>【保险费用】{{orderInfo.insureMoney/100 || 0}}</text>
+			<text>【平台费用】{{orderInfo.serviceMoney/100 || 0}}</text>
+			<text>【预计交车时间】{{dayjs(orderInfo.wantCarTime).format('YYYY-MM-DD')}}</text>
+			<text>【预计还车时间】{{dayjs(orderInfo.estimateReturnTime).format('YYYY-MM-DD')}}</text>
+			<text>【交车地点】{{orderInfo.address}}</text>
+			<text>【还车地点】{{orderInfo.returnAddress}}</text>
 		</view>
+		<u-button v-show="type === '1'" @click="orderHandle(1)" class="btn" type="primary">确认接单</u-button>
+		<u-button v-show="type === '1'" @click="orderHandle(2)" class="btn">放弃接单</u-button>
+		<u-button v-show="type === '2'" @click="orderHandle(4)" class="btn" type="primary">交车</u-button>
+		<u-button v-show="type === '2'" @click="orderHandle(3)" class="btn" type="error">确认退款</u-button>
 	</view>
 </template>
 
@@ -119,11 +123,33 @@
 		width: 90%;
 		display: flex;
 		flex-direction: column;
-		padding-top: 10px;
+		padding: 10px;
+		background-color: #FFFFFF;
+		border-radius: 10px;
+		margin-bottom: 10px;
+		margin-top: 10px;
+	}
+	.adorn {
+		width: 3px;
+		height: 60%;
+		background-color: #FFD101;
+		margin-right: 5px;
+	}
+	.info_title {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		height: 42rpx;
+	}
+	.line {
+		width: 100%;
+		height: 1px;
+		background-color: #eee;
+		margin: 5px 0px;
 	}
 
 	.btn {
 		margin-top: 30rpx;
-		width: 80%;
+		width: 90%;
 	}
 </style>

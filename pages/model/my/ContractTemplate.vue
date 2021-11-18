@@ -1,8 +1,8 @@
 <template>
-	<view class="content">
-		<uni-data-picker v-show="((user || {}).complany || []).length >= 2" v-model="complanyId" :localdata="complanys" @change="selectComplany" class="complanyPicker"></uni-data-picker>
-		<button class="btn" type="primary" @click="downLoadTemplate" v-show="!fileFlag">下载模板</button>
-		<button class="btn" type="primary" @click="upLoadTemplate" v-show="!fileFlag">上传模板</button>
+	<view class="content" style="align-items: center;">
+		<uni-data-picker v-show="((user || {}).complany || []).length >= 2" v-model="complanyId" :localdata="complanys" @change="selectComplany" class="complanyPicker" ></uni-data-picker>
+		<u-image src="/static/img/pact_download.png" @click="downLoadTemplate" v-show="!fileFlag" width="350px" height="150px" style="margin-top: 20px;"></u-image>
+		<u-image src="/static/img/pact_upload.png" @click="upLoadTemplate" v-show="!fileFlag" width="350px" height="150px" style="margin-top: 20px;"></u-image>
 		<nk-select-file v-model="fileFlag" @confirm="getPath"></nk-select-file>
 	</view>
 </template>
@@ -43,7 +43,11 @@
 				this.complany = e.detail.value[0].data;
 			},
 			downLoadTemplate() {
-				let url = this.complany.templateUrl ? `${config.API_URL}/contract/template?url=${this.complany.templateUrl}` : 'http://www.fanzehua.cn/uploads/contractTemplate.docx'
+				let url = this.complany.templateUrl ? `${config.API_URL}/contract/template?url=${this.complany.templateUrl}` : 'http://www.fanzehua.cn/uploads/contractTemplate.docx';
+				uni.showLoading({
+					title: '下载中',
+					mask: true,
+				})
 				uni.downloadFile({
 					url,
 					header: {
@@ -60,6 +64,7 @@
 									savedFilePath
 								} = file
 								if (savedFilePath) {
+									uni.hideLoading();
 									uni.openDocument({
 										filePath: tempFilePath,
 										fail: () => {
