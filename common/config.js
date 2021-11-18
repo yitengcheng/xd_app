@@ -6,7 +6,8 @@ let DEVELOPMENT_API_URL = "https://xd.qiantur.com/prod-api";
 // let DEVELOPMENT_API_URL = "http://192.168.2.54:8080";
 let PRODUCT_API_URL = "https://xd.qiantur.com/prod-api";
 // let PRODUCT_API_URL = "https://test.qiantur.com/stage-api";
-let DEFAULT_IMG_URL = 'https://test.qiantur.com/minio';
+// let DEFAULT_IMG_URL = 'https://test.qiantur.com/minio';
+let DEFAULT_IMG_URL = 'https://xd.qiantur.com/minio';
 let PRODUCT_IMG_URL = 'https://xd.qiantur.com/minio';
 
 if (process.env.NODE_ENV === 'development') {

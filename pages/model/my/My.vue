@@ -1,30 +1,31 @@
 <template>
 	<view class="content" style="align-items: center;">
-		<view class="page_top">
+		<view class="page_top" @click="() => show = true">
 			<u-image width="106rpx" height="106rpx" src="/static/img/head.png"></u-image>
 			<view class="page_top_info">
-				<text class="name" @click="() => show = true">{{complanyName}}</text>
+				<text class="name">{{complanyName}}</text>
 				<text style="font-size: 14px;">ID：{{ _.random(100000000, 999999999, false) || 'youxingxiaodi'}}</text>
 			</view>
 		</view>
 		<view class="menus_box">
 			<view v-for="(item,index) in data" :key="index" @click="toPage(item)" class="item_row" :style="{borderBottom: index === (data.length - 1) ? '' : '1px solid #E0E0E0'}">
 				<view style="display: flex; flex-direction: row;flex: 1;align-items: center;">
-					<view class="item_img">
-						<u-image :src="item.icon" width="20px" height="20px"></u-image>
-					</view>
+					<u-image :src="item.icon" width="30px" height="30px"></u-image>
 					<text class="item_text">{{item.title}}</text>
 				</view>
 				<u-icon name="arrow-right" color="#999999"></u-icon>
 			</view>
 		</view>
 		<text class="complany">贵州小滴科技有限公司 版权所有</text>
-		<u-popup v-model="show" mode="bottom">
+		<u-popup :show="show" mode="bottom">
 			<view class="popup_box">
-				<view class="popup_box_title">请选择</view>
+				<view class="popup_box_title">公司切换</view>
 				<view class="line"></view>
-				<view v-for="(complany, index) in complanys" class="popup_box_info" @click="selectComplany(index)">
-					<view class="popup_box_info_name">{{complany.text}}</view>
+				<view v-for="(complany, index) in complanys" class="popup_box_info">
+					<view class="popup_box_info_name">
+						{{complany.text}}
+						<view @click="selectComplany(index)" class="change_btn">切换</view>
+					</view>
 					<view class="line" ></view>
 				</view>
 			</view>
@@ -37,13 +38,15 @@
 		data() {
 			return {
 				data: [
-					{title: '接单/通知',  icon: '/static/img/notice.png', path: '/pages/model/my/Todo'},
-					{title: '历史订单',  icon: '/static/img/', path: '/pages/model/my/Orders'},
-					{title: '合同模板',  icon: '/static/img/', path: '/pages/model/my/ContractTemplate'},
-					{title: '修改密码',  icon: '/static/img/', path: '/pages/model/login/ResetPassword'},
-					{title: '公司信息',  icon: '/static/img/', path: '/pages/model/my/UpdateComplanyInfo'},
+					{title: '接单/通知',  icon: '/static/img/my_notice.png', path: '/pages/model/my/Todo'},
+					{title: '历史订单',  icon: '/static/img/history_orders.png', path: '/pages/model/my/Orders'},
+					{title: '合同模板',  icon: '/static/img/pact.png', path: '/pages/model/my/ContractTemplate'},
+					{title: '修改密码',  icon: '/static/img/modify_password.png', path: '/pages/model/login/ResetPassword'},
+					{title: '公司信息',  icon: '/static/img/company_info.png', path: '/pages/model/my/UpdateComplanyInfo'},
+					{title: '硬件设备',  icon: '/static/img/devices.png', path: '/pages/model/my/Equipment'},
+					{title: '硬件订单',  icon: '/static/img/indent.png', path: '/pages/model/mall/EquipmentOrder'},
 					{title: '清理缓存',  icon: '/static/img/', func: 'clear'},
-					{title: '退出登录',  icon: '/static/img/', func: 'logout'},
+					{title: '退出登录',  icon: '/static/img/logout.png', func: 'logout'},
 				],
 				user: uni.getStorageSync('user'),
 				complanys: [],
@@ -136,29 +139,35 @@
 	.line {
 		height: 1px;
 		width: 100%;
-		background-color: #888888;
+		background-color: #CDCDCD;
 	}
 	.popup_box {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
 		width: 100%;
 	}
 	.popup_box_title {
 		font-size: 16px;
-		font-weight: 700;
+		font-family: Microsoft YaHei;
+		font-weight: 400;
+		color: #333333;
 		margin-bottom: 10px;
 		margin-top: 10px;
+		padding-left: 10px;
 	}
 	.popup_box_info {
-		width: 100%;
+		width: 90%;
 		height: 45px;
+		align-self: center;
 		display: flex;
 		flex-direction: column;
 	}
 	.popup_box_info_name {
 		flex: 1;
-		line-height: 44px;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
 		margin-left: 10px;
 	}
 	.menus_box {
@@ -174,15 +183,24 @@
 		flex-direction: row;
 		align-items: center;
 	}
-	.item_img {
+	.item_text {
+		font-size: 14px;
+		font-family: Microsoft YaHei;
+		font-weight: 400;
+		color: #333333;
+		margin-left: 15px;
+	}
+	.change_btn {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 30px;
-		height: 30px;
-		border-radius: 50%;
-		background-color: #333333;
-		margin-right: 15px;
+		width: 66px;
+		background: #FFD101;
+		border-radius: 4px;
+		font-size: 12px;
+		font-family: Microsoft YaHei;
+		font-weight: 400;
+		color: #333333;
 	}
 	.complany {
 		margin-top: 40rpx;

@@ -1,7 +1,7 @@
 <template>
 	<view class="content" style="align-items: center;">
 		<swiper class="swiper_box">
-			<swiper-item v-for="(item, index) in orderInfo.carPhotos" :key="index">
+			<swiper-item v-for="(item, index) in (orderInfo || {}).carPhotos" :key="index">
 				<image :src="item" class="swiper_img" mode="aspectFill"></image>
 			</swiper-item>
 		</swiper>
@@ -48,10 +48,10 @@
 					} = res;
 					if (data) {
 						let tmp = [];
-						data.car.carPhotos.split(',').forEach(o => {
+						data?.car?.carPhotos?.split(',').forEach(o => {
 							o ? tmp.push(`${config.IMG_URL}${o}`) : tmp.push('/static/img/defalut.png');
 						});
-						delete res.data.car.carPhotos;
+						delete res?.data?.car?.carPhotos;
 						if(res?.data?.comfirStatus && this.type !== '3'){
 							this.type = '2';
 						}
@@ -69,7 +69,7 @@
 					'string') ? api.handleRead : type === 3 ? api.orderCannel : undefined;
 				if(type === 4){
 					uni.navigateTo({
-						url: `/pages/model/InCar/InCarDetail?id=${this.orderInfo.car.id}`
+						url: `/pages/model/InCar/InCarDetail?id=${this.orderInfo?.car?.id}`
 					});
 					return;
 				}

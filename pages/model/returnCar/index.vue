@@ -5,7 +5,7 @@
 			<view @click="getData(1)" class="search_text">搜索</view>
 		</view>
 		<view v-for="(car, index) in data" :key="index" class="car_box">
-			<u-image :showError="false" :src="car.carPhoto" width="80" height="55" shape="square"></u-image>
+			<u-image :showError="false" :src="car.carPhoto" width="80" height="55" shape="square" style="margin-right: 10px;"></u-image>
 			<view class="car_box_info" style="flex: 1;">
 				<view class="car_box_info_title">{{car.carBrand}}</view>
 				<view class="car_box_info_plate">{{car.carNum}}</view>

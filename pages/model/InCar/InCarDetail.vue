@@ -1,70 +1,75 @@
 <template>
 	<view class="content" style="align-items: center;">
 		<swiper class="swiper_box" @change="change">
-			<swiper-item v-for="(item, index) in carInfo.carPhotos" :key="index">
+			<swiper-item v-for="(item, index) in (carInfo || {}).carPhotos" :key="index">
 				<image :src="item" class="swiper_img" mode="aspectFill"></image>
 			</swiper-item>
 		</swiper>
 		<view class="info_box">
-			<text>车辆信息</text>
-			<text>车辆品牌：{{ carInfo.carBrand || '无' }}</text>
-			<text>车牌号：{{ carInfo.carNum || '无' }}</text>
-			<text>车牌颜色：{{ carInfo.color || '无' }}</text>
-			<text>车主姓名：{{ carInfo.name || '无' }}</text>
-			<text>车主联系方式：{{ carInfo.phoneNum || '无' }}</text>
-			<text>租车单价：{{ carInfo.unitPrice || '无' }} 元/天</text>
-			<text>租车保证金：{{ carInfo.bondMoney || '无' }} 元</text>
-			<text>违章保证金：{{ carInfo.violationBondMoney || '无' }} 元</text>
-			<text>超过里程收取金额：{{ carInfo.maxMileagePrice || '无' }} 每日</text>
-			<text>预约租车时间：{{ (carInfo.wxOrder || {}).wantCarTime || '无' }}至{{ (carInfo.wxOrder || {}).estimateReturnTime || '无' }}</text>
-			<text>租车天数：{{ ((carInfo || {}).wxOrder || {}).rentCarDays }} 天</text>
-		</view>
-		<view class="info_box">
+			<view class="info_title">
+				<view class="adorn"></view>
+				<text>车辆信息</text>
+			</view>
+			<view class="line"></view>
+			<text>【车辆品牌】{{ carInfo.carBrand || '无' }}</text>
+			<text>【车牌号】{{ carInfo.carNum || '无' }}</text>
+			<text>【车牌颜色】{{ carInfo.color || '无' }}</text>
+			<text>【租车单价】{{ carInfo.unitPrice || '无' }} 元/天</text>
+			<text>【租车保证金】{{ carInfo.bondMoney || '无' }} 元</text>
+			<text>【违章保证金】{{ carInfo.violationBondMoney || '无' }} 元</text>
+			<text>【预约租车时间】{{dayjs((carInfo.wxOrder || {}).wantCarTime).format('YYYY-MM-DD')}}至{{dayjs((carInfo.wxOrder || {}).estimateReturnTime).format('YYYY-MM-DD')}}</text>
+			<text>【租车天数】{{ ((carInfo || {}).wxOrder || {}).rentCarDays }} 天</text>
 			<uni-forms ref="formOrder" v-model="formOrderData" :rules="orderRules" :labelWidth="100" class="form_box">
-				<FormInput :formData="formOrderData" name="unitPrice" label="租车单价"/>
-				<FormInput :formData="formOrderData" name="rentCarDays" label="租车天数"/>
-				<FormInput :formData="formOrderData" name="bondMoney" label="租车保证金"/>
-				<FormInput :formData="formOrderData" name="violationBondMoney" label="违章保证金"/>
+				<FormInput :formData="formOrderData" name="unitPrice" label="租车单价" decoration/>
+				<FormInput :formData="formOrderData" name="rentCarDays" label="租车天数" decoration/>
+				<FormInput :formData="formOrderData" name="bondMoney" label="租车保证金" decoration/>
+				<FormInput :formData="formOrderData" name="violationBondMoney" label="违章保证金" decoration/>
 			</uni-forms>
-		</view>
-		<view class="info_box" v-if="formOrderData.unitPrice * 1 - carInfo.unitPrice * 1 !== 0">
-			<view >优惠：{{ formOrderData.unitPrice * 1 - carInfo.unitPrice * 1 > 0 ? `增加${formOrderData.unitPrice * 1 - carInfo.unitPrice * 1}元` : `减少${carInfo.unitPrice * 1 - formOrderData.unitPrice * 1}元`}}</view>
+			<view v-if="formOrderData.unitPrice * 1 - carInfo.unitPrice * 1 !== 0" >【优惠】{{ formOrderData.unitPrice * 1 - carInfo.unitPrice * 1 > 0 ? `增加${formOrderData.unitPrice * 1 - carInfo.unitPrice * 1}元` : `减少${carInfo.unitPrice * 1 - formOrderData.unitPrice * 1}元`}}</view>
 		</view>
 		<view class="info_box">
-			<text>下单人信息</text>
-			<text>姓名：{{ customer.name || '无' }}</text>
-			<text>身份证号：{{ customer.idcard || '无' }}</text>
-			<text>手机号：{{ customer.phoneNumber || '无' }}</text>
+			<view class="info_title">
+				<view class="adorn"></view>
+				<text>下单人信息</text>
+			</view>
+			<view class="line"></view>
+			<text>【姓名】{{ customer.name || '无' }}</text>
+			<text>【身份证号】{{ customer.idcard || '无' }}</text>
+			<text>【手机号】{{ customer.phoneNumber || '无' }}</text>
 		</view>
 		<button @click="readIdcard" class="readIdcard" type="primary">身份证阅读器</button>
 		<view class="info_box">
+			<view class="info_title">
+				<view class="adorn"></view>
+				<text>承租人信息</text>
+			</view>
+			<view class="line"></view>
 			<uni-forms ref="form" v-model="formData" :rules="rules" :labelWidth="100">
 				<FormUpload :formData="formData" name="idcardFront" label="身份证" :limit="1" @getOcrData="getIdCard" url="/tool/ocr/idcard?type=2"></FormUpload>
 				<FormUpload :formData="formData" name="licenseMainUrl" label="驾照主页" :limit="1" @getOcrData="getLicenseMain" url="/tool/ocr/driving?type=8"></FormUpload>
 				<FormUpload :formData="formData" name="licenseViceUrl" label="驾照副页" :limit="1" @getOcrData="getLicenseVice" url="/tool/ocr/driving?type=9"></FormUpload>
 				<FormUpload ref="photoScan" :formData="formData" name="photoScan" label="现场照片" :limit="3" :required="false"></FormUpload>
-				<uni-forms-item label="姓名" :name="formData.name" :required="true">
+				<uni-forms-item label="姓名" :name="formData.name" :required="true" decoration>
 					<Combox :value="formData.name" :candidates="candidates" :isJSON="true" keyName="name"
 						@getValue="getComboxValue" class="form_combox"></Combox>
 				</uni-forms-item>
-				<uni-forms-item label="移交车辆" :name="formData.carId" :required="true">
+				<uni-forms-item label="移交车辆" :name="formData.carId" :required="true" decoration>
 					<Combox :value="formData.carId" :candidates="carList" :isJSON="true" keyName="text"
 						@getValue="getCarValue" class="form_combox"></Combox>
 				</uni-forms-item>
-				<FormInput :formData="formData" name="idcard" label="身份证号" />
-				<FormInput :formData="formData" name="archivesNum" label="档案编号" />
-				<FormPicker :formData="formData" name="sex" label="性别" :localdata="sexList"/>
-				<FormInput :formData="formData" name="phone" label="手机号" />
-				<FormInput :formData="formData" name="nowAddress" label="当前居住地" />
-				<FormInput :formData="formData" name="urgentConcat" label="紧急联系人" :required="false"/>
-				<FormSwitch :formData="formData" name="preferredUse" label="代金券" @change="changePreferredUse" :required="false">
-				</FormSwitch>
+				<FormInput :formData="formData" name="idcard" label="身份证号" decoration/>
+				<FormInput :formData="formData" name="archivesNum" label="档案编号" decoration/>
+				<FormPicker :formData="formData" name="sex" label="性别" :localdata="sexList" decoration/>
+				<FormInput :formData="formData" name="phone" label="手机号" decoration/>
+				<FormInput :formData="formData" name="nowAddress" label="当前居住地" decoration/>
+				<FormInput :formData="formData" name="urgentConcat" label="紧急联系人" :required="false" decoration/>
+				<FormSwitch :formData="formData" name="preferredUse" label="代金券" @change="changePreferredUse" :required="false" decoration/>
 				<FormRadio :required="false" :multiple="true" :formData="formData" name="check" :localdata="checkList"
-					label="附加核验" @change="changeCheck" />
-				<button type="primary" class="btn" @click="submit">提交</button>
-				<button type="warn" class="btn" @click="reset">重置</button>
+					label="附加核验" @change="changeCheck" decoration/>
 			</uni-forms>
 		</view>
+		<u-button type="primary" class="btn" @click="submit">提交</u-button>
+		<u-button class="btn" @click="reset">重置</u-button>
 	</view>
 </template>
 
@@ -114,8 +119,11 @@
 					urgentConcat: '',
 					sex: '',
 					photoScan: [],
+					birthday: '',
+					archivesNum: '',
 					
 				},
+				customerId: '',
 				checkList: [],
 				rules: {
 					name: {
@@ -303,8 +311,10 @@
 				this.formData.preferredUse = e
 			},
 			getComboxValue(e) {
+				this.customerId = this.candidates[e]?.id;
 				this.formData.name = this.candidates[e]?.name ?? '';
 				this.formData.idcard = this.candidates[e]?.idcard ?? '';
+				this.formData.archivesNum = this.candidates[e]?.archivesNum ?? '';
 				this.formData.phone = this.candidates[e]?.phoneNumber ?? '';
 				this.formData.nowAddress = this.candidates[e]?.nowAddress ?? '';
 				this.formData.idcardFront = formattingPhoto(this.candidates[e]?.idcardFront) ? [formattingPhoto(this.candidates[e]?.idcardFront)] : [];
@@ -387,15 +397,16 @@
 				api.returnCarInfo(id).then((res = {}) => {
 					if (res.data) {
 						let tmp = [];
-						res.data.carPhotos.split(',').forEach(o => {
+						res?.data?.carPhotos?.split(',').forEach(o => {
 							tmp.push(`${config.IMG_URL}${o}`);
 						});
-						delete res.data.carPhotos;
+						delete res?.data?.carPhotos;
 						this.carInfo = {
 							carPhotos: tmp,
 							...res.data
 						};
 						this.carList.push({ value: res?.data?.id, text: res?.data?.carNum });
+						this.customerId = res?.data?.customer?.id;
 						this.customer = res?.data?.customer ?? {};
 						this.idcardFront = res.data?.customer?.idcardFront;
 						this.licenseMainUrl = res.data?.customer?.licenseMainUrl;
@@ -404,11 +415,13 @@
 						this.formData.licenseViceUrl = [(formattingPhoto(res.data?.customer?.licenseViceUrl))];
 						this.formData.idcardFront = [(formattingPhoto(res.data?.customer?.idcardFront))];
 						this.formData.name = res?.data?.customer?.name;
+						this.formData.archivesNum = res?.data?.customer?.archivesNum;
 						this.formData.carId = res?.data?.carNum ?? '';
 						this.formData.idcard = res?.data?.customer?.idcard;
 						this.formData.phone = res?.data?.customer?.phoneNumber;
 						this.formData.nowAddress = res?.data?.customer?.nowAddress;
 						this.formData.urgentConcat = res?.data?.customer?.urgentConcat;
+						this.formData.sex = res?.data?.customer?.sex * 1;
 						this.formOrderData.unitPrice = res?.data?.unitPrice;
 						this.formOrderData.bondMoney = res?.data?.bondMoney;
 						this.formOrderData.violationBondMoney = res?.data?.violationBondMoney;
@@ -423,20 +436,10 @@
 				if (url && !!ocr) {
 					this.formData.idcardFront = [formattingPhoto(url)];
 					this.idcardFront = url;
-					api.insertUserInfo({
-						name: ocr.name,
-						idcard: ocr.idnumber,
-						address: ocr.address,
-						nowAddress: ocr.address,
-						sex: ocr.gender === '男' ? 0 : 1,
-						birthday: ocr.birthday,
-						complanyId: this.carInfo.complanyId,
-						orderId: this.carInfo.orderId,
-						idcardFront: url,
-					})
 					this.formData.name = ocr.name;
 					this.formData.idcard = ocr.idnumber;
 					this.formData.nowAddress = ocr.address;
+					this.formData.birthday = ocr.birthday;
 					this.formData.sex = ocr.gender === '男' ? 0 : 1;
 				}
 			},
@@ -445,13 +448,6 @@
 				if (url && !!ocr) {
 					this.formData.licenseMainUrl = [formattingPhoto(url)];
 					this.licenseMainUrl = url;
-					api.insertUserInfo({
-						licenseMainUrl: url,
-						receiveCarTime: ocr.issueDate,
-						invalidCarTime: [this.dayjs(ocr.startDate).format('YYYY-MM-DD'), this.dayjs(ocr.endDate).format('YYYY-MM-DD')].join(','),
-						complanyId: this.carInfo.complanyId,
-						orderId: this.carInfo.orderId,
-					});
 				}
 			},
 			getLicenseVice(e = {}) {
@@ -459,12 +455,7 @@
 				if (url && !!ocr) {
 					this.formData.licenseViceUrl = [formattingPhoto(url)];
 					this.licenseViceUrl = url;
-					api.insertUserInfo({
-						licenseViceUrl: url,
-						archivesNum: ocr.archiveNumber,
-						complanyId: this.carInfo.complanyId,
-						orderId: this.carInfo.orderId,
-					});
+					this.formData.archivesNum = ocr.archiveNumber;
 				}
 			},
 			submit() {
@@ -485,13 +476,18 @@
 								};
 							}
 							api.insertUserInfo({
+								customerId: this.customerId,
 								name: this.formData.name,
 								idcard: this.formData.idcard,
 								phoneNumber: this.formData.phoneNumber,
 								orderId: this.formData.orderId,
 								nowAddress: this.formData.nowAddress,
+								birthday: this.formData.birthday,
 								complanyId: this.carInfo.complanyId,
 								orderId: this.carInfo.orderId,
+								licenseMainUrl: this.licenseMainUrl,
+								licenseViceUrl: this.licenseViceUrl,
+								idcardFront: this.idcardFront,
 								photoScan: this.$refs.photoScan.getFileList().join(','),
 								...this.formOrderData,
 								...params,
@@ -528,8 +524,7 @@
 														money: this._.sum(this._.map(checks,'value')),
 													}).then(result => {
 														if (result) {
-															if (typeof this.carInfo.complany
-																.subMchId === 'string') {
+															if (typeof this.carInfo.complany.subMchId === 'string') {
 																uni.navigateTo({
 																	url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idcard=${this.formData.idcard}&name=${this.formData.name}&orderId=${this.carInfo.orderId}`
 																});
@@ -615,16 +610,40 @@
 		width: 100%;
 		height: 300rpx;
 	}
+	
+	.adorn {
+		width: 3px;
+		height: 60%;
+		background-color: #FFD101;
+		margin-right: 5px;
+	}
 
 	.info_box {
-		width: 98%;
+		width: 90%;
 		display: flex;
 		flex-direction: column;
-		padding-top: 10px;
+		padding: 10px;
+		background-color: #FFFFFF;
+		border-radius: 10px;
+		margin-bottom: 10px;
+	}
+	
+	.info_title {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		height: 42rpx;
+	}
+	.line {
+		width: 100%;
+		height: 1px;
+		background-color: #eee;
+		margin: 5px 0px;
 	}
 
 	.btn {
 		margin-bottom: 10px;
+		width: 90%;
 	}
 
 	.readIdcard {

@@ -19,6 +19,9 @@ const tool = {
 	checkIllegal: (data)=>{
 		return request.globalRequest(`/tool/license/violation`, 'post', data);
 	},
+	checkLease: (data)=>{
+		return request.globalRequest(`/system/car/check/lease`, 'post', data);
+	},
 }
 
 export default tool

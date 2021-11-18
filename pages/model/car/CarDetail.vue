@@ -392,7 +392,7 @@
 				carId: '',
 				scrollY: true,
 				complanyName: '',
-				showQR: false,
+				showQR: true,
 				paymentList: [
 					{value: '1', text: '线上支付'},
 					{value: '2', text: '线下支付'},
@@ -584,6 +584,7 @@
 						this.formData.maxMileagePrice = data.maxMileagePrice;
 						this.formData.remark = data.remark;
 						this.formData.complanyId = data.complany.id;
+						this.val = `${config.API_URL}/applet?complanyId=${data.complany.id}=${data.id}=${this.paymentQR}`;
 					}
 				} );
 			},

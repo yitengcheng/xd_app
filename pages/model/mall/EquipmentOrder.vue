@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="content" style="align-items: center;">
 		
 	</view>
 </template>

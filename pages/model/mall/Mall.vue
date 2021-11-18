@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<u-swiper :list="list" :circular="true"></u-swiper>
+		<u-swiper :list="list" :circular="true" height="150px"></u-swiper>
 		<WaterfallsFlow :wfList="productList" @itemTap="itemTap"></WaterfallsFlow>
 	</view>
 </template>
@@ -17,7 +17,7 @@
 			return {
 				pageNum: 1,
 				productList: [],
-				list:[]
+				list:['/static/img/mall_back.png']
 			};
 		},
 		mounted() {

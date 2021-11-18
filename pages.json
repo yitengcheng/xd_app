@@ -21,7 +21,7 @@
 		}, {
 			"path": "pages/model/my/My",
 			"style": {
-				"navigationBarTitleText": "我的",
+				"navigationBarTitleText": "管理中心",
 				"navigationBarBackgroundColor":"#FFD101",
 				"enablePullDownRefresh": false
 			}
@@ -104,7 +104,7 @@
             "path" : "pages/model/returnCar/index",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "待还车辆",
+                "navigationBarTitleText": "在租车辆",
 				"navigationBarBackgroundColor":"#FFD101",
                 "enablePullDownRefresh": true
             }
@@ -124,6 +124,7 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "异常还车",
+				"navigationBarBackgroundColor":"#FFD101",
                 "enablePullDownRefresh": false
             }
             
@@ -142,6 +143,7 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "订单",
+				"navigationBarBackgroundColor":"#FFD101",
                 "enablePullDownRefresh": true
             }
             
@@ -226,13 +228,7 @@
 				"pagePath": "pages/model/returnCar/index",
 				"iconPath": "static/img/returnCar.png",
 				"selectedIconPath": "static/img/returnCar_active.png",
-				"text": "还车"
-			}, 
-			{
-			    "pagePath" : "pages/model/mall/Mall",
-			    "iconPath": "static/img/mall.png",
-			    "selectedIconPath": "static/img/mall_active.png",
-			    "text": "商城"
+				"text": "在租"
 			},
 			{
 				"pagePath": "pages/model/car/Car",
@@ -241,10 +237,16 @@
 				"text": "车辆"
 			},
 			{
+			    "pagePath" : "pages/model/mall/Mall",
+			    "iconPath": "static/img/mall.png",
+			    "selectedIconPath": "static/img/mall_active.png",
+			    "text": "商城"
+			},
+			{
 				"pagePath": "pages/model/my/My",
 				"iconPath": "static/img/my.png",
 				"selectedIconPath": "static/img/my_active.png",
-				"text": "我的"
+				"text": "管理中心"
 			}
 		]
 	},

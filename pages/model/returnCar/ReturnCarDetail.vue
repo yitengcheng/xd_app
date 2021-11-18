@@ -206,7 +206,7 @@
 			},
 			abnormalReturnCar() {
 				uni.navigateTo({
-					url: `/pages/model/returnCar/AbnormalReturnCar?id=${this.carInfo.id}&idcard=${this.carInfo.driverUser?.idcard}&phoneNumber=${this.carInfo.driverUser?.phoneNumber}&name=${this.carInfo.driverUser?.name}`
+					url: `/pages/model/returnCar/AbnormalReturnCar?id=${this.carInfo.id}&idcard=${this.carInfo.driverUser?.idcard}&phoneNumber=${this.carInfo.driverUser?.phoneNumber}&name=${this.carInfo.driverUser?.name}&bondMoney=${this.carInfo.wxOrder?.bondMoney}`
 				})
 			}
 		}

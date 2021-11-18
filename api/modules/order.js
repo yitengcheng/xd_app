@@ -23,7 +23,7 @@ const order = {
 		return request.globalRequest(`/system/wxorder/renewal`, 'post', data);
 	},
 	finishCar: (data) => {
-		return request.globalRequest(`/system/wxorder/uploadContract/${data}`, 'post');
+		return request.globalRequest(`/system/wxorder/uploadContract`, 'post', data);
 	},
 	
 }

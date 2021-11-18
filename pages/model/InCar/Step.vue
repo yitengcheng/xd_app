@@ -1,17 +1,14 @@
 <template>
-	<view class="content" style="margin: 10px;">
-		<u-steps :current="active" :list="options" direction="column"></u-steps>
-		<view class="info_box">
-			<text v-show="!!licenseText" class="info_text">驾照存分：{{licenseText}}</text>
-			<text v-show="!!zdryText" class="info_text">重点人员核查：{{zdryText}}</text>
-			<text v-show="!!faceText" class="info_text">人脸匹配度：{{faceText}}</text>
-			<text v-show="!!blackText" class="info_text">老赖信息：{{blackText}}</text>
-			<text v-show="!!blackListText" class="info_text">平台黑名单记录：{{blackListText}}</text>
+	<view class="content">
+		<view class="step_box">
+			<u-steps :current="active" direction="column" activeColor="#FFD101" dot>
+				<u-steps-item v-for="(item,index) in options" :key="index" :title="item.name" :desc="item.desc" :error="item.error"></u-steps-item>
+			</u-steps>
 		</view>
-		<button v-for="(item,index) in options" :key="index" type="primary" class="btn" v-show="active + 1 === index"
-			@click="validation(item.name)">{{item.name === '电子合同' ? '电子合同签订' : item.name}}</button>
+		<u-button v-for="(item,index) in options" :key="index" type="primary" class="btn" v-show="active + 1 === index"
+			@click="validation(item.name)">{{item.name === '电子合同' ? '电子合同签订' : item.name}}</u-button>
 		<view v-if="pactFlag" class="pactBtn">
-			<button type="primary" @click="toPact">{{pactBtnText}}</button>
+			<u-button type="primary" @click="toPact" class="btn">{{pactBtnText}}</u-button>
 		</view>
 
 	</view>
@@ -39,12 +36,13 @@
 		},
 		onLoad(option) {
 			let checks = (option.checks || '').split(',');
-			this.idCard = option.idCard;
+			this.idCard = option.idcard;
 			this.name = option.name;
 			this.orderId = option.orderId;
 			checks.forEach(o => {
 				this.options.push({
 					name: o.substr(0, o.indexOf(" ")),
+					error: false,
 				})
 			});
 			if (!checks[0]) {
@@ -58,14 +56,22 @@
 			autoCheck() {
 				this.options.forEach(o => {
 					if (o.name === '重点人员查询') {
-						uni.showLoading({
-							mask: true,
-							title: '查询中'
-						})
+						
 						api.checkZtryService(this.idCard).then((res = {}) => {
-							uni.hideLoading();
+							
 							this.active = this.active + 1;
-							this.zdryText = res.data.msg;
+							o.desc = res.data.msg;
+							this.$nextTick(() => {
+								if (this.active === this.options.length - 1) {
+									this.pactFlag = true;
+								}
+							});
+						});
+					}
+					if (o.name === '一人多租') {
+						api.checkLease(this.idCard).then((res = {}) => {
+							this.active = this.active + 1;
+							o.desc = `租车未还${res.data}`;
 							this.$nextTick(() => {
 								if (this.active === this.options.length - 1) {
 									this.pactFlag = true;
@@ -74,14 +80,9 @@
 						});
 					}
 					if (o.name === '驾照存分查询') {
-						uni.showLoading({
-							mask: true,
-							title: '查询中'
-						})
 						api.checkLicense(this.idCard).then((res = {}) => {
-							uni.hideLoading()
 							this.active = this.active + 1;
-							this.licenseText = res.data?.msg ?? `已被扣除${res.data.data}分`;
+							o.desc = res.data?.msg ?? `已被扣除${res.data.data}分`;
 							this.$nextTick(() => {
 								if (this.active === this.options.length - 1) {
 									this.pactFlag = true;
@@ -89,21 +90,15 @@
 							});
 						});
 					}
-					if (o.name === '老赖查询') {
-						uni.showLoading({
-							mask: true,
-							title: '查询中'
-						})
-						api.checkDeadbeat({
+					if (o.name === '黑名单校验') {
+						api.checkBlack({
 							idcard: this.idCard,
-							realname: this.name,
 						}).then((res = {}) => {
-							uni.hideLoading()
 							if (res.data) {
-								if (res.data.msg !== '没有信息') {
-									this.blackText = `${this.name}存在有履行能力而拒不履行生效法律文书确定义务的行为`
+								if (res.data.length > 0) {
+									o.desc = `此人已有${res.data.length}次不良记录`;
 								} else {
-									this.blackText = res.data.msg
+									o.desc = `此人在平台中未有不良记录`;
 								}
 								this.active = this.active + 1;
 								this.$nextTick(() => {
@@ -114,20 +109,16 @@
 							}
 						});
 					}
-					if (o.name === '黑名单校验') {
-						uni.showLoading({
-							mask: true,
-							title: '查询中'
-						})
-						api.checkBlack({
+					if (o.name === '老赖查询') {
+						api.checkDeadbeat({
 							idcard: this.idCard,
+							realname: this.name,
 						}).then((res = {}) => {
-							uni.hideLoading()
 							if (res.data) {
-								if (res.data.length > 0) {
-									this.blackListText = `此人已在平台中有${res.data.length}次不良记录`
+								if (res.data.msg !== '没有信息') {
+									o.desc = `${this.name}存在有履行能力而拒不履行生效法律文书确定义务的行为`;
 								} else {
-									this.blackListText = `此人在平台中未有不良记录`
+									o.desc = res.data.msg;
 								}
 								this.active = this.active + 1;
 								this.$nextTick(() => {
@@ -148,29 +139,40 @@
 					success: (e) => {
 						if(e.confirm){
 							uni.chooseImage({
+								count: 3,
 								success: (res) => {
 									uni.showLoading({
 										mask: true,
 										title: '合同上传中'
-									})
-									uni.uploadFile({
-										url: `${config.API_URL}/system/wxorder/uploadContract/${this.orderId}`,
-										filePath: res.tempFilePaths[0],
-										name: 'file',
-										header: {
-											Authorization: 'Bearer ' + uni.getStorageSync('tonken')
-										},
-										success: (res) => {
-											uni.hideLoading();
-											uni.navigateTo({
-												url: '/pages/model/InCar/Finish'
-											});
-										}
+									});
+									let tmp = [];
+									res.tempFiles.forEach(file => {
+										uni.uploadFile({
+											url: `${config.API_URL}/tool/oss/upload`,
+											filePath: file.path,
+											name: 'file',
+											header: {
+												Authorization: 'Bearer ' + uni.getStorageSync('tonken')
+											},
+											success: (res) => {
+												uni.hideLoading();
+												let result = JSON.parse(res.data);
+												tmp.push(result.data);
+											}
+										});
+									});
+									api.finishCar({
+										orderId: this.orderId,
+										contracts: tmp.join(','),
+									}).then(res => {
+										uni.navigateTo({
+											url: '/pages/model/InCar/Finish'
+										});
 									});
 								}
 							});
 						} else {
-							api.finishCar(this.orderId).then( res => {
+							api.finishCar({orderId: this.orderId}).then( res => {
 								uni.navigateTo({
 									url: '/pages/model/InCar/Finish'
 								});
@@ -193,8 +195,7 @@
 										maxDuration: 3,
 										success: (video) => {
 											// #ifdef APP-PLUS
-											const path = plus.io.convertLocalFileSystemURL(video
-												.tempFilePath) //绝对路径
+											const path = plus.io.convertLocalFileSystemURL(video.tempFilePath) //绝对路径
 											const fileReader = new plus.io.FileReader()
 											// #endif
 											fileReader.readAsDataURL(path)
@@ -209,18 +210,17 @@
 														flag,
 														result
 													} = res.data;
+													let current = this._.find(this.options, o => { return checkTitle === o.name });
 													if (flag) {
 														uni.showToast({
 															title: '人脸核验通过',
 															icon: 'none',
 														});
+														current.desc = '人脸识别通过';
 														this.active = this.active + 1;
 														this.$nextTick(() => {
-															if (this.active ===
-																this.options
-																.length - 1) {
-																this.pactFlag =
-																	true;
+															if (this.active === this.options.length - 1) {
+																this.pactFlag = true;
 															}
 														});
 													} else {
@@ -229,27 +229,16 @@
 															content: '此人人脸核验匹配度过低，可能存在风险，是否强制通过？',
 															confirmText: '通过',
 															success: (e) => {
-																if (e
-																	.confirm
-																	) {
-																	this.active =
-																		this
-																		.active +
-																		1;
-																	this.$nextTick(
-																		() => {
-																			if (this
-																				.active ===
-																				this
-																				.options
-																				.length -
-																				1
-																			) {
-																				this.pactFlag =
-																					true;
-																			}
+																if (e.confirm) {
+																	this.active =this.active + 1;
+																	this.$nextTick(() => {
+																		if (this.active === this.options.length - 1 ) {
+																			this.pactFlag = true;
 																		}
-																		);
+																	});
+																} else {
+																	current.desc = '人脸识别未通过';
+																	current.error = true;
 																}
 															},
 														});
@@ -281,25 +270,14 @@
 </script>
 
 <style lang="scss" scoped>
-	.checkBox {
-		margin-bottom: 50rpx;
-	}
-
-	.pactBtn {
-		margin-top: 200rpx;
-	}
-
-	.info_box {
-		width: 80%;
-		display: flex;
-		flex-direction: column;
-	}
-
-	.info_text {
-		margin-top: 20rpx;
-	}
-
 	.btn {
+		width: 90%;
 		margin-top: 200rpx;
+	}
+	.step_box {
+		background-color: #FFFFFF;
+		margin: 10px;
+		padding: 10px;
+		border-radius: 10px;
 	}
 </style>

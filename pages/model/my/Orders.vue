@@ -1,9 +1,20 @@
 <template>
-	<view class="content">
-		<uni-list>
-			<uni-list-item v-for="item in orders" :key="item.orderId" :thumb="item.thumb" :title="item.title"
-				:note="item.note" :rightText="item.rightText" :clickable="true" @click="clickItem(item.data)"></uni-list-item>
-		</uni-list>
+	<view class="content" style="align-items: center;">
+		<view v-for="(order, index) in orders" :key="index" class="row_item" @click="clickItem(order)">
+			<view class="row_item_image">
+				<u-image :src="order.thumb" width="30px" height="30px" shape="circle"></u-image>
+			</view>
+			<view class="row_item_info">
+				<view class="row_item_info_row">
+					<view class="row_item_info_title">{{order.title}}</view>
+					<view class="row_item_info_status">{{order.rightText}}</view>
+				</view>
+				<view class="row_item_info_row">
+					<view class="row_item_info_time"><view class="row_item_circle"></view>{{order.note}}</view>
+					<view class="row_item_info_time" style="margin-right: 10px;">{{order.time}}</view>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -23,7 +34,7 @@
 			});
 		},
 		onReachBottom() {
-			this.initOrders();
+			this.initOrders(this.pageNo);
 		},
 		onPullDownRefresh() {
 			this.initOrders(1);
@@ -32,8 +43,7 @@
 			this.initOrders(1);
 		},
 		methods: {
-			initOrders(pageNo) {
-				let pageNum = pageNo || this.pageNo;
+			initOrders(pageNum) {
 				let status = this.current === 0 ? undefined : this.current === 1 ? 0 : 1;
 				api.orders({
 					pageNum,
@@ -41,40 +51,24 @@
 				}).then((res = {}) => {
 					uni.stopPullDownRefresh();
 					if ((res.rows || []).length > 0) {
-						if (pageNum === 1) {
-							let tmp = []
-							res.rows.forEach(o => {
-								let carPhoto = `${config.IMG_URL}${o.car.carPhotos.split(',')[0]}`
-								tmp.push({
-									data: o,
-									orderId: o.orderId,
-									thumb: carPhoto,
-									title: o.car.carNum,
-									note: `交车时间：${this.dayjs(o.wantCarTime).format('YYYY年MM月DD日')}`,
-									rightText: `${o.payStatus === 'SUCCESS' ? '支付成功' : o.payStatus ===
-										'NOTPAY' ? "等待付款" : o.payStatus === 'REFUNDED' ? '退款完成' : o
-										.payStatus === 'CLOSED' ? '订单关闭' : o.payStatus ===
-										'REFUSE' ? '已拒绝' : o.payStatus}`,
-								});
+						let tmp = []
+						res.rows.forEach(o => {
+							let carPhoto = `${config.IMG_URL}${o?.car?.carPhotos?.split(',')[0]}`
+							tmp.push({
+								data: o,
+								orderId: o?.orderId,
+								thumb: carPhoto,
+								title: o?.car?.carNum,
+								time: this.dayjs(o?.wantCarTime).format('HH:mm:ss'),
+								note: `交车：${this.dayjs(o?.wantCarTime).format('YYYY年MM月DD日')}`,
+								rightText: `${o?.payStatus === 'SUCCESS' ? '支付成功' : o?.payStatus ===
+									'NOTPAY' ? "等待付款" : o?.payStatus === 'REFUNDED' ? '退款完成' : o
+									?.payStatus === 'CLOSED' ? '订单关闭' : o?.payStatus ===
+									'REFUSE' ? '已拒绝' : o?.payStatus}`,
 							});
-							this.orders = tmp;
-						} else {
-							res.rows.forEach(o => {
-								let carPhoto = `${config.IMG_URL}${o.car.carPhotos.split(',')[0]}`
-								this.orders.push({
-									data: o,
-									orderId: o.orderId,
-									thumb: carPhoto,
-									title: o.car.carNum,
-									note: `交车时间：${this.dayjs(o.wantCarTime).format('YYYY年MM月DD日')}`,
-									rightText: `${o.payStatus === 'SUCCESS' ? '支付成功' : o.payStatus ===
-										'NOTPAY' ? "等待付款" : o.payStatus === 'REFUNDED' ? '退款完成' : o
-										.payStatus === 'CLOSED' ? '订单关闭' : o.payStatus ===
-										'REFUSE' ? '已拒绝' : o.payStatus}`,
-								});
-							})
-						}
-						this.pageNo = pageNum + 1;
+						});
+						pageNum === 1 ? this.orders = tmp : this.orders = this._.concat(this.orders, tmp);
+						pageNum === 1 ? this.pageNo = 2 : this.pageNo = this.pageNo + 1;
 					}
 				});
 			},
@@ -89,5 +83,69 @@
 </script>
 
 <style lang="scss" scoped>
-
+.row_item {
+	display: flex;
+	flex-direction: row;
+	background-color: #FFFFFF;
+	border-radius: 10px;
+	padding: 15px;
+	margin-top: 10px;
+	width: 85%;
+	align-items: center;
+}
+.row_item_image {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: #FFD101;
+}
+.row_item_info {
+	display: flex;
+	flex-direction: column;
+	margin-left: 10px;
+	flex: 1;
+}
+.row_item_info_row {
+	flex: 1;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+.row_item_info_title {
+	font-size: 16px;
+	font-family: Microsoft YaHei;
+	font-weight: bold;
+	color: #333333;
+}
+.row_item_info_status {
+	background: #FFD101;
+	border-radius: 25px;
+	padding: 3px 18px;
+	font-size: 10px;
+	font-family: Microsoft YaHei;
+	font-weight: 400;
+	color: #333333;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.row_item_info_time {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	font-size: 14px;
+	font-family: Microsoft YaHei;
+	font-weight: 400;
+	color: #333333;
+}
+.row_item_circle {
+	width: 10px;
+	height: 10px;
+	background: #999999;
+	border-radius: 50%;
+	margin-right: 10px;
+}
 </style>

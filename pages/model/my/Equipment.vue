@@ -1,17 +1,33 @@
 <template>
-	<view class="content">
-		<view v-for="(item, index) in list" :key="index" class="item_box" @click="renewal(item)">
+	<view class="content" style="align-items: center;">
+		<view v-for="(item, index) in list" :key="index" class="item_box">
 			<view class="item_row">
-				<view class="item_text">编号：{{item.id}}</view>
-				<view class="item_text">名称：{{item.name}}</view>
-				<view class="item_text">方式：{{item.payMethod === 0 ? '购买' : '租赁'}}</view>
+				<view class="item_title">{{item.name}}</view>
+				<view class="item_day">{{dayjs(item.createTime).format('YYYY-MM-DD')}}</view>
 			</view>
-			<view class="item_row">
-				<view class="item_text">
+			<view class="item_row" style="justify-content: flex-start;">
+				<view class="payment_box">
+					<view class="big_round" :style="{borderColor:(item.payMethod ? '#CCCCCC':'#FFD101')}">
+						<view class="small_round" :style="{background:(item.payMethod ? '#CCCCCC':'#FFD101')}"></view>
+					</view>
+					<view class="payment_text" :style="{color:(item.payMethod ? '#CCCCCC':'#333333')}">购买</view>
+				</view>
+				<view class="payment_box">
+					<view class="big_round" :style="{borderColor:(!item.payMethod ? '#CCCCCC':'#FFD101')}">
+						<view class="small_round" :style="{background:(!item.payMethod ? '#CCCCCC':'#FFD101')}"></view>
+					</view>
+					<view class="payment_text" :style="{color:(!item.payMethod ? '#CCCCCC':'#333333')}">租赁</view>
+				</view>
+			</view>
+			<view class="item_row" v-if="item.payMethod">
+				<view class="item_lease">
 					租期：{{dayjs(item.leaseBeginTime).format('YYYY-MM-DD')}}至{{dayjs(item.leaseEndTime).format('YYYY-MM-DD')}}
 				</view>
-				<view class="item_text">剩余：{{item.diffDate}}天</view>
 			</view>
+			<view class="item_row" v-if="item.payMethod">
+				<view class="item_surplus">倒计时：{{item.diffDate}}天</view>
+			</view>
+			<u-button  v-if="item.payMethod" type="primary" class="goon_btn" @click="renewal(item)">续费</u-button>
 		</view>
 	</view>
 </template>
@@ -93,6 +109,9 @@
 						case 4:
 							leaseTerm = 24;
 							break
+						default:
+							return;
+							break;
 					};
 					api.renewalProduct({
 						flag: 1,
@@ -129,11 +148,12 @@
 
 <style lang="scss" scoped>
 	.item_box {
-		width: 100%;
+		width: 90%;
 		display: flex;
 		flex-direction: column;
-		padding: 5px;
-		border-bottom: 1px solid #808080;
+		background: #FFFFFF;
+		border-radius: 10px;
+		margin-top: 10px;
 	}
 
 	.item_row {
@@ -141,10 +161,78 @@
 		flex: 1;
 		flex-direction: row;
 		justify-content: space-between;
+		padding: 0px 20px;
 	}
-
-	.item_text {
-		font-size: 16px;
-		font-weight: 300;
+	
+	.item_title {
+		font-size: 14px;
+		font-family: Microsoft YaHei;
+		font-weight: bold;
+		color: #333333;
+		margin-top: 20px;
+	}
+	
+	.item_day {
+		font-size: 12px;
+		font-family: Microsoft YaHei;
+		font-weight: 400;
+		margin-top: 20px;
+		color: #999999;
+	}
+	
+	.payment_box {
+		display: flex;
+		flex-direction: row;
+		width: 100px;
+		height: 20px;
+		align-items: center;
+		margin: 5px 0px;
+	}
+	
+	.big_round {
+		width: 15px;
+		height: 15px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: #FFFFFF;
+		border: 1px solid #CCCCCC;
+		border-radius: 50%;
+		margin-right: 10px;
+	}
+	
+	.small_round {
+		width: 7px;
+		height: 7px;
+		background: #CCCCCC;
+		border-radius: 50%;
+	}
+	
+	.payment_text {
+		font-size: 14px;
+		font-family: Microsoft YaHei;
+		font-weight: 400;
+		color: #999999;
+	}
+	
+	.item_lease {
+		font-size: 14px;
+		font-family: Microsoft YaHei;
+		font-weight: 400;
+		color: #333333;
+		margin: 5px 0px;
+	}
+	
+	.item_surplus {
+		font-size: 12px;
+		font-family: Microsoft YaHei;
+		font-weight: 400;
+		color: #999999;
+		margin: 5px 0px;
+	}
+	
+	.goon_btn {
+		width: 100%;
+		height: 40px;
 	}
 </style>

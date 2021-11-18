@@ -2,6 +2,7 @@
 	<view>
 		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="320">
 			<FormUpload ref="upload" :formData="formData" name="photos" label="异常车辆照片" :limit="8" :required="false"/>
+			<FormInput :formData="formData" name="deductBondMoney" label="已扣除租车保证金" type="number" :required="false"></FormInput>
 			<FormInput :formData="formData" name="remark" label="异常车辆说明" type="textarea" :required="false"></FormInput>
 			<FormRadio :formData="formData" name="isJoinBlack" label="是否加入黑名单" :required="false" @change="hasJoinBlack"></FormRadio>
 			<FormRadio v-if="blackFlag" :formData="formData" name="dictValue" label="黑名单类型" :required="false" :localdata="blackList" :multiple="true"></FormRadio>
@@ -32,6 +33,7 @@
 			this.blackIdcard = option.idcard;
 			this.blackPhoneNumber = option.phoneNumber;
 			this.blackName = option.name;
+			this.bondMoney = option.bondMoney;
 		},
 		data() {
 			return {
@@ -42,6 +44,7 @@
 					latlong:'',
 					hideInfo: 0,
 					cause: '',
+					deductBondMoney: '',
 				},
 				id: '',
 				address: '',
@@ -50,6 +53,7 @@
 				blackIdcard: '',
 				blackPhoneNumber: '',
 				blackName: '',
+				bondMoney: '',
 			};
 		},
 		mounted() {
@@ -84,24 +88,42 @@
 					};
 					let func = this.blackFlag ? api.returnCarAndJoinBlack : api.updateCarStatus;
 					let id = this.blackFlag ? {carId: this.id} : {id: this.id};
-					func({
-						status: 8,
-						...id,
-						...res,
-						...params,
-					}).then(o => {
-						uni.showToast({
-							title: '还车成功',
-							icon: 'success',
-							success: () => {
-								this.$emit('inCar');
-								this.$emit('returnCar');
-								uni.switchTab({
-									url: '../car/Car'
-								})
-							}
+					if(res.deductBondMoney * 1 > this?.bondMoney * 1){
+						uni.showModal({
+							title: '提示',
+							content: '扣除的租车保证金已超过已缴纳的租车保证金，请确认后重新输入',
+							showCancel:false,
 						});
-					});
+						return;
+					} else {
+						uni.showModal({
+							title: '提示',
+							content: `请退${this?.bondMoney * 1 - res.deductBondMoney * 1}元的租车保证金`,
+							success: (e) => {
+								if(e.confirm) {
+									func({
+										status: 8,
+										...id,
+										...res,
+										...params,
+									}).then(o => {
+										uni.showToast({
+											title: '还车成功',
+											icon: 'success',
+											success: () => {
+												this.$emit('inCar');
+												this.$emit('returnCar');
+												uni.switchTab({
+													url: '../car/Car'
+												})
+											}
+										});
+									});
+								}
+							},
+						});
+					}
+					
 				});
 			},
 			hasJoinBlack(e){
