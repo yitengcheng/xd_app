@@ -6,8 +6,8 @@ import config from './config.js';
 const request = {}
 const headers = {}
 
-request.globalRequest = (url, method, data) => {
-	uni.showLoading({
+request.globalRequest = (url, method, data, showLoading = true) => {
+	showLoading && uni.showLoading({
 		title: '加载中...',
 		mask:true,
 	})
@@ -36,7 +36,7 @@ request.globalRequest = (url, method, data) => {
 	// #endif
 
 	return uni.request(JSONParams).then(res => {
-		uni.hideLoading();
+		showLoading && uni.hideLoading();
 		process.env.NODE_ENV === 'development' && console.log('response:', res.length > 1 ? res[1].data : res);
 		if (res[1]) {
 			let data = '';

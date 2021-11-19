@@ -51,7 +51,7 @@ export default {
 			}).then(res =>{
 				uni.stopPullDownRefresh();
 				let tmp = [];
-				if(res?.rows?.length > 0){
+				if(res?.rows?.length !== 0){
 					let { rows } = res;
 					rows.forEach(row => {
 						let photo = row?.carPhotos?.split(',');

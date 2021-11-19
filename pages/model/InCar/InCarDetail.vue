@@ -653,4 +653,9 @@
 		padding-right: 5px;
 		border-radius: 5px;
 	}
+	
+	.readIdcard {
+		width: 60%;
+		margin: 10px 0px;
+	}
 </style>

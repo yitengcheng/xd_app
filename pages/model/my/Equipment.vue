@@ -59,7 +59,7 @@
 					complanyId: uni.getStorageSync('complanyId')
 				}).then(res => {
 					uni.stopPullDownRefresh();
-					if (res.rows.length >= 0) {
+					if (res.rows.length !== 0) {
 						let tmp = [];
 						let {
 							rows

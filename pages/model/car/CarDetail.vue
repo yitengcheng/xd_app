@@ -68,6 +68,7 @@
 		<view v-if="showQR" class="qrcode_box">
 			<Qrcode ref="qrcode" :size="400" :val="val" :onval="true" background="#FFFFFF" foreground="#000000"></Qrcode>
 			<uni-data-checkbox style="margin-top: 50rpx;" v-model="payment" :localdata="paymentList" @change="changePayment"></uni-data-checkbox>
+			<u-button type="primary" style="margin-top: 50rpx;" @click="share">分享车辆小程序</u-button>
 			<u-button style="margin-top: 50rpx;" @click="() => showQR = false" type="error">关闭二维码</u-button>
 		</view>
 	</view>
@@ -387,7 +388,7 @@
 				}, ],
 				complany: [],
 				user: uni.getStorageSync( 'user' ),
-				payment: '1',
+				payment: uni.getStorageSync('payment'),
 				complanyId: '',
 				carId: '',
 				scrollY: true,
@@ -397,7 +398,6 @@
 					{value: '1', text: '线上支付'},
 					{value: '2', text: '线下支付'},
 				],
-				paymentQR: '1',
 				val:'',
 				photo: [],
 			};
@@ -407,6 +407,7 @@
 				title: option.type === 'add' ? '添加车辆' : '车辆详情'
 			} );
 			this.disabled = option.type === 'add' ? false : true;
+			this.showQR = option.showQR;
 			this.getGpsList();
 			this.dictInit( 'car_type', 'sources_vehicle', 'fuel_number', 'insurance_status' ).then( () => {
 				this.carType = uni.getStorageSync( 'car_type' );
@@ -415,6 +416,11 @@
 				this.lossInsuranceType = uni.getStorageSync( 'insurance_status' );
 			} );
 			this.carId = option.id;
+		},
+		onBackPress(e) {
+			if(e.from){
+				uni.$emit('car');
+			}
 		},
 		mounted() {
 			this.carId && this.getCarInfo( this.carId );
@@ -442,7 +448,7 @@
 								type: 5,
 								scene: 'WXSceneSession',
 								imageUrl: '/static/logo.png',
-								title: `欢迎进入${this.complanyName}`,
+								title: `${this.formData.carBrand}`,
 								miniProgram: {
 									id: 'gh_8e6352992afc',
 									path: `/pages/index/Index?complanyId=${this.complanyId}&carId=${this.carId}&payment=${payment}`,
@@ -475,13 +481,14 @@
 					duration: 200,
 				})
 				this.$nextTick(() => {
-					this.val = `${config.API_URL}/applet?complanyId=${this.complanyId}=${this.carId}=${this.paymentQR}`;
+					this.val = `${config.API_URL}/applet?complanyId=${this.complanyId}=${this.carId}=${this.payment}`;
 				})
 			},
 			changePayment(e){
-				this.paymentQR = e.detail.value;
+				this.payment = e.detail.value;
+				uni.setStorageSync('payment', e.detail.value);
 				this.$nextTick(() => {
-					this.val = `${config.API_URL}/applet?complanyId=${this.complanyId}=${this.carId}=${this.paymentQR}`;
+					this.val = `${config.API_URL}/applet?complanyId=${this.complanyId}=${this.carId}=${this.payment}`;
 				})
 			},
 			changeStrongEndTime( e ) {
@@ -584,7 +591,7 @@
 						this.formData.maxMileagePrice = data.maxMileagePrice;
 						this.formData.remark = data.remark;
 						this.formData.complanyId = data.complany.id;
-						this.val = `${config.API_URL}/applet?complanyId=${data.complany.id}=${data.id}=${this.paymentQR}`;
+						this.val = `${config.API_URL}/applet?complanyId=${data.complany.id}=${data.id}=${this.payment}`;
 					}
 				} );
 			},

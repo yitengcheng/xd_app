@@ -193,9 +193,9 @@ export default {
 						...this.idCard,
 						...res
 					}).then(() => {
-						uni.showToast({
-							title: '账号密码均为身份证后6位',
-							icon: 'success'
+						uni.showModal({
+							title: '成功',
+							content: `恭喜你，您的公司${res.complanyName}注册成功默认账号为手机号码，密码为000000！`
 						});
 						uni.redirectTo({
 							url: '/pages/model/login/Login'

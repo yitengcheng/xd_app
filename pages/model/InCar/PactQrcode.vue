@@ -13,10 +13,8 @@
 		onLoad(option) {
 			this.pactId = option.pactId;
 			let timer = setInterval(() => {
-				api.orderDetail(option.orderId).then((res = {}) => {
-					let {
-						data
-					} = res;
+				api.orderDetail(option.orderId, false).then((res = {}) => {
+					let { data } = res;
 					if (data.signStatus === 2) {
 						clearInterval(timer);
 						uni.navigateTo({
