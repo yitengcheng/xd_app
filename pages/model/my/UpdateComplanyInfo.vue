@@ -125,7 +125,13 @@
 							}
 						})
 					})
-				})
+				}).catch(err => {
+						uni.showModal({
+							title: '提示',
+							content: '请认真核对填写的信息',
+							showCancel: false,
+						})
+					})
 			}
 		}
 	}

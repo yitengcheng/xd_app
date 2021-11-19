@@ -8,7 +8,7 @@
 	import api from '../../../api/index.js';
 	import FormInput from '../../../components/form/FormInput.vue';
 	export default {
-		components:{
+		components: {
 			FormInput,
 		},
 		onLoad(option) {
@@ -27,14 +27,18 @@
 				show: false,
 			};
 		},
-		methods:{
-			getContract(orderId){
-				api.send({orderId}).then((res = {}) => {
+		methods: {
+			getContract(orderId) {
+				api.send({
+					orderId
+				}).then((res = {}) => {
 					if (res.data) {
 						this.src = res.data;
-						let timer = setInterval(()=>{
+						let timer = setInterval(() => {
 							api.orderDetail(orderId, false).then((res = {}) => {
-								let { data } = res;
+								let {
+									data
+								} = res;
 								if (data.signStatus === 1) {
 									clearInterval(timer);
 									uni.navigateTo({
@@ -48,9 +52,15 @@
 					}
 				});
 			},
-			submit(){
+			submit() {
 				this.$refs.form.validate().then(data => {
 					this.getContract(this.formData);
+				}).catch(err => {
+					uni.showModal({
+						title: '提示',
+						content: '请认真核对填写的信息',
+						showCancel: false,
+					})
 				});
 			}
 		}
@@ -64,14 +74,17 @@
 		align-items: center;
 		padding-bottom: 10px;
 	}
+
 	.tips_title {
 		font-size: 18px;
 		font-weight: 700;
 	}
+
 	.form_box {
 		width: 80%;
 		margin: 10px 0px;
 	}
+
 	.form_btn {
 		width: 80%;
 	}

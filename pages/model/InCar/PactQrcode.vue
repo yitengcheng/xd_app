@@ -18,7 +18,7 @@
 					if (data.signStatus === 2) {
 						clearInterval(timer);
 						uni.navigateTo({
-							url: `/pages/model/InCar/Finish`
+							url: `/pages/model/InCar/Finish`,
 						})
 					}
 				})

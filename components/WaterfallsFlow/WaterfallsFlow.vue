@@ -4,8 +4,8 @@
         <view>
             <view id="left" v-if="leftList.length">
                 <view v-for="(item,index) in leftList" :key="index"
-                      class="wf-item">
-                    <WaterfallsFlowItem :item="item"  @itemTap="itemTap" @itemClick="itemClick"/>
+                      class="wf-item" @tap="itemTap(item)">
+                    <WaterfallsFlowItem :item="item"/>
                 </view>
             </view>
         </view>
@@ -15,8 +15,8 @@
         <view>
             <view id="right" v-if="rightList.length">
                 <view v-for="(item,index) in rightList" :key="index"
-                      class="wf-item">
-                    <WaterfallsFlowItem :item="item" @itemTap="itemTap" @itemClick="itemClick"/>
+                      class="wf-item" @tap="itemTap(item)">
+                    <WaterfallsFlowItem :item="item"/>
                 </view>
             </view>
         </view>
@@ -52,6 +52,7 @@ export default {
     },
     watch: {
         // 监听列表数据变化
+        // 监听列表数据变化
         wfList() {
             // 如果数据为空或新的列表数据少于旧的列表数据（通常为下拉刷新或切换排序或使用筛选器），初始化变量
             if (!this.wfList.length || this.wfList.length <= this.allList.length) {
@@ -61,7 +62,7 @@ export default {
                 this.boxHeight = [];
                 this.mark = 0;
             }
-
+        
             // 如果列表有值，调用waterfall方法
             if (this.wfList.length) {
                 this.allList = this.wfList;
@@ -115,13 +116,11 @@ export default {
                 }).exec();
             })
         },
-		itemTap(e){
-			this.$emit('itemTap',e);
-		},
-		itemClick(e){
-			this.$emit('itemClick',e);
-		}
 
+        // item点击
+        itemTap(item) {
+            this.$emit('itemTap', item)
+        }
     }
 }
 </script>

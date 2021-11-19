@@ -207,7 +207,13 @@ export default {
 						icon: 'error'
 					});
 				}
-			});
+			}).catch(err => {
+						uni.showModal({
+							title: '提示',
+							content: '请认真核对填写的信息',
+							showCancel: false,
+						})
+					});
 		},
 		reset() {
 			this.$refs.form.resetFields();

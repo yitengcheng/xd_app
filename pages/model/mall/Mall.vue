@@ -37,6 +37,10 @@
 				}).then(res => {
 					uni.stopPullDownRefresh();
 					let tmp = [];
+					if(res?.total === 0){
+						this.productList = [];
+						this.pageNum = 0;
+					}
 					if(res?.rows?.length > 0){
 						let { rows } = res;
 						rows.forEach(row => {

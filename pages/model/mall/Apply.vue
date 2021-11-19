@@ -9,11 +9,11 @@
 			<FormPicker v-show="((user || {}).complany || []).length >= 2" label="公司" name="complanyId" :localdata="complanys" :formData="formData" :required="false"></FormPicker>
 			<FormRadio label="购买/租赁" :localdata="payTypeList" @change="changePay" name="payType" :formData="formData" :required="false"></FormRadio>
 			<FormInput label="台数" name="applyNum" :formData="formData" type="number" :required="false"></FormInput>
-			<FormPicker v-show="formData.payType !== 0" label="租期" name="leaseTerm" :localdata="leaseTermList" :formData="formData" :required="false"></FormPicker>
+			<FormPicker v-show="formData.payType !== 0" label="租期" name="lease" :localdata="leaseTermList" :formData="formData" :required="false"></FormPicker>
 			<FormInput label="收货地址" name="address" :formData="formData" :required="false"></FormInput>
 			<view class="form_price">{{formData.payType === 1 ? `租金：￥${rent} 元/月`: `单价：￥ ${price} 元`}}</view>
 			<view class="form_price">{{formData.payType === 1 ? `押金：￥${deposit} 元`: `总计：￥ ${price * formData.applyNum} 元`}}</view>
-			<view class="form_price" v-if="formData.payType === 1">总计：{{rent * formData.applyNum * formData.leaseTerm * 1 + deposit * 1}} 元</view>
+			<view class="form_price" v-if="formData.payType === 1">总计：{{rent * formData.applyNum * formData.lease * 1 + deposit * 1}} 元</view>
 		</uni-forms>
 		<view class="bottom_box">
 			<u-button class="btn">联系客服</u-button>
@@ -42,7 +42,7 @@
 				formData: {
 					complanyId: '',
 					applyNum: '',
-					leaseTerm: 3,
+					lease: 3,
 					payType: '',
 					address: '',
 					productId: '',
@@ -150,7 +150,13 @@
 							});
 						}
 					});
-				});
+				}).catch(err => {
+						uni.showModal({
+							title: '提示',
+							content: '请认真核对填写的信息',
+							showCancel: false,
+						})
+					});
 			},
 			priceFormat(){
 				if(this.formData.payType === 1){

@@ -35,17 +35,18 @@
 			};
 		},
 		onLoad(option) {
-			let checks = (option.checks || '').split(',');
+			let checks = option.checks?.split(',');
 			this.idCard = option.idcard;
 			this.name = option.name;
 			this.orderId = option.orderId;
-			checks.forEach(o => {
+			console.log(checks)
+			checks?.forEach(o => {
 				this.options.push({
 					name: o.substr(0, o.indexOf(" ")),
 					error: false,
 				})
 			});
-			if (!checks[0]) {
+			if (!checks) {
 				this.pactFlag = true
 			}
 		},

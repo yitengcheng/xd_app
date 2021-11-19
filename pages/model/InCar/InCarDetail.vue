@@ -547,11 +547,23 @@
 											})
 										}
 									}
-								});
+								}).catch(err => {
+						uni.showModal({
+							title: '提示',
+							content: '请认真核对填写的信息',
+							showCancel: false,
+						})
+					});
 							} else {
 								this.payOrder(this._.sum(this._.map(checks, 'value')), this._.map(checks, 'text').join(','), this.formData);
 							}
-						});
+						}).catch(err => {
+						uni.showModal({
+							title: '提示',
+							content: '请认真核对填写的信息',
+							showCancel: false,
+						})
+					});
 					
 				});
 			},

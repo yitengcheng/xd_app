@@ -104,7 +104,7 @@
             "path" : "pages/model/returnCar/index",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "在租车辆",
+                "navigationBarTitleText": "待还车辆",
 				"navigationBarBackgroundColor":"#FFD101",
                 "enablePullDownRefresh": true
             }
@@ -236,7 +236,7 @@
 				"pagePath": "pages/model/returnCar/index",
 				"iconPath": "static/img/returnCar.png",
 				"selectedIconPath": "static/img/returnCar_active.png",
-				"text": "在租"
+				"text": "待还"
 			},
 			{
 				"pagePath": "pages/model/car/Car",

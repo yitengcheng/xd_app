@@ -8,15 +8,12 @@
 			<FormUpload :readonly="disabled" :formData="formData" name="licenseBackUrl" label="行驶证背面" :limit="1"
 				@getOcrData="getLicenseBack" url="/tool/ocr/license" :otherData="{ type: 7 }" :decoration="true"/>
 			<FormUpload ref="carPhotos" :readonly="disabled" :formData="formData" name="carPhotos" label="车辆图片" :decoration="true"/>
-			<FormPicker v-show="(complany || []).length > 1" :disabled="disabled" :formData="formData" name="complanyId"
-				:localdata="complany" label="所属公司" @change="e => formData.complanyId = e.value" />
 			<FormPicker :disabled="disabled" :formData="formData" name="source" :localdata="sourceType" label="车辆来源"
 				@change="sourceChange" />
 			<FormPicker :disabled="disabled" :formData="formData" name="operatorId" :localdata="gpsVendorType"
 				label="GPS厂商" @change="e => formData.operatorId = e.value" />
 			<FormInput :disabled="disabled" :formData="formData" name="carNum" label="车牌号" />
 			<FormInput :disabled="disabled" :formData="formData" name="carBrand" label="车辆品牌" />
-			<FormInput :disabled="disabled" :formData="formData" name="model" label="车辆型号" />
 			<FormPicker :disabled="disabled" :formData="formData" name="type" :localdata="carType" label="车辆类型"
 				@change="e => formData.type = e.value" />
 			<FormInput :disabled="disabled" :formData="formData" name="color" label="车身颜色" />
@@ -60,7 +57,7 @@
 			</view>
 			<view class="btnGrup" v-show="!disabled">
 				<u-button @click="submit" type="primary" class="bottomBtn">保存</u-button>
-				<u-button @click="reset" type="warn" class="bottomBtn">重置</u-button>
+				<u-button @click="reset" type="error" class="bottomBtn">重置</u-button>
 			</view>
 		</uni-forms>
 		<uni-fab v-show="carId" :content="content" horizontal="right" vertical="bottom" direction="vertical"
@@ -152,12 +149,6 @@
 							errorMessage: '请输入车辆品牌'
 						} ]
 					},
-					model: {
-						rules: [ {
-							required: true,
-							errorMessage: '请输入车辆型号'
-						} ]
-					},
 					type: {
 						rules: [ {
 							required: true,
@@ -239,15 +230,6 @@
 							errorMessage: '请输入租车单价'
 						} ]
 					},
-					name: {
-						rules: [ {
-							required: true,
-							errorMessage: '请输入姓名'
-						}, {
-							maxLength: 60,
-							errorMessage: '车主姓名长度不能超过60个字符'
-						} ]
-					},
 					cardId: {
 						rules: [ {
 							required: true,
@@ -326,7 +308,6 @@
 					operatorId: '',
 					carNum: '',
 					carBrand: '',
-					model: '',
 					type: '',
 					color: '',
 					frameNum: '',
@@ -389,7 +370,7 @@
 				complany: [],
 				user: uni.getStorageSync( 'user' ),
 				payment: uni.getStorageSync('payment'),
-				complanyId: '',
+				complanyId: uni.getStorageSync('complanyId'),
 				carId: '',
 				scrollY: true,
 				complanyName: '',
@@ -407,7 +388,7 @@
 				title: option.type === 'add' ? '添加车辆' : '车辆详情'
 			} );
 			this.disabled = option.type === 'add' ? false : true;
-			this.showQR = option.showQR;
+			this.showQR = option.showQR === 'true';
 			this.getGpsList();
 			this.dictInit( 'car_type', 'sources_vehicle', 'fuel_number', 'insurance_status' ).then( () => {
 				this.carType = uni.getStorageSync( 'car_type' );
@@ -464,12 +445,10 @@
 				api.checkIllegal( {
 					carId: this.carId
 				} ).then( res => {
-					let {
-						data
-					} = res.data;
+					let { data } = res;
 					uni.showModal( {
 						title: '违章提示',
-						content: `${data.car_no}有${data.vio_total}条违章尚未处理！`,
+						content: `${data?.car_no}有${data?.vio_total}条违章尚未处理！`,
 						showCancel: false
 					} )
 				} );
@@ -558,7 +537,6 @@
 						licenseBack.push(formattingPhoto(data.licenseBackUrl));
 						licenseFront.push(formattingPhoto(data.licenseFrontUrl));
 						this.source = data.source;
-						this.complanyId = data.complany.id;
 						this.complanyName = data.complany.complanyName;
 						this.carId = data.id;
 						this.formData.carPhotos = carsPhotos;
@@ -590,24 +568,23 @@
 						this.formData.maxMileage = data.maxMileage;
 						this.formData.maxMileagePrice = data.maxMileagePrice;
 						this.formData.remark = data.remark;
-						this.formData.complanyId = data.complany.id;
 						this.val = `${config.API_URL}/applet?complanyId=${data.complany.id}=${data.id}=${this.payment}`;
 					}
 				} );
 			},
 			submit() {
 				this.$refs.form.validate().then( data => {
-					let func = this.carId ? api.updateCar : api.addCar;
-					this.formData.complanyId = this.formData.complanyId ? this.formData.complanyId : this.complanyId;
-					delete this.formData.carPhotos;
-					delete this.formData.licenseFrontUrl;
-					delete this.formData.licenseBackUrl;
+					let func = this?.carId ? api.updateCar : api.addCar;
 					let carPhotos = this.$refs.carPhotos.getFileList();
+					delete this?.formData?.carPhotos;
+					delete this?.formData?.licenseFrontUrl;
+					delete this?.formData?.licenseBackUrl;
 					func( {
 						id: this.carId,
 						licenseFrontUrl: this.licenseFrontUrl,
 						licenseBackUrl: this.licenseBackUrl,
 						carPhotos: carPhotos.join( ',' ),
+						complanyId: this.complanyId,
 						...this.formData
 					} ).then( ( res ) => {
 						if ( res ) {
@@ -626,7 +603,13 @@
 								icon: 'none'
 							} );
 						}
-					} );
+					} ).catch(err => {
+						uni.showModal({
+							title: '提示',
+							content: '请认真核对填写的信息',
+							showCancel: false,
+						})
+					});
 				} );
 			},
 			reset() {

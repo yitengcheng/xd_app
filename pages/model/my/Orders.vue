@@ -1,5 +1,6 @@
 <template>
 	<view class="content" style="align-items: center;">
+		<u-image v-if="orders.length === 0" src="/static/img/empty_data.png"></u-image>
 		<view v-for="(order, index) in orders" :key="index" class="row_item" @click="clickItem(order)">
 			<view class="row_item_image">
 				<u-image :src="order.thumb" width="30px" height="30px" shape="circle"></u-image>

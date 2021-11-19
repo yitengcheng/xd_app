@@ -4,6 +4,7 @@
 			<uni-easyinput v-model="keyword" placeholder="请输入关键字搜索" prefixIcon="search" :inputBorder="false" style="background-color: #FFD101;border-radius: 20px;border: 1px solid #FFD101;margin-right: 20px;"/>
 			<view @click="getData(1)" class="search_text">搜索</view>
 		</view>
+		<u-image src="/static/img/empty_data.png" v-if="data.length === 0"></u-image>
 		<view v-for="(car, index) in data" :key="index" class="car_box">
 			<u-image :showError="false" :src="car.carPhoto" width="80" height="55" shape="square" style="margin-right: 10px;"></u-image>
 			<view class="car_box_info" style="flex: 1;">
