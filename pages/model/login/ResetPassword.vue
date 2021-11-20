@@ -79,7 +79,7 @@
 				}).catch(err => {
 						uni.showModal({
 							title: '提示',
-							content: '请认真核对填写的信息',
+							content: '必填项请填写完整',
 							showCancel: false,
 						})
 					});

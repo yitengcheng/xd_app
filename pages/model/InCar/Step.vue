@@ -39,19 +39,20 @@
 			this.idCard = option.idcard;
 			this.name = option.name;
 			this.orderId = option.orderId;
-			console.log(checks)
 			checks?.forEach(o => {
 				this.options.push({
 					name: o.substr(0, o.indexOf(" ")),
 					error: false,
 				})
 			});
-			if (!checks) {
-				this.pactFlag = true
+			if (!checks && option.pactFlag === 'false') {
+				this.pactFlag = true;
+			} else if(option.pactFlag === 'true') {
+				this.options = [{
+					name: '电子合同',
+					error: false,
+				}];
 			}
-		},
-		mounted() {
-			this.autoCheck();
 		},
 		methods: {
 			autoCheck() {
@@ -61,6 +62,7 @@
 							this.active = this.active + 1;
 							o.desc = res.data.msg;
 							this.$nextTick(() => {
+								
 								if (this.active === this.options.length - 1) {
 									this.pactFlag = true;
 								}
@@ -72,6 +74,7 @@
 							this.active = this.active + 1;
 							o.desc = `租车未还${res.data}辆车`;
 							this.$nextTick(() => {
+								
 								if (this.active === this.options.length - 1) {
 									this.pactFlag = true;
 								}
@@ -81,8 +84,9 @@
 					if (o.name === '驾照存分查询') {
 						api.checkLicense(this.idCard).then((res = {}) => {
 							this.active = this.active + 1;
-							o.desc = res.data?.msg ?? `已被扣除${res.data.data}分`;
+							o.desc = `已被扣除${res.data.data}分`;
 							this.$nextTick(() => {
+								
 								if (this.active === this.options.length - 1) {
 									this.pactFlag = true;
 								}
@@ -101,6 +105,7 @@
 								}
 								this.active = this.active + 1;
 								this.$nextTick(() => {
+									
 									if (this.active === this.options.length - 1) {
 										this.pactFlag = true;
 									}
@@ -121,6 +126,7 @@
 								}
 								this.active = this.active + 1;
 								this.$nextTick(() => {
+									
 									if (this.active === this.options.length - 1) {
 										this.pactFlag = true;
 									}
@@ -221,6 +227,7 @@
 															if (this.active === this.options.length - 1) {
 																this.pactFlag = true;
 															}
+															
 														});
 													} else {
 														uni.showModal({
@@ -234,6 +241,7 @@
 																		if (this.active === this.options.length - 1 ) {
 																			this.pactFlag = true;
 																		}
+																		
 																	});
 																} else {
 																	current.desc = '人脸识别未通过';
@@ -252,7 +260,7 @@
 						})
 						break;
 					case "电子合同":
-						uni.navigateTo({
+						uni.redirectTo({
 							url: `/pages/model/InCar/Pact?orderId=${this.orderId}`
 						});
 						break;

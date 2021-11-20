@@ -65,7 +65,7 @@
 		<view v-if="showQR" class="qrcode_box">
 			<Qrcode ref="qrcode" :size="400" :val="val" :onval="true" background="#FFFFFF" foreground="#000000"></Qrcode>
 			<uni-data-checkbox style="margin-top: 50rpx;" v-model="payment" :localdata="paymentList" @change="changePayment"></uni-data-checkbox>
-			<u-button type="primary" style="margin-top: 50rpx;" @click="share">分享车辆小程序</u-button>
+			<u-button type="primary" style="margin-top: 50rpx;" @click="share(payment)">分享车辆小程序</u-button>
 			<u-button style="margin-top: 50rpx;" @click="() => showQR = false" type="error">关闭二维码</u-button>
 		</view>
 	</view>
@@ -369,14 +369,14 @@
 				}, ],
 				complany: [],
 				user: uni.getStorageSync( 'user' ),
-				payment: uni.getStorageSync('payment'),
+				payment: uni.getStorageSync('payment') || '2',
 				complanyId: uni.getStorageSync('complanyId'),
 				carId: '',
 				scrollY: true,
 				complanyName: '',
 				showQR: true,
 				paymentList: [
-					{value: '1', text: '线上支付'},
+					{value: '1', text: '线上支付', disable: true},
 					{value: '2', text: '线下支付'},
 				],
 				val:'',
@@ -397,6 +397,8 @@
 				this.lossInsuranceType = uni.getStorageSync( 'insurance_status' );
 			} );
 			this.carId = option.id;
+			this.complany = this._.find(this.user.complany, o => { return o.id === uni.getStorageSync('complanyId') });
+			this.paymentList[0].disable = this?.complany?.subMchId === null;
 		},
 		onBackPress(e) {
 			if(e.from){
@@ -405,41 +407,52 @@
 		},
 		mounted() {
 			this.carId && this.getCarInfo( this.carId );
-			( this.user.complany || [] ).length > 1 && this.user.complany.forEach( o => {
-				this.complany.push( {
-					value: o.id,
-					text: o.complanyName
-				} );
-			} )
 		},
 		methods: {
-			share() {
-				uni.showActionSheet( {
-					itemList: [ '线上支付', '线下支付' ],
-					success: ( e ) => {
-						let payment = undefined;
-						if ( e.tapIndex === 0 ) {
-							payment = '1';
-						} else if ( e.tapIndex === 1 ) {
-							payment = '2';
+			share(paymethod) {
+				if(paymethod){
+					uni.share( {
+						provider: 'weixin',
+						type: 5,
+						scene: 'WXSceneSession',
+						imageUrl: '/static/logo.png',
+						title: `${this.formData.carBrand}`,
+						miniProgram: {
+							id: 'gh_4be764c63360',
+							path: `/pages/index/Index?complanyId=${this.complanyId}&carId=${this.carId}&payment=${paymethod}`,
+							type: 0,
+							webUrl: 'http://uniapp.dcloud.io'
+						},
+					} )
+				}else {
+					uni.showActionSheet( {
+						itemList: [ '线上支付', '线下支付' ],
+						success: ( e ) => {
+							let payment = undefined;
+							if ( e.tapIndex === 0 ) {
+								payment = '1';
+							} else if ( e.tapIndex === 1 ) {
+								payment = '2';
+							}
+							if ( payment ) {
+								uni.share( {
+									provider: 'weixin',
+									type: 5,
+									scene: 'WXSceneSession',
+									imageUrl: '/static/logo.png',
+									title: `${this.formData.carBrand}`,
+									miniProgram: {
+										id: 'gh_4be764c63360',
+										path: `/pages/index/Index?complanyId=${this.complanyId}&carId=${this.carId}&payment=${payment}`,
+										type: 0,
+										webUrl: 'http://uniapp.dcloud.io'
+									},
+								} )
+							}
 						}
-						if ( payment ) {
-							uni.share( {
-								provider: 'weixin',
-								type: 5,
-								scene: 'WXSceneSession',
-								imageUrl: '/static/logo.png',
-								title: `${this.formData.carBrand}`,
-								miniProgram: {
-									id: 'gh_8e6352992afc',
-									path: `/pages/index/Index?complanyId=${this.complanyId}&carId=${this.carId}&payment=${payment}`,
-									type: 0,
-									webUrl: 'http://uniapp.dcloud.io'
-								},
-							} )
-						}
-					}
-				} );
+					} );
+				}
+				
 			},
 			checkIllegal() {
 				api.checkIllegal( {
@@ -522,9 +535,7 @@
 			},
 			getCarInfo( id ) {
 				api.carInfo( id ).then( ( res = {} ) => {
-					let {
-						data
-					} = res;
+					let { data } = res;
 					if ( data ) {
 						let files = data.carPhotos.split( ',' );
 						let carsPhotos = [];
@@ -606,7 +617,7 @@
 					} ).catch(err => {
 						uni.showModal({
 							title: '提示',
-							content: '请认真核对填写的信息',
+							content: '必填项请填写完整',
 							showCancel: false,
 						})
 					});

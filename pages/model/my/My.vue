@@ -1,9 +1,9 @@
 <template>
 	<view class="content" style="align-items: center;">
-		<view class="page_top" @click="() => show = true">
+		<view class="page_top" @click="() => user.complany.length > 1 ? show = true : ''">
 			<u-image width="106rpx" height="106rpx" src="/static/img/head.png"></u-image>
 			<view class="page_top_info">
-				<text class="name">{{complanyName}}</text>
+				<text class="name">{{complanyName}} {{user.complany.length > 1 ? '点击切换公司' : ''}}</text>
 				<text style="font-size: 14px;">ID：{{ _.random(100000000, 999999999, false) || 'youxingxiaodi'}}</text>
 			</view>
 		</view>
@@ -17,7 +17,7 @@
 			</view>
 		</view>
 		<text class="complany">贵州小滴科技有限公司 版权所有</text>
-		<u-popup :show="show" mode="bottom">
+		<u-popup :show="show" mode="bottom" :overlay="true" :closeOnClickOverlay="true" @close="() => show = false">
 			<view class="popup_box">
 				<view class="popup_box_title">公司切换</view>
 				<view class="line"></view>
@@ -83,6 +83,7 @@
 				uni.$emit('inCar');
 				uni.$emit('returnCar');
 				uni.$emit('car');
+				uni.$emit('orders');
 			},
 			toPage(e){
 				if(e?.path){

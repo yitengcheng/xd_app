@@ -46,7 +46,7 @@
 		},
 		onLoad() {
 			this.getCarList(1);
-			this.$on('car', () => {
+			uni.$on('car', () => {
 				this.getCarList(1);
 			})
 		},

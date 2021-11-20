@@ -25,22 +25,22 @@
 					}
 				},
 				show: false,
+				timer: undefined,
 			};
+		},
+		onBackPress(e) {
+			this.timer && clearInterval(this.timer);
 		},
 		methods: {
 			getContract(orderId) {
-				api.send({
-					orderId
-				}).then((res = {}) => {
+				api.send({ orderId }).then((res = {}) => {
 					if (res.data) {
 						this.src = res.data;
-						let timer = setInterval(() => {
+						this.timer = setInterval(() => {
 							api.orderDetail(orderId, false).then((res = {}) => {
-								let {
-									data
-								} = res;
+								let { data } = res;
 								if (data.signStatus === 1) {
-									clearInterval(timer);
+									clearInterval(this.timer);
 									uni.navigateTo({
 										url: `/pages/model/InCar/PactQrcode?pactId=${data.contract}&orderId=${orderId}`
 									})
@@ -58,7 +58,7 @@
 				}).catch(err => {
 					uni.showModal({
 						title: '提示',
-						content: '请认真核对填写的信息',
+						content: '必填项请填写完整',
 						showCancel: false,
 					})
 				});

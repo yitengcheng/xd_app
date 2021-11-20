@@ -1,6 +1,6 @@
 <template>
 	<view class="content" style="align-items: center;">
-		<swiper class="swiper_box" @change="change">
+		<swiper class="swiper_box" @change="(e) => current = e.detail.current">
 			<swiper-item v-for="(item, index) in (carInfo || {}).carPhotos" :key="index">
 				<image :src="item" class="swiper_img" mode="aspectFill"></image>
 			</swiper-item>
@@ -17,7 +17,7 @@
 			<text>【租车单价】{{ carInfo.unitPrice || '无' }} 元/天</text>
 			<text>【租车保证金】{{ carInfo.bondMoney || '无' }} 元</text>
 			<text>【违章保证金】{{ carInfo.violationBondMoney || '无' }} 元</text>
-			<text>【预约租车时间】{{dayjs((carInfo.wxOrder || {}).wantCarTime).format('YYYY-MM-DD')}}至{{dayjs((carInfo.wxOrder || {}).estimateReturnTime).format('YYYY-MM-DD')}}</text>
+			<text>【预约租车时间】{{dayjs((carInfo.wxOrder || {}).wantCarTime).format('YYYY-MM-DD HH:mm:ss')}}至{{dayjs((carInfo.wxOrder || {}).estimateReturnTime).format('YYYY-MM-DD HH:mm:ss')}}</text>
 			<text>【租车天数】{{ ((carInfo || {}).wxOrder || {}).rentCarDays }} 天</text>
 			<uni-forms ref="formOrder" v-model="formOrderData" :rules="orderRules" :labelWidth="100" class="form_box">
 				<FormInput :formData="formOrderData" name="unitPrice" label="租车单价" decoration/>
@@ -62,8 +62,8 @@
 				<FormInput :formData="formData" name="archivesNum" label="档案编号" decoration/>
 				<FormPicker :formData="formData" name="sex" label="性别" :localdata="sexList" decoration/>
 				<FormInput :formData="formData" name="phone" label="手机号" decoration/>
-				<FormInput :formData="formData" name="nowAddress" label="当前居住地" decoration/>
-				<FormInput :formData="formData" name="urgentConcat" label="紧急联系人" :required="false" decoration/>
+				<FormInput :formData="formData" name="urgentConcat" label="紧急联系人"  decoration/>
+				<FormInput :formData="formData" name="nowAddress" label="当前居住地" decoration :required="false"/>
 				<FormSwitch :formData="formData" name="preferredUse" label="代金券" @change="changePreferredUse" :required="false" decoration/>
 				<FormRadio :required="false" :multiple="true" :formData="formData" name="check" :localdata="checkList"
 					label="附加核验" @change="changeCheck" decoration/>
@@ -77,7 +77,6 @@
 <script>
 	import api from '../../../api/index.js';
 	import config from '../../../common/config.js';
-	import IdCardOcr from '../../../components/ocr/IdCardOcr.vue';
 	import FormRadio from '../../../components/form/FormRadio.vue';
 	import FormInput from '../../../components/form/FormInput.vue';
 	import Combox from '../../../components/cuihai-combox/cuihai-combox.vue';
@@ -92,7 +91,6 @@
 	} from '../../../common/regex.js';
 	export default {
 		components: {
-			IdCardOcr,
 			FormRadio,
 			FormInput,
 			Combox,
@@ -181,10 +179,10 @@
 							errorMessage: '请选择移交车辆'
 						}]
 					},
-					nowAddress: {
+					urgentConcat: {
 						rules: [{
 							required: true,
-							errorMessage: '请填写当前居住地'
+							errorMessage: '请填写紧急联系人'
 						}]
 					},
 					idcard: {
@@ -391,9 +389,6 @@
 					})
 				}
 			},
-			change(e) {
-				this.current = e.detail.current;
-			},
 			getCarInfo(id) {
 				api.returnCarInfo(id).then((res = {}) => {
 					if (res.data) {
@@ -429,6 +424,18 @@
 						this.formOrderData.rentCarDays = res?.data?.wxOrder?.rentCarDays;
 						this.oldCarId = res?.data?.id;
 						this.carList = this._.uniqBy(this.carList, 'text');
+						if(res?.data?.wxOrder?.contract){
+							uni.redirectTo({
+								url: `/pages/model/InCar/Pact?orderId=${res?.data?.wxOrder?.orderId}`
+							});
+							return;
+						}
+						if(res?.data?.wxOrder?.infoFlag || res?.data?.wxOrder?.conctratInfoFlag){
+							uni.redirectTo({
+								url: `/pages/model/InCar/Step?orderId=${res?.data?.wxOrder?.orderId}&pactFlag=${res?.data?.conctratInfoFlag}`
+							});
+							return;
+						}
 					}
 				});
 			},
@@ -503,7 +510,7 @@
 								});
 							});
 							if (checks.length === 0 && typeof this.carInfo.complany.subMchId === 'string') {
-								uni.navigateTo({
+								uni.redirectTo({
 									url: `/pages/model/InCar/Step?orderId=${this.carInfo.orderId}&idcard=${this.formData.idcard}&name=${this.formData.name}`
 								})
 								return;
@@ -525,8 +532,8 @@
 														money: this._.sum(this._.map(checks,'value')),
 													}).then(result => {
 														if (result) {
-															if (typeof this.carInfo.complany.subMchId === 'string') {
-																uni.navigateTo({
+															if (this.carInfo.wxOrder.payStatus !== '到店付款') {
+																uni.redirectTo({
 																	url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idcard=${this.formData.idcard}&name=${this.formData.name}&orderId=${this.carInfo.orderId}`
 																});
 															} else {
@@ -550,7 +557,7 @@
 								}).catch(err => {
 						uni.showModal({
 							title: '提示',
-							content: '请认真核对填写的信息',
+							content: '必填项请填写完整',
 							showCancel: false,
 						})
 					});
@@ -560,7 +567,7 @@
 						}).catch(err => {
 						uni.showModal({
 							title: '提示',
-							content: '请认真核对填写的信息',
+							content: '必填项请填写完整',
 							showCancel: false,
 						})
 					});
@@ -595,7 +602,7 @@
 							provider: 'wxpay',
 							orderInfo: info,
 							success: () => {
-								uni.navigateTo({
+								uni.redirectTo({
 									url: `/pages/model/InCar/Step?checks=${serviceRemark}&idcard=${data.idcard}&name=${this.formData.name}&orderId=${this.carInfo.orderId}`
 								});
 							},
