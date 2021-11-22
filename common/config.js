@@ -2,8 +2,8 @@ let API_URL = ""
 let IMG_URL = ""
 //默认路径应与 manifest.json 一致，同时修改
 // let DEVELOPMENT_API_URL = "https://test.qiantur.com/stage-api";
-let DEVELOPMENT_API_URL = "https://xd.qiantur.com/prod-api";
-// let DEVELOPMENT_API_URL = "http://192.168.2.54:8080";
+// let DEVELOPMENT_API_URL = "https://xd.qiantur.com/prod-api";
+let DEVELOPMENT_API_URL = "http://192.168.2.79:8080";
 let PRODUCT_API_URL = "https://xd.qiantur.com/prod-api";
 // let PRODUCT_API_URL = "https://test.qiantur.com/stage-api";
 // let DEFAULT_IMG_URL = 'https://test.qiantur.com/minio';

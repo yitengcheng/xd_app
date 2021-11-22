@@ -1,6 +1,7 @@
 <template>
 	<view class="content">
 		<u-swiper :list="list" :circular="true" height="150px"></u-swiper>
+		<u-image src="/static/img/empty_data.png" v-if="productList.length === 0" style="align-self: center;"></u-image>
 		<WaterfallsFlow :wfList="productList" @itemTap="itemTap"></WaterfallsFlow>
 	</view>
 </template>

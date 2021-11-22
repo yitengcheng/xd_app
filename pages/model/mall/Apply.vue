@@ -125,7 +125,8 @@
 			apply(){
 				this.$refs.form.validate().then(data => {
 					api.applyReader(this.formData).then((res) => {
-						if(res.data){
+						if(res?.data){
+							console.log(res?.data);
 							uni.requestPayment({
 								provider: 'wxpay',
 								orderInfo: res.data,
