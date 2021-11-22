@@ -51,6 +51,11 @@
 					pageSize: 10,
 				}).then((res = {}) => {
 					uni.stopPullDownRefresh();
+					if(res?.total === 0){
+						this.orders = [];
+						this.pageNo = 1;
+						return;
+					}
 					if ((res.rows || []).length > 0) {
 						let tmp = []
 						res.rows.forEach(o => {

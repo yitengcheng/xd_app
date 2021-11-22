@@ -40,7 +40,7 @@
 				<text>【是否续租】</text>
 				<u-switch v-model="hasRelet" @change="changeRelet" active-color="#FFD101"></u-switch>
 			</view>
-			<uni-datetime-picker ref="pickerDate" class="reletDate" v-if="hasRelet" type="date" :value="reletDate" :start="dayjs().format('YYYY-MM-DD')" @change="changeDate"></uni-datetime-picker>
+			<uni-datetime-picker ref="pickerDate" class="reletDate" v-if="hasRelet" type="date" :value="reletDate" :start="dayjs(((carInfo || {}).wxOrder || {}).estimateReturnTime).format('YYYY-MM-DD')" @change="changeDate"></uni-datetime-picker>
 			<view v-if="!hasRelet" class="margin_box">
 				<text>【已扣除租车保证金】</text>
 				<u-input v-model="deductBondMoney" placeholder="请输入已扣除租车保证金" type="number" border="bottom" shape="circle" inputAlign="right"></u-input>
@@ -193,7 +193,8 @@
 											uni.switchTab({
 												url: '/pages/model/car/Car',
 												success: () => {
-													uni.$emit('returnCar')
+													uni.$emit('returnCar');
+													uni.$emit('car');
 												}
 											});
 										}

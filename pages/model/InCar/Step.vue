@@ -52,6 +52,8 @@
 					name: '电子合同',
 					error: false,
 				}];
+			} else {
+				this.autoCheck();
 			}
 		},
 		methods: {

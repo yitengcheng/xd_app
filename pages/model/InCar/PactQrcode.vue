@@ -1,5 +1,5 @@
 <template>
-	<view class="content">
+	<view class="content" style="align-items: center;">
 		<canvas id="qrcode" canvas-id="qrcode" style="width: 354px;height: 354px;" />
 		<text>请客户打开优行小滴小程序，在首页点击合同扫码，扫描上面的二维码</text>
 	</view>
@@ -10,13 +10,21 @@
 	import uQRCode from '../../../components/uqrcode/common/uqrcode.js';
 	import api from '../../../api/index.js';
 	export default {
+		data() {
+			return {
+				timer: undefined,
+			};
+		},
+		onBackPress(e) {
+			this.timer && clearInterval(this.timer);
+		},
 		onLoad(option) {
 			this.pactId = option.pactId;
-			let timer = setInterval(() => {
+			this.timer = setInterval(() => {
 				api.orderDetail(option.orderId, false).then((res = {}) => {
 					let { data } = res;
-					if (data.signStatus === 2) {
-						clearInterval(timer);
+					if (data?.signStatus === 2) {
+						clearInterval(this.timer);
 						uni.navigateTo({
 							url: `/pages/model/InCar/Finish`,
 						})

@@ -39,7 +39,7 @@
 						this.timer = setInterval(() => {
 							api.orderDetail(orderId, false).then((res = {}) => {
 								let { data } = res;
-								if (data.signStatus === 1) {
+								if (data?.signStatus === 1) {
 									clearInterval(this.timer);
 									uni.navigateTo({
 										url: `/pages/model/InCar/PactQrcode?pactId=${data.contract}&orderId=${orderId}`

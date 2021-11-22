@@ -13,7 +13,6 @@
 	.content {
 		display: flex;
 		flex-direction: column;
-		overflow: hidden;
 		width: 100%;
 	}
 	page {

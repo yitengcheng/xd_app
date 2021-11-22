@@ -20,10 +20,10 @@
 			<text>【预约租车时间】{{dayjs((carInfo.wxOrder || {}).wantCarTime).format('YYYY-MM-DD HH:mm:ss')}}至{{dayjs((carInfo.wxOrder || {}).estimateReturnTime).format('YYYY-MM-DD HH:mm:ss')}}</text>
 			<text>【租车天数】{{ ((carInfo || {}).wxOrder || {}).rentCarDays }} 天</text>
 			<uni-forms ref="formOrder" v-model="formOrderData" :rules="orderRules" :labelWidth="100" class="form_box">
-				<FormInput :formData="formOrderData" name="unitPrice" label="租车单价" decoration/>
-				<FormInput :formData="formOrderData" name="rentCarDays" label="租车天数" decoration/>
-				<FormInput :formData="formOrderData" name="bondMoney" label="租车保证金" decoration/>
-				<FormInput :formData="formOrderData" name="violationBondMoney" label="违章保证金" decoration/>
+				<FormInput :formData="formOrderData" name="unitPrice" label="租车单价" decoration type="number"/>
+				<FormInput :formData="formOrderData" name="rentCarDays" label="租车天数" decoration type="number"/>
+				<FormInput :formData="formOrderData" name="bondMoney" label="租车保证金" decoration type="number"/>
+				<FormInput :formData="formOrderData" name="violationBondMoney" label="违章保证金" decoration type="number"/>
 			</uni-forms>
 			<view v-if="formOrderData.unitPrice * 1 - carInfo.unitPrice * 1 !== 0" >【优惠】{{ formOrderData.unitPrice * 1 - carInfo.unitPrice * 1 > 0 ? `增加${formOrderData.unitPrice * 1 - carInfo.unitPrice * 1}元` : `减少${carInfo.unitPrice * 1 - formOrderData.unitPrice * 1}元`}}</view>
 		</view>
@@ -60,7 +60,7 @@
 				</uni-forms-item>
 				<FormInput :formData="formData" name="idcard" label="身份证号" decoration/>
 				<FormInput :formData="formData" name="archivesNum" label="档案编号" decoration/>
-				<FormPicker :formData="formData" name="sex" label="性别" :localdata="sexList" decoration/>
+				<FormPicker :formData="formData" name="sex" label="性别" :localdata="sexList" decoration @change="changeSex"/>
 				<FormInput :formData="formData" name="phone" label="手机号" decoration/>
 				<FormInput :formData="formData" name="urgentConcat" label="紧急联系人"  decoration/>
 				<FormInput :formData="formData" name="nowAddress" label="当前居住地" decoration :required="false"/>
@@ -306,8 +306,11 @@
 					this.formData.check = e.detail.value;
 				}
 			},
+			changeSex(e){
+				this.formData.sex = e.value
+			},
 			changePreferredUse(e) {
-				this.formData.preferredUse = e
+				this.formData.preferredUse = e;
 			},
 			getComboxValue(e) {
 				this.customerId = this.candidates[e]?.id;
@@ -432,7 +435,7 @@
 						}
 						if(res?.data?.wxOrder?.infoFlag || res?.data?.wxOrder?.conctratInfoFlag){
 							uni.redirectTo({
-								url: `/pages/model/InCar/Step?orderId=${res?.data?.wxOrder?.orderId}&pactFlag=${res?.data?.conctratInfoFlag}`
+								url: `/pages/model/InCar/Step?orderId=${res?.data?.wxOrder?.orderId}&pactFlag=${res?.data?.wxOrder?.conctratInfoFlag}`
 							});
 							return;
 						}
@@ -511,7 +514,7 @@
 							});
 							if (checks.length === 0 && typeof this.carInfo.complany.subMchId === 'string') {
 								uni.redirectTo({
-									url: `/pages/model/InCar/Step?orderId=${this.carInfo.orderId}&idcard=${this.formData.idcard}&name=${this.formData.name}`
+									url: `/pages/model/InCar/Step?orderId=${this.carInfo.orderId}&idcard=${this.formData.idcard}&name=${this.formData.name}&pactFlag=false`
 								})
 								return;
 							}

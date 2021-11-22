@@ -9,7 +9,7 @@
 			<FormPicker v-show="((user || {}).complany || []).length >= 2" label="公司" name="complanyId" :localdata="complanys" :formData="formData" :required="false"></FormPicker>
 			<FormRadio label="购买/租赁" :localdata="payTypeList" @change="changePay" name="payType" :formData="formData" :required="false"></FormRadio>
 			<FormInput label="台数" name="applyNum" :formData="formData" type="number" :required="false"></FormInput>
-			<FormPicker v-show="formData.payType !== 0" label="租期" name="lease" :localdata="leaseTermList" :formData="formData" :required="false"></FormPicker>
+			<FormPicker v-show="formData.payType !== 0" @change="changeLease" label="租期" name="lease" :localdata="leaseTermList" :formData="formData" :required="false"></FormPicker>
 			<FormInput label="收货地址" name="address" :formData="formData" :required="false"></FormInput>
 			<view class="form_price">{{formData.payType === 1 ? `租金：￥${rent} 元/月`: `单价：￥ ${price} 元`}}</view>
 			<view class="form_price">{{formData.payType === 1 ? `押金：￥${deposit} 元`: `总计：￥ ${price * formData.applyNum} 元`}}</view>
@@ -95,6 +95,9 @@
 		methods:{
 			changePay(e){
 				this.formData.payType = e.detail.value;
+			},
+			changeLease(e){
+				this.formData.lease = e.value;
 			},
 			initComplany() {
 				let { complany } = this.user;

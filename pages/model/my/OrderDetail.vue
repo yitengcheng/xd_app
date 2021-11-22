@@ -22,7 +22,7 @@
 		<u-button v-show="type === '1'" @click="orderHandle(1)" class="btn" type="primary">确认接单</u-button>
 		<u-button v-show="type === '1'" @click="orderHandle(2)" class="btn">放弃接单</u-button>
 		<u-button v-show="type === '2'" @click="orderHandle(4)" class="btn" type="primary">交车</u-button>
-		<u-button v-show="type === '2'" @click="orderHandle(3)" class="btn" type="error">确认退款</u-button>
+		<u-button v-show="type === '2'" @click="orderHandle(3)" class="btn" type="error">{{orderInfo.payStatus === '到店付款' ? '取消订单' : '确认退款'}}</u-button>
 	</view>
 </template>
 
@@ -41,6 +41,11 @@
 			this.type = option.type; // 0 列表进入 1 新订单确认或取消 2 退款确认 3交车
 			this.handleId = option.handleId;
 			this.initOrderDetail(option.id);
+		},
+		onBackPress() {
+			uni.switchTab({
+				url: 'pages/model/my/Orders',
+			})
 		},
 		methods: {
 			initOrderDetail(id) {
@@ -82,10 +87,6 @@
 					if (res) {
 						uni.$emit('orders');
 						this.initOrderDetail(this.orderInfo.orderId);
-						uni.showToast({
-							title: '操作成功',
-							icon: 'success'
-						});
 						if(type === 1){
 							uni.showModal({
 								title: '提示',
@@ -97,8 +98,19 @@
 										})
 									}
 								}
-							})
+							});
+							return;
 						}
+						uni.showModal({
+							title: '提示',
+							content: '操作成功',
+							showCancel: false,
+							success: () => {
+								uni.$emit('orders');
+								uni.navigateBack();
+							}
+						});
+						
 					}
 				})
 			}

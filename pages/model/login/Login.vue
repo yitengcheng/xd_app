@@ -65,40 +65,42 @@
 						type: 'app',
 						...data,
 					}).then((res = {})=>{
-						if (uni.getSystemInfoSync().platform == "android" && this.appVersion * 1 < res.appVersion * 1) {
-							uni.showModal({
-								content: '当前使用版本过低，请更新',
-								showCancel: false,
-								success: (e) => {
-									if(e.confirm){
-										if(uni.getSystemInfoSync().platform == 'android'){
-											uni.showLoading({
-												mask:true,
-												title: '更新中，请稍后'
-											})
-											uni.downloadFile({
-												url: 'http://www.fanzehua.cn/uploads/xd-app.apk',
-												success: (downloadResult) => {
-													uni.hideLoading();
-													plus.runtime.install(downloadResult.tempFilePath, {force: false}, ()=> {
-														plus.runtime.restart();
-													});
-												},
-												fail: () => {
-													uni.hideLoading();
-													uni.showToast({
-														title: '更新失败',
-														icon: 'error',
-													})
-												}
-											});
-										} else if(uni.getSystemInfoSync().platform == 'ios'){
-											plus.ios.import("UIApplication").sharedApplication().performSelector("exit")
+						if(process.env.NODE_ENV !== 'development'){
+							if (uni.getSystemInfoSync().platform == "android" && this.appVersion * 1 < res.appVersion * 1) {
+								uni.showModal({
+									content: '当前使用版本过低，请更新',
+									showCancel: false,
+									success: (e) => {
+										if(e.confirm){
+											if(uni.getSystemInfoSync().platform == 'android'){
+												uni.showLoading({
+													mask:true,
+													title: '更新中，请稍后'
+												})
+												uni.downloadFile({
+													url: 'http://www.fanzehua.cn/uploads/xd-app.apk',
+													success: (downloadResult) => {
+														uni.hideLoading();
+														plus.runtime.install(downloadResult.tempFilePath, {force: false}, ()=> {
+															plus.runtime.restart();
+														});
+													},
+													fail: () => {
+														uni.hideLoading();
+														uni.showToast({
+															title: '更新失败',
+															icon: 'error',
+														})
+													}
+												});
+											} else if(uni.getSystemInfoSync().platform == 'ios'){
+												plus.ios.import("UIApplication").sharedApplication().performSelector("exit")
+											}
 										}
 									}
-								}
-							});
-							return;
+								});
+								return;
+							}
 						}
 						if(res.token){
 							uni.setStorage({

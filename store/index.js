@@ -39,9 +39,9 @@ const store = new Vuex.Store({
 											if (e.confirm) {
 												api.handleRead({
 													type,
-													handleId
+													id: handleId,
 												});
-												uni.redirectTo({
+												uni.navigateTo({
 													url: `/pages/model/my/OrderDetail?id=${orderId}&type=1&handleId=${handleId}`
 												});
 											}
@@ -56,9 +56,9 @@ const store = new Vuex.Store({
 											if (e.confirm) {
 												api.handleRead({
 													type,
-													handleId
+													id: handleId,
 												});
-												uni.redirectTo({
+												uni.navigateTo({
 													url: `/pages/model/my/OrderDetail?id=${orderId}&type=1&handleId=${handleId}`
 												});
 											}
@@ -73,7 +73,7 @@ const store = new Vuex.Store({
 											if (e.confirm) {
 												api.handleRead({
 													type,
-													handleId
+													id: handleId,
 												});
 											}
 										}
@@ -86,9 +86,9 @@ const store = new Vuex.Store({
 											if (e.confirm) {
 												api.handleRead({
 													type,
-													handleId
+													id: handleId,
 												});
-												uni.redirectTo({
+												uni.navigateTo({
 													url: `/pages/model/my/OrderDetail?id=${orderId}&type=2&handleId=${handleId}`
 												});
 											}
@@ -103,7 +103,7 @@ const store = new Vuex.Store({
 											if (e.confirm) {
 												api.handleRead({
 													type,
-													handleId
+													id: handleId,
 												});
 											}
 										}
@@ -139,7 +139,7 @@ const store = new Vuex.Store({
 											if (e.confirm) {
 												api.handleRead({
 													type,
-													handleId
+													id: handleId,
 												});
 											}
 										}
