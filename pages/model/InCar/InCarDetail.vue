@@ -228,6 +228,13 @@
 						rules: [{
 							required: true,
 							errorMessage: '请填写租车单价'
+						}, {
+							validateFunction: ( rule, value, data, callback ) => {
+								if ( value * 1 < 20 ) {
+									callback( '租车单价最低不能低于20元' );
+								}
+								return true;
+							}
 						}]
 					},
 					rentCarDays: {

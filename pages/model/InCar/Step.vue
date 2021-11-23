@@ -10,7 +10,6 @@
 		<view v-if="pactFlag" class="pactBtn">
 			<u-button type="primary" @click="toPact" class="btn">{{pactBtnText}}</u-button>
 		</view>
-
 	</view>
 </template>
 

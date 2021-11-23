@@ -16,6 +16,8 @@
 			<FormInput :disabled="disabled" :formData="formData" name="carBrand" label="车辆品牌" />
 			<FormPicker :disabled="disabled" :formData="formData" name="type" :localdata="carType" label="车辆类型"
 				@change="e => formData.type = e.value" />
+			<FormPicker :disabled="disabled" :formData="formData" name="cartype" :localdata="violateType" label="违章查询车辆类型"
+				@change="e => formData.cartype = e.value" />
 			<FormInput :disabled="disabled" :formData="formData" name="color" label="车身颜色" />
 			<FormInput :disabled="disabled" :formData="formData" name="frameNum" label="车架号" />
 			<FormInput :disabled="disabled" :formData="formData" name="engineNum" label="发动机号" />
@@ -155,6 +157,12 @@
 							errorMessage: '请选择车辆类型'
 						} ]
 					},
+					cartype: {
+						rules: [ {
+							required: true,
+							errorMessage: '请选择违章查询车辆类型'
+						} ]
+					},
 					color: {
 						rules: [ {
 							required: true,
@@ -228,6 +236,13 @@
 						}, {
 							pattern: positiveRegex,
 							errorMessage: '请输入租车单价'
+						}, {
+							validateFunction: ( rule, value, data, callback ) => {
+								if ( value * 1 < 20 ) {
+									callback( '租车单价最低不能低于20元' );
+								}
+								return true;
+							}
 						} ]
 					},
 					cardId: {
@@ -330,10 +345,14 @@
 					annualReview: '',
 					maxMileage: '',
 					maxMileagePrice: '',
-					remark: ''
+					remark: '',
+					idcard: '',
+					cartype: '',
 				},
+				carPhotos: [],
 				sourceType: [],
 				carType: [],
+				violateType: [],
 				gpsVendorType: [],
 				carBrand: [],
 				gasolineType: [],
@@ -390,11 +409,13 @@
 			this.disabled = option.type === 'add' ? false : true;
 			this.showQR = option.showQR === 'true';
 			this.getGpsList();
-			this.dictInit( 'car_type', 'sources_vehicle', 'fuel_number', 'insurance_status' ).then( () => {
+			this.dictInit( 'car_type', 'sources_vehicle', 'fuel_number', 'insurance_status', 'violate_type' ).then( () => {
 				this.carType = uni.getStorageSync( 'car_type' );
 				this.sourceType = uni.getStorageSync( 'sources_vehicle' );
 				this.gasolineType = uni.getStorageSync( 'fuel_number' );
 				this.lossInsuranceType = uni.getStorageSync( 'insurance_status' );
+				this.violateType = uni.getStorageSync( 'violate_type' );
+				console.log(uni.getStorageSync( 'violate_type' ));
 			} );
 			this.carId = option.id;
 			this.complany = this._.find(this.user.complany, o => { return o.id === uni.getStorageSync('complanyId') });
@@ -540,25 +561,25 @@
 					if ( data ) {
 						let files = data.carPhotos.split( ',' );
 						let carsPhotos = [];
-						let licenseBack = [];
-						let licenseFront = [];
 						files.forEach( ( item, index ) => {
 							carsPhotos.push(formattingPhoto(item));
+							this.carPhotos.push(item);
 						} );
 						this.photo = carsPhotos;
-						licenseBack.push(formattingPhoto(data.licenseBackUrl));
-						licenseFront.push(formattingPhoto(data.licenseFrontUrl));
 						this.source = data.source;
 						this.complanyName = data.complany.complanyName;
 						this.carId = data.id;
 						this.formData.carPhotos = carsPhotos;
-						this.formData.licenseFrontUrl = licenseFront;
-						this.formData.licenseBackUrl = licenseBack;
+						this.formData.licenseFrontUrl = [formattingPhoto(data.licenseFrontUrl)];
+						this.licenseFrontUrl = data.licenseFrontUrl;
+						this.formData.licenseBackUrl = [formattingPhoto(data.licenseBackUrl)];
+						this.licenseBackUrl = data.licenseBackUrl;
 						this.formData.source = data.source;
 						this.formData.operatorId = data.operatorId;
 						this.formData.carNum = data.carNum;
 						this.formData.carBrand = data.carBrand;
 						this.formData.type = data.type;
+						this.formData.cartype = data.cartype;
 						this.formData.color = data.color;
 						this.formData.frameNum = data.frameNum;
 						this.formData.engineNum = data.engineNum;
@@ -572,6 +593,7 @@
 						this.formData.unitPrice = data.unitPrice;
 						this.formData.name = data.name;
 						this.formData.phoneNum = data.phoneNum;
+						this.formData.idcard = data.idcard;
 						this.formData.bondMoney = data.bondMoney;
 						this.formData.violationBondMoney = data.violationBondMoney;
 						this.formData.strongEndTime = data.strongEndTime;
@@ -588,6 +610,9 @@
 				this.$refs.form.validate().then( data => {
 					let func = this?.carId ? api.updateCar : api.addCar;
 					let carPhotos = this.$refs.carPhotos.getFileList();
+					if(carPhotos.length === 0){
+						carPhotos = this.carPhotos;
+					}
 					delete this?.formData?.carPhotos;
 					delete this?.formData?.licenseFrontUrl;
 					delete this?.formData?.licenseBackUrl;
@@ -615,14 +640,14 @@
 								icon: 'none'
 							} );
 						}
-					} ).catch(err => {
+					} );
+				} ).catch(err => {
 						uni.showModal({
 							title: '提示',
 							content: '必填项请填写完整',
 							showCancel: false,
 						})
 					});
-				} );
 			},
 			reset() {
 				this.$refs.form.resetFields();
@@ -633,8 +658,8 @@
 			},
 			getLicenseFront( e = {} ) {
 				let { url, ocr } = e;
+				this.licenseFrontUrl = url;
 				if ( url && !!ocr ) {
-					this.licenseFrontUrl = url;
 					this.formData.engineNum = ocr.engineNumber;
 					this.formData.carNum = ocr.plateNumber;
 					this.formData.carBrand = ocr.model;
@@ -644,8 +669,8 @@
 			},
 			getLicenseBack( e = {} ) {
 				let { url, ocr } = e;
+				this.licenseBackUrl = url;
 				if ( url && !!ocr ) {
-					this.licenseBackUrl = url;
 					this.formData.maxManned = ocr.approvedPassengerCapacity;
 					this.formData.fuelType = ocr.energyType;
 				}

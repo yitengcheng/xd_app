@@ -11,7 +11,6 @@
 				<text>订单信息</text>
 			</view>
 			<view class="line"></view>
-			<text>【总金额】{{orderInfo.totalMoney/100 || 0}}</text>
 			<text>【支付状态】{{orderInfo.payStatus === 'NOTPAY' ? '未付款' : orderInfo.payStatus === 'SUCCESS' ? '付款成功' : orderInfo.payStatus === 'REFUNDED' ? '退款成功' : orderInfo.payStatus === '到店付款' ? '到店付款' : '未知状态'}}</text>
 			<text>【租赁费用】{{orderInfo.shouldMoney/100 || 0}}</text>
 			<text>【预计交车时间】{{dayjs(orderInfo.wantCarTime).format('YYYY-MM-DD HH:mm:ss')}}</text>
