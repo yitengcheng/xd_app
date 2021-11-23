@@ -64,7 +64,6 @@
 							this.active = this.active + 1;
 							o.desc = res.data.msg;
 							this.$nextTick(() => {
-								
 								if (this.active === this.options.length - 1) {
 									this.pactFlag = true;
 								}
@@ -107,7 +106,6 @@
 								}
 								this.active = this.active + 1;
 								this.$nextTick(() => {
-									
 									if (this.active === this.options.length - 1) {
 										this.pactFlag = true;
 									}
@@ -128,7 +126,6 @@
 								}
 								this.active = this.active + 1;
 								this.$nextTick(() => {
-									
 									if (this.active === this.options.length - 1) {
 										this.pactFlag = true;
 									}
@@ -267,10 +264,7 @@
 						});
 						break;
 					default:
-						uni.showToast({
-							title: '功能尚未开发完成',
-							icon: 'none'
-						});
+						this.pactFlag = true;
 						break;
 				}
 			}

@@ -468,6 +468,7 @@
 			},
 			showQrCode(){
 				this.showQR = true;
+				this.val ='';
 				uni.pageScrollTo({
 					scrollTop: 0,
 					duration: 200,

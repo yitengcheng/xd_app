@@ -48,7 +48,7 @@
 				<u-button @click="readIdcard" class="readIdcard" type="primary">身份证阅读器</u-button>
 				<FormUpload :formData="formData" name="idcardFront" label="身份证" :limit="1" @getOcrData="getIdCard" url="/tool/ocr/idcard?type=2"></FormUpload>
 				<FormUpload :formData="formData" name="licenseMainUrl" label="驾照主页" :limit="1" @getOcrData="getLicenseMain" url="/tool/ocr/driving?type=8"></FormUpload>
-				<FormUpload :formData="formData" name="licenseViceUrl" label="驾照副页" :limit="1" @getOcrData="getLicenseVice" url="/tool/ocr/driving?type=9"></FormUpload>
+				<FormUpload :formData="formData" name="licenseViceUrl" label="驾照副页" :limit="1" @getOcrData="getLicenseVice" url="/tool/ocr/driving?type=9" :required="false"></FormUpload>
 				<FormUpload ref="photoScan" :formData="formData" name="photoScan" label="现场照片" :limit="3" :required="false"></FormUpload>
 				<uni-forms-item label="姓名" :name="formData.name" :required="true" decoration>
 					<Combox :value="formData.name" :candidates="candidates" :isJSON="true" keyName="name"
@@ -146,16 +146,6 @@
 							validateFunction: (rule, value, data, callback) => {
 								if (!value?.[0]) {
 									callback('请上传驾照主页');
-								}
-								return true;
-							}
-						}]
-					},
-					licenseViceUrl: {
-						rules: [{
-							validateFunction: (rule, value, data, callback) => {
-								if (!value?.[0]) {
-									callback('请上传驾照副页');
 								}
 								return true;
 							}
@@ -444,9 +434,9 @@
 			},
 			getIdCard(e = {}) {
 				let { url, ocr } = e;
-				if (url && !!ocr) {
-					this.formData.idcardFront = [formattingPhoto(url)];
-					this.idcardFront = url;
+				this.formData.idcardFront = [formattingPhoto(url)];
+				this.idcardFront = url;
+				if (!!ocr) {
 					this.formData.name = ocr.name;
 					this.formData.idcard = ocr.idnumber;
 					this.formData.nowAddress = ocr.address;
@@ -456,16 +446,14 @@
 			},
 			getLicenseMain(e = {}) {
 				let { url, ocr } = e;
-				if (url && !!ocr) {
-					this.formData.licenseMainUrl = [formattingPhoto(url)];
-					this.licenseMainUrl = url;
-				}
+				this.formData.licenseMainUrl = [formattingPhoto(url)];
+				this.licenseMainUrl = url;
 			},
 			getLicenseVice(e = {}) {
 				let { url, ocr } = e;
-				if (url && !!ocr) {
-					this.formData.licenseViceUrl = [formattingPhoto(url)];
-					this.licenseViceUrl = url;
+				this.formData.licenseViceUrl = [formattingPhoto(url)];
+				this.licenseViceUrl = url;
+				if (!!ocr) {
 					this.formData.archivesNum = ocr.archiveNumber;
 				}
 			},

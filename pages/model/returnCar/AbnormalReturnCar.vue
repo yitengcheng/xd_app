@@ -34,6 +34,7 @@
 			this.blackPhoneNumber = option.phoneNumber;
 			this.blackName = option.name;
 			this.bondMoney = option.bondMoney;
+			this.formData.deductBondMoney = option.money;
 		},
 		data() {
 			return {
@@ -111,11 +112,12 @@
 											title: '还车成功',
 											icon: 'success',
 											success: () => {
-												this.$emit('inCar');
-												this.$emit('returnCar');
+												uni.$emit('returnCar');
+												uni.$emit('orders');
+												uni.$emit('car');
 												uni.switchTab({
-													url: '../car/Car'
-												})
+													url: '/pages/model/returnCar/index'
+												});
 											}
 										});
 									});
