@@ -84,9 +84,7 @@
 			},
 			orderHandle(type) {
 				// 1 确认接单 2 取消接单 3 确认退款 
-				let func = type === 1 ? api.orderConfirm : (type === 2 && typeof this.orderInfo.complany.subMchId ===
-					'string') ? api.orderCannel : (type === 2 && typeof this.orderInfo.complany.subMchId !==
-					'string') ? api.handleRead : type === 3 ? api.orderCannel : undefined;
+				let func = type === 1 ? api.orderConfirm : type === 2 ? api.orderCannel : type === 3 ? api.orderCannel : undefined;
 				if(type === 4){
 					uni.navigateTo({
 						url: `/pages/model/InCar/InCarDetail?id=${this.orderInfo?.car?.id}`

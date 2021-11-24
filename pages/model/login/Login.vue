@@ -9,7 +9,7 @@
 		    <FormInput :formData="formData" name="password" label="" type="password" :inputBorder="false" :required="false" placeholder="请输入密码"/>
 		</uni-forms>
 		<view class="login_option">
-			<view @click="forgetPassword">忘记密码?</view>
+			<view @click="forgetPassword" style="display: flex;flex-direction: row;align-items: center;"><u-image src="/static/img/service.png" width="12" height="12"></u-image><text>联系客服</text></view>
 			<view @click="register">快速注册</view>
 		</view>
 		<u-button type="primary" class="login" @click="login">账号登录</u-button>
@@ -49,9 +49,10 @@
 		},
 		methods: {
 			forgetPassword(){
-				uni.navigateTo({
-					url:'/pages/model/login/ForgetPassword'
-				})
+				// uni.navigateTo({
+				// 	url:'/pages/model/login/ForgetPassword'
+				// })
+				plus.runtime.openURL('https://work.weixin.qq.com/kfid/kfcfc9e2a601d6b5d2d');
 			},
 			register(e){
 				uni.navigateTo({

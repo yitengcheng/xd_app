@@ -1,6 +1,6 @@
 <template>
 	<view class="content" style="align-items: center;">
-		<u-sticky style="width: 100%;" >
+		<u-sticky style="width: 100%;background-color: #FFFFFF;" >
 			<u-tabs :current="current" :list="items" @click="onClickItem" lineColor="#FFD101"
 				:activeStyle="{color: '#FFD101'}" :is-scroll="false"></u-tabs>
 		</u-sticky>
@@ -102,7 +102,7 @@
 						res.rows.forEach((item) => {
 							let img = item.carPhotos.split(',')[0];
 							tmp.push({
-								image: `${config.IMG_URL}${img}`,
+								image: img ? `${config.IMG_URL}${img}` : '/static/img/defalut.png',
 								nickName: item.carBrand,
 								plate: item.carNum,
 								carInfo: item,

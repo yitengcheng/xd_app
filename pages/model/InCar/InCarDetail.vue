@@ -256,6 +256,8 @@
 						}]
 					},
 				},
+				driveType: '',
+				nation: '',
 			};
 		},
 		onLoad(option) {
@@ -324,6 +326,8 @@
 				this.licenseViceUrl = this.candidates[e]?.licenseViceUrl ?? '';
 				this.formData.urgentPhone = this.candidates[e]?.urgentPhone;
 				this.formData.sex = this.candidates[e]?.sex;
+				this.driveType = this.candidates[e]?.driveType;
+				this.nation = this.candidates[e]?.nation;
 			},
 			getCarValue(e) {
 				this.formData.carId = this.carList[e]?.text ?? '';
@@ -360,6 +364,7 @@
 																	this.formData.idcard = data?.身份证号;
 																	this.formData.nowAddress = data?.地址;
 																	this.formData.sex = data?.性别 === '男' ? 0 : 1;
+																	this.nation = data?.民族;
 																});
 															}
 														});
@@ -420,6 +425,8 @@
 						this.formData.phone = res?.data?.customer?.phoneNumber;
 						this.formData.nowAddress = res?.data?.customer?.nowAddress;
 						this.formData.urgentPhone = res?.data?.customer?.urgentPhone;
+						this.driveType = res?.data?.customer?.driveType;
+						this.nation = res?.data?.customer?.nation;
 						this.formData.sex = res?.data?.customer?.sex * 1;
 						this.formOrderData.unitPrice = res?.data?.unitPrice;
 						this.formOrderData.bondMoney = res?.data?.bondMoney;
@@ -452,12 +459,14 @@
 					this.formData.nowAddress = ocr.address;
 					this.formData.birthday = ocr.birthday;
 					this.formData.sex = ocr.gender === '男' ? 0 : 1;
+					this.nation = ocr.nationality;
 				}
 			},
 			getLicenseMain(e = {}) {
 				let { url, ocr } = e;
 				this.formData.licenseMainUrl = [formattingPhoto(url)];
 				this.licenseMainUrl = url;
+				this.driveType = ocr?.vehicleType;
 			},
 			getLicenseVice(e = {}) {
 				let { url, ocr } = e;
@@ -499,6 +508,8 @@
 								licenseMainUrl: this.licenseMainUrl,
 								licenseViceUrl: this.licenseViceUrl,
 								idcardFront: this.idcardFront,
+								driveType: this.driveType,
+								nation: this.nation,
 								urgentPhone: this.formData.urgentPhone,
 								photoScan: this.$refs.photoScan.getFileList().join(','),
 								...this.formOrderData,

@@ -16,7 +16,7 @@
 			<view class="form_price" v-if="formData.payType === 1">总计：{{rent * formData.applyNum * formData.lease * 1 + deposit * 1}} 元</view>
 		</uni-forms>
 		<view class="bottom_box">
-			<u-button class="btn">联系客服</u-button>
+			<u-button class="btn" @click="callService">联系客服</u-button>
 			<u-button type="primary" class="btn" @click="apply">提交</u-button>
 		</view>
 	</view>
@@ -93,6 +93,9 @@
 			this.initProduct(option.id);
 		},
 		methods:{
+			callService(){
+				plus.runtime.openURL('https://work.weixin.qq.com/kfid/kfcfc9e2a601d6b5d2d');
+			},
 			changePay(e){
 				this.formData.payType = e.detail.value;
 			},
