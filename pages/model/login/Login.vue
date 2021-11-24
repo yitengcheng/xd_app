@@ -178,7 +178,7 @@
 		font-size: 12px;
 		font-family: Microsoft YaHei;
 		font-weight: 400;
-		color: #FFD101;
+		color: #333333;
 	}
 	.login {
 		margin-top: 60rpx;

@@ -1,10 +1,13 @@
 <template>
 	<view class="content" style="align-items: center;">
-		<view class="page_top" @click="() => user.complany.length > 1 ? show = true : ''">
+		<view class="page_top">
 			<u-image width="106rpx" height="106rpx" src="/static/img/head.png"></u-image>
 			<view class="page_top_info">
-				<text class="name">{{complanyName}} <span style="font-size: 8px;margin-left: 10px;">{{user.complany.length > 1 ? '点击切换公司' : ''}}</span></text>
-				<text style="font-size: 14px;">ID：{{ _.random(100000000, 999999999, false) || 'youxingxiaodi'}}</text>
+				<text class="name">{{complanyName}}
+					<span style="font-size: 8px;margin-left: 10px;" @click="() => user.complany.length > 1 ? show = true : ''">{{user.complany.length > 1 ? '点击切换公司' : ''}}</span>
+				</text>
+				<text style="font-size: 14px;margin-bottom: 20px;">ID：{{ _.random(100000000, 999999999, false) || 'youxingxiaodi'}}</text>
+				<view style="font-size: 10px;" @click="loginWeb">登录网页版</view>
 			</view>
 		</view>
 		<view class="menus_box">
@@ -112,6 +115,9 @@
 				uni.showToast({
 					title: '清理完毕',
 				})
+			},
+			loginWeb(){
+				plus.runtime.openURL('https://xd.qiantur.com/');
 			}
 		}
 	}
@@ -124,7 +130,7 @@
 		border-radius: 0px 0px 60px 60px;
 		display: flex;
 		flex-direction: row;
-		padding: 15px 0px 60px 15px;
+		padding: 15px 0px 40px 15px;
 	}
 	.page_top_info {
 		display: flex;

@@ -64,6 +64,7 @@
 			},
 			onClickItem(e) {
 				this.current = e.index;
+				this.list = [];
 				this.$nextTick(() => {
 					this.getCarList(1);
 				})
