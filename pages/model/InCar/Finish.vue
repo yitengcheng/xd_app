@@ -1,7 +1,8 @@
 <template>
 	<view class="content" style="align-items: center;">
 		<image src="../../../static/img/finish.png"></image>
-		<view @click="toIndex">请将{{plateNo}}车辆交于客户</view>
+		<view>请将{{plateNo}}车辆交于客户</view>
+		<u-button type="primary" @click="toIndex">返回首页</u-button>
 	</view>
 </template>
 
@@ -23,7 +24,9 @@
 				uni.switchTab({
 					url: '/pages/model/my/Orders',
 					success: () => {
-						uni.$emit('order');
+						uni.$emit('orders');
+						uni.$emit('returnCar');
+						uni.$emit('car');
 					}
 				});
 			},

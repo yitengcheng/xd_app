@@ -13,7 +13,7 @@
 		},
 		onLoad(option) {
 			this.orderId = option.orderId;
-			this.getContract(option.orderId);
+			this.pactId = option.pactId;
 		},
 		data() {
 			return {
@@ -24,6 +24,7 @@
 						color: '#FF3333'
 					}
 				},
+				pactId: '',
 				show: false,
 				timer: undefined,
 			};
@@ -31,21 +32,47 @@
 		onBackPress(e) {
 			this.timer && clearInterval(this.timer);
 		},
+		mounted() {
+			if(this.pactId){
+				api.getContract({
+					 contractId: this.pactId,
+				}).then(res => {
+					this.src = res.data;
+					this.timer = setInterval(() => {
+						if(this.orderId){
+							api.orderDetail(this.orderId, false).then((res = {}) => {
+								let { data } = res;
+								if (data?.signStatus === 1) {
+									clearInterval(this.timer);
+									uni.navigateTo({
+										url: `/pages/model/InCar/PactQrcode?pactId=${data.contract}&orderId=${this.orderId}`
+									})
+								}
+							})
+						}
+					}, 3000);
+				})
+			}else{
+				this.getContract(this.orderId);
+			}
+		},
 		methods: {
 			getContract(orderId) {
 				api.send({ orderId }).then((res = {}) => {
 					if (res.data) {
 						this.src = res.data;
 						this.timer = setInterval(() => {
-							api.orderDetail(orderId, false).then((res = {}) => {
-								let { data } = res;
-								if (data?.signStatus === 1) {
-									clearInterval(this.timer);
-									uni.navigateTo({
-										url: `/pages/model/InCar/PactQrcode?pactId=${data.contract}&orderId=${orderId}`
-									})
-								}
-							})
+							if(orderId){
+								api.orderDetail(orderId, false).then((res = {}) => {
+									let { data } = res;
+									if (data?.signStatus === 1) {
+										clearInterval(this.timer);
+										uni.navigateTo({
+											url: `/pages/model/InCar/PactQrcode?pactId=${data.contract}&orderId=${orderId}`
+										})
+									}
+								})
+							}
 						}, 3000);
 					} else {
 						uni.navigateBack()

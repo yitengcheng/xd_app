@@ -15,13 +15,23 @@
 			<text>【租赁费用】{{orderInfo.shouldMoney/100 || 0}}</text>
 			<text>【预计交车时间】{{dayjs(orderInfo.wantCarTime).format('YYYY-MM-DD HH:mm:ss')}}</text>
 			<text>【预计还车时间】{{dayjs(orderInfo.estimateReturnTime).format('YYYY-MM-DD HH:mm:ss')}}</text>
-			<text>【交车地点】{{orderInfo.address}}</text>
-			<text>【还车地点】{{orderInfo.returnAddress}}</text>
+			<view style="display: flex;flex-direction: row;align-items: center;">
+				<text>【交车地点】{{orderInfo.address}}</text>
+				<u-icon name="map" color="#FFD101" @click="showMap(orderInfo.latitude, orderInfo.address)"/>
+			</view>
+			<view style="display: flex;flex-direction: row;align-items: center;">
+				<text>【还车地点】{{orderInfo.returnAddress}}</text>
+				<u-icon name="map" color="#FFD101" @click="showMap(orderInfo.returnLatitude, orderInfo.returnAddress)"/>
+			</view>
 		</view>
 		<u-button v-show="type === '1'" @click="orderHandle(1)" class="btn" type="primary">确认接单</u-button>
 		<u-button v-show="type === '1'" @click="orderHandle(2)" class="btn">放弃接单</u-button>
 		<u-button v-show="type === '2'" @click="orderHandle(4)" class="btn" type="primary">交车</u-button>
 		<u-button v-show="type === '2'" @click="orderHandle(3)" class="btn" type="error">{{orderInfo.payStatus === '到店付款' ? '取消订单' : '确认退款'}}</u-button>
+		<u-popup :show="show" mode="center">
+			<map :longitude="longitude" :latitude="latitude" :markers="marker" :show-location="true" style="width: 750rpx; height: 500rpx;"></map>
+			<u-button type="primary" @click="closeMap" class="close_map">关闭</u-button>
+		</u-popup>
 	</view>
 </template>
 
@@ -34,6 +44,10 @@
 				type: '0',
 				orderInfo: {},
 				handleId: '',
+				show: false,
+				longitude: '',
+				latitude: '',
+				marker: [],
 			};
 		},
 		onLoad(option) {
@@ -112,6 +126,39 @@
 						
 					}
 				})
+			},
+			showMap(latitude, address){
+				if(!latitude){
+					uni.showModal({
+						title: '提示',
+						content: '下单人未上传坐标，无法打开地图',
+						showCancel: false,
+					});
+					return
+				}
+				this.show = true;
+				this.$nextTick(()=>{
+					this.marker = [{
+						id: 1,
+						latitude: latitude?.split(',')?.[1],
+						longitude: latitude?.split(',')?.[0],
+						iconPath: '/static/img/location.png',
+						width: 10,
+						height: 10,
+						callout: {
+							content: address,
+							display: 'ALWAYS'
+						}
+					}];
+					this.longitude = latitude?.split(',')?.[0];
+					this.latitude = latitude?.split(',')?.[1];
+				})
+			},
+			closeMap(){
+				this.show = false; 
+				this.longitude = ''; 
+				this.latitude = '';
+				this.marker = [];
 			}
 		}
 	}
@@ -160,5 +207,9 @@
 	.btn {
 		margin-top: 30rpx;
 		width: 90%;
+	}
+	.close_map {
+		margin-top: 10px;
+		width: 60%;
 	}
 </style>

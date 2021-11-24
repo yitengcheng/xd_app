@@ -86,7 +86,7 @@
 		}, {
 			"path": "pages/model/login/ForgetPassword",
 			"style": {
-				"navigationBarTitleText": "忘记密码",
+				"navigationBarTitleText": "联系客服",
 				"enablePullDownRefresh": false
 			}
 

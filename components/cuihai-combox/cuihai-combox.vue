@@ -129,11 +129,11 @@
 						return this.candidates.filter((item) => {
 							item.index = index;
 							index++;
-							return item[this.keyName].indexOf(this.inputVal) > -1
+							return item[this.keyName]?.indexOf(this.inputVal) > -1
 						})
 					} else {
 						return this.candidates.filter((item) => {
-							return item.indexOf(this.inputVal) > -1
+							return item?.indexOf(this.inputVal) > -1
 						})
 					}
 				} else {
@@ -197,7 +197,7 @@
 			},
 			onSelectorClick(index) {
 				if (this.isCheckBox) {
-					let flag = this.arrays.indexOf(index);
+					let flag = this.arrays?.indexOf(index);
 					if (flag != -1) {
 						let x = (this.arrays || []).findIndex((item) => item === index)
 						this.arrays.splice(x, 1);
@@ -260,7 +260,7 @@
 				return this.inputVal;
 			},
 			isCheck(index) {
-				return this.arrays.indexOf(index) != -1;
+				return this.arrays?.indexOf(index) != -1;
 			}
 		}
 	}

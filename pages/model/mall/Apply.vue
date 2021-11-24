@@ -143,12 +143,6 @@
 											}
 										}
 									})
-								},
-								fail: (error) => {
-									uni.showModal({
-										title: error.errMsg,
-										icon: 'none',
-									});
 								}
 							});
 						}

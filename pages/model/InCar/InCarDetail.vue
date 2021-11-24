@@ -45,11 +45,11 @@
 			</view>
 			<view class="line"></view>
 			<uni-forms ref="form" v-model="formData" :rules="rules" :labelWidth="100">
-				<u-button @click="readIdcard" class="readIdcard" type="primary">身份证阅读器</u-button>
 				<FormUpload :formData="formData" name="idcardFront" label="身份证" :limit="1" @getOcrData="getIdCard" url="/tool/ocr/idcard?type=2"></FormUpload>
 				<FormUpload :formData="formData" name="licenseMainUrl" label="驾照主页" :limit="1" @getOcrData="getLicenseMain" url="/tool/ocr/driving?type=8"></FormUpload>
 				<FormUpload :formData="formData" name="licenseViceUrl" label="驾照副页" :limit="1" @getOcrData="getLicenseVice" url="/tool/ocr/driving?type=9" :required="false"></FormUpload>
 				<FormUpload ref="photoScan" :formData="formData" name="photoScan" label="现场照片" :limit="3" :required="false"></FormUpload>
+				<u-button @click="readIdcard" class="readIdcard" type="primary">身份证阅读器</u-button>
 				<uni-forms-item label="姓名" :name="formData.name" :required="true" decoration>
 					<Combox :value="formData.name" :candidates="candidates" :isJSON="true" keyName="name"
 						@getValue="getComboxValue" class="form_combox"></Combox>
@@ -62,7 +62,7 @@
 				<FormInput :formData="formData" name="archivesNum" label="档案编号" decoration/>
 				<FormPicker :formData="formData" name="sex" label="性别" :localdata="sexList" decoration @change="changeSex"/>
 				<FormInput :formData="formData" name="phone" label="手机号" decoration/>
-				<FormInput :formData="formData" name="urgentConcat" label="紧急联系人"  decoration/>
+				<FormInput :formData="formData" name="urgentPhone" label="紧急联系人"  decoration/>
 				<FormInput :formData="formData" name="nowAddress" label="当前居住地" decoration :required="false"/>
 				<FormSwitch :formData="formData" name="preferredUse" label="代金券" @change="changePreferredUse" :required="false" decoration/>
 				<FormRadio :required="false" :multiple="true" :formData="formData" name="check" :localdata="checkList"
@@ -115,7 +115,7 @@
 					idcardFront: [],
 					licenseMainUrl: [],
 					licenseViceUrl: [],
-					urgentConcat: '',
+					urgentPhone: '',
 					sex: '',
 					photoScan: [],
 					birthday: '',
@@ -169,7 +169,7 @@
 							errorMessage: '请选择移交车辆'
 						}]
 					},
-					urgentConcat: {
+					urgentPhone: {
 						rules: [{
 							required: true,
 							errorMessage: '请填写紧急联系人'
@@ -322,7 +322,7 @@
 				this.licenseMainUrl = this.candidates[e]?.licenseMainUrl ?? '';
 				this.formData.licenseViceUrl = formattingPhoto(this.candidates[e]?.licenseViceUrl) ? [formattingPhoto(this.candidates[e]?.licenseViceUrl)] : [];
 				this.licenseViceUrl = this.candidates[e]?.licenseViceUrl ?? '';
-				this.formData.urgentConcat = this.candidates[e]?.urgentConcat;
+				this.formData.urgentPhone = this.candidates[e]?.urgentPhone;
 				this.formData.sex = this.candidates[e]?.sex;
 			},
 			getCarValue(e) {
@@ -354,10 +354,13 @@
 																});
 															} else {
 																let data = JSON.parse(e?.data);
-																this.formData.name = data?.姓名;
-																this.formData.idcard = data?.身份证号;
-																this.formData.nowAddress = data?.地址;
-																this.formData.sex = data?.性别 === '男' ? 0 : 1;
+																this.formData.name = '';
+																this.$nextTick(() => {
+																	this.formData.name = data?.姓名;
+																	this.formData.idcard = data?.身份证号;
+																	this.formData.nowAddress = data?.地址;
+																	this.formData.sex = data?.性别 === '男' ? 0 : 1;
+																});
 															}
 														});
 													} else {
@@ -416,7 +419,7 @@
 						this.formData.idcard = res?.data?.customer?.idcard;
 						this.formData.phone = res?.data?.customer?.phoneNumber;
 						this.formData.nowAddress = res?.data?.customer?.nowAddress;
-						this.formData.urgentConcat = res?.data?.customer?.urgentConcat;
+						this.formData.urgentPhone = res?.data?.customer?.urgentPhone;
 						this.formData.sex = res?.data?.customer?.sex * 1;
 						this.formOrderData.unitPrice = res?.data?.unitPrice;
 						this.formOrderData.bondMoney = res?.data?.bondMoney;
@@ -426,7 +429,7 @@
 						this.carList = this._.uniqBy(this.carList, 'text');
 						if(res?.data?.wxOrder?.contract){
 							uni.redirectTo({
-								url: `/pages/model/InCar/Pact?orderId=${res?.data?.wxOrder?.orderId}`
+								url: `/pages/model/InCar/Pact?orderId=${res?.data?.wxOrder?.orderId}&pactId=${res?.data?.wxOrder?.contract}`
 							});
 							return;
 						}
@@ -491,9 +494,12 @@
 								birthday: this.formData.birthday,
 								complanyId: this.carInfo.complanyId,
 								orderId: this.carInfo.orderId,
+								sex: this.formData.sex,
+								archivesNum: this.formData.archivesNum,
 								licenseMainUrl: this.licenseMainUrl,
 								licenseViceUrl: this.licenseViceUrl,
 								idcardFront: this.idcardFront,
+								urgentPhone: this.formData.urgentPhone,
 								photoScan: this.$refs.photoScan.getFileList().join(','),
 								...this.formOrderData,
 								...params,
@@ -602,12 +608,6 @@
 							success: () => {
 								uni.redirectTo({
 									url: `/pages/model/InCar/Step?checks=${serviceRemark}&idcard=${data.idcard}&name=${this.formData.name}&orderId=${this.carInfo.orderId}`
-								});
-							},
-							fail: (error) => {
-								uni.showModal({
-									title: error.errMsg,
-									icon: 'none',
 								});
 							}
 						});

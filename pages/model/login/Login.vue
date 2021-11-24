@@ -9,7 +9,7 @@
 		    <FormInput :formData="formData" name="password" label="" type="password" :inputBorder="false" :required="false" placeholder="请输入密码"/>
 		</uni-forms>
 		<view class="login_option">
-			<!-- <view @click="forgetPassword">忘记密码?</view> -->
+			<view @click="forgetPassword">忘记密码?</view>
 			<view @click="register">快速注册</view>
 		</view>
 		<u-button type="primary" class="login" @click="login">账号登录</u-button>

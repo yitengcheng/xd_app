@@ -2,14 +2,21 @@
 	<view class="content">
 		<view class="step_box">
 			<u-steps :current="active" direction="column" activeColor="#FFD101" dot>
-				<u-steps-item v-for="(item,index) in options" :key="index" :title="item.name" :desc="item.desc" :error="item.error"></u-steps-item>
+				<u-steps-item v-for="(item,index) in options" :key="index" :title="item.name" :desc="item.desc" :error="item.error"/>
 			</u-steps>
 		</view>
+		<u-button type="error" v-if="_.includes(_.map(options, 'name'), '黑名单校验')" @click="lookDetail">黑名单详情</u-button>
 		<u-button v-for="(item,index) in options" :key="index" type="primary" class="btn" v-show="active + 1 === index"
 			@click="validation(item.name)">{{item.name === '电子合同' ? '电子合同签订' : item.name}}</u-button>
 		<view v-if="pactFlag" class="pactBtn">
 			<u-button type="primary" @click="toPact" class="btn">{{pactBtnText}}</u-button>
 		</view>
+		<u-popup :show="show" mode="bottom" :overlay="true" :closeOnClickOverlay="true" @close="() => show = false">
+			<u-empty mode="history" v-if="backList.length === 0"/>
+			<view v-for="(backInfo, index) in backList" :key="index" >
+				<text>{{`${dayjs(backInfo.createTime).format('YYYY-MM-DD')}${backInfo.cause}`}}</text>
+			</view>
+		</u-popup>
 	</view>
 </template>
 
@@ -31,6 +38,8 @@
 				blackListText: '',
 				pactBtnText: '完成交车',
 				orderId: '',
+				backList: [],
+				show: false,
 			};
 		},
 		onLoad(option) {
@@ -98,6 +107,7 @@
 							idcard: this.idCard,
 						}).then((res = {}) => {
 							if (res.data) {
+								this.backList = res.data;
 								if (res.data.length > 0) {
 									o.desc = `此人已有${res.data.length}次不良记录`;
 								} else {
@@ -266,6 +276,9 @@
 						this.pactFlag = true;
 						break;
 				}
+			},
+			lookDetail(item){
+				this.show = true;
 			}
 		}
 	}
@@ -281,5 +294,15 @@
 		margin: 10px;
 		padding: 10px;
 		border-radius: 10px;
+	}
+	.slot-icon {
+		width: 21px;
+		height: 21px;
+		background-color: #FFD101;
+		border-radius: 100px;
+		font-size: 12px;
+		color: #333333;
+		line-height: 21px;
+		text-align: center;
 	}
 </style>

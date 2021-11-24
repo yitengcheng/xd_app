@@ -7,6 +7,9 @@ const qys = {
 	checkAuth: (name) =>{
 		return request.globalRequest(`/qys/complany/auth/result?complanyName=${name}`, 'get');
 	},
+	getContract: (data)=>{
+		return request.globalRequest(`/qys/signurl`, 'post', data);
+	},
 }
 
 
