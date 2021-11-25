@@ -56,7 +56,13 @@
                 "abiFilters" : [ "armeabi-v7a", "arm64-v8a", "x86" ]
             },
             /* ios打包配置 */
-            "ios" : {},
+            "ios" : {
+                "capabilities" : {
+                    "entitlements" : {
+                        "com.apple.developer.associated-domains" : [ "applinks:xd.qiantur.com" ]
+                    }
+                }
+            },
             /* SDK配置 */
             "sdkConfigs" : {
                 "ad" : {},
@@ -64,19 +70,19 @@
                     "weixin" : {
                         "__platform__" : [ "android" ],
                         "appid" : "wx71599fafed8de89c",
-                        "UniversalLinks" : ""
+                        "UniversalLinks" : "https://xd.qiantur.com/"
                     }
                 },
                 "maps" : {
                     "amap" : {
-                        "appkey_ios" : "5a4bf3768245e2cfd59f1bdda269f01a",
+                        "appkey_ios" : "22cc6c30f7a7232bcd2613d237ce6b55",
                         "appkey_android" : "5a4bf3768245e2cfd59f1bdda269f01a"
                     }
                 },
                 "geolocation" : {
                     "amap" : {
                         "__platform__" : [ "android" ],
-                        "appkey_ios" : "",
+                        "appkey_ios" : "22cc6c30f7a7232bcd2613d237ce6b55",
                         "appkey_android" : "5a4bf3768245e2cfd59f1bdda269f01a"
                     }
                 },
@@ -86,7 +92,7 @@
                 "share" : {
                     "weixin" : {
                         "appid" : "wx71599fafed8de89c",
-                        "UniversalLinks" : ""
+                        "UniversalLinks" : "https://xd.qiantur.com/"
                     }
                 }
             },
@@ -189,5 +195,6 @@
         },
         "domain" : ""
     },
-    "vueVersion" : "2"
+    "vueVersion" : "2",
+    "_spaceID" : "2066bc9d-3dcd-4343-964f-40989c2f7419"
 }
