@@ -20,8 +20,8 @@
 			<text>【预约租车时间】{{dayjs((carInfo.wxOrder || {}).wantCarTime).format('YYYY-MM-DD HH:mm:ss')}}至{{dayjs((carInfo.wxOrder || {}).estimateReturnTime).format('YYYY-MM-DD HH:mm:ss')}}</text>
 			<text>【租车天数】{{ ((carInfo || {}).wxOrder || {}).rentCarDays }} 天</text>
 			<uni-forms ref="formOrder" v-model="formOrderData" :rules="orderRules" :labelWidth="100" class="form_box">
-				<FormInput :formData="formOrderData" name="unitPrice" label="租车单价" decoration type="number"/>
-				<FormInput :formData="formOrderData" name="rentCarDays" label="租车天数" decoration type="number"/>
+				<FormInput v-if="(carInfo.wxOrder || {}).payStatus !== 'SUCCESS'" :formData="formOrderData" name="unitPrice" label="租车单价" decoration type="number"/>
+				<FormInput v-if="(carInfo.wxOrder || {}).payStatus !== 'SUCCESS'" :formData="formOrderData" name="rentCarDays" label="租车天数" decoration type="number"/>
 				<FormInput :formData="formOrderData" name="bondMoney" label="租车保证金" decoration type="number"/>
 				<FormInput :formData="formOrderData" name="violationBondMoney" label="违章保证金" decoration type="number"/>
 			</uni-forms>

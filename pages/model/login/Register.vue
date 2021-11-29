@@ -139,6 +139,12 @@ export default {
 				this.formData.complanyType = ocr.type;
 				this.formData.capital = ocr.capital;
 				this.formData.establishTime = ocr.establishDate;
+			} else if(!ocr){
+				uni.showModal({
+					title: '提示',
+					content: '营业执照未能识别，请重新上传',
+					showCancel:false,
+				})
 			}
 			this.$nextTick(() => {
 				this.changeFlag();
@@ -157,6 +163,12 @@ export default {
 					nation: ocr.nationality,
 					...this.idCard
 				};
+			}else if(!ocr){
+				uni.showModal({
+					title: '提示',
+					content: '身份证正面未能识别，请重新上传',
+					showCancel:false,
+				})
 			}
 			this.$nextTick(() => {
 				this.changeFlag();
@@ -172,6 +184,12 @@ export default {
 					invalidTime: ocr.endDate,
 					...this.idCard
 				};
+			}else if(!ocr){
+				uni.showModal({
+					title: '提示',
+					content: '身份证背面未能识别，请重新上传',
+					showCancel:false,
+				})
 			}
 			this.$nextTick(() => {
 				this.changeFlag();
