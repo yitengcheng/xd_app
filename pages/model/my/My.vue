@@ -101,17 +101,21 @@
 			logout(){
 				let userName = uni.getStorageSync('userName');
 				let password = uni.getStorageSync('password');
+				let privacyFlag = uni.getStorageSync('privacyFlag');
 				uni.clearStorageSync();
 				uni.setStorageSync('userName',userName);
 				uni.setStorageSync('password',password);
+				uni.setStorageSync('privacyFlag',privacyFlag);
 				uni.reLaunch({url: '/pages/model/login/Login'});
 			},
 			clear(){
 				let userName = uni.getStorageSync('userName');
 				let password = uni.getStorageSync('password');
+				let privacyFlag = uni.getStorageSync('privacyFlag');
 				uni.clearStorageSync();
 				uni.setStorageSync('userName',userName);
 				uni.setStorageSync('password',password);
+				uni.setStorageSync('privacyFlag',privacyFlag);
 				uni.showToast({
 					title: '清理完毕',
 				})

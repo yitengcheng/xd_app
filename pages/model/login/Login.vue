@@ -16,12 +16,15 @@
 			<view @click="register">快速注册</view>
 		</view>
 		<view class="privacy_box">
-			<u-image src="/static/img/select.png" v-if="!select" width="18px" height="18px"></u-image>
+			<u-image src="/static/img/select.png" v-if="!select" width="18px" height="18px" @click="toPrivacy"></u-image>
 			<u-image src="/static/img/select_active.png" v-if="select" width="18px" height="18px" @click="refused"></u-image>
-			<view>我已同意<span class="privacy_title" @click="toPrivacy">《隐私政策》</span></view>
+			<view>
+				我已同意
+				<span class="privacy_title" @click="toPrivacy">《隐私政策》</span>
+			</view>
 		</view>
-		<u-button type="primary" class="login" @click="login" :disabled="!select">账号登录</u-button>
-		<u-popup :show="show" mode="center" >
+		<u-button type="primary" class="login" @click="login">账号登录</u-button>
+		<u-popup :show="show" mode="center">
 			<view class="download_box">
 				<text>当前进度{{ progress }}%</text>
 				<u-line-progress height="8" :percentage="progress" activeColor="#3c9cff" inactiveColor="#f3f3f3" />
@@ -47,7 +50,7 @@ export default {
 			appVersion: '',
 			progress: 0,
 			show: false,
-			select: uni.getStorageSync('privacyFlag'),
+			select: uni.getStorageSync('privacyFlag')
 		};
 	},
 	mounted() {
@@ -64,15 +67,15 @@ export default {
 			}
 		});
 		this.appVersion = plus.runtime.versionCode;
-		uni.$on('operation', (flag)=> this.select = flag);
+		uni.$on('operation', flag => (this.select = flag));
 	},
 	methods: {
-		toPrivacy(){
+		toPrivacy() {
 			uni.navigateTo({
 				url: '/pages/model/login/Privacy'
 			});
 		},
-		refused(){
+		refused() {
 			this.select = false;
 			uni.setStorageSync('privacyFlag', false);
 		},
@@ -88,7 +91,21 @@ export default {
 			});
 		},
 		login() {
-			this.$refs.form.validate().then(data => {
+			if(!this.select){
+				uni.showModal({
+					title: '提示',
+					content: '请先同意隐私政策',
+					showCancel:false,
+					confirmText: '前往隐私政策',
+					success: () => {
+						this.toPrivacy();
+					}
+				});
+				return;
+			}
+			this.$refs.form
+				.validate()
+				.then(data => {
 					api.login({
 						sginType: 1,
 						type: 'app',
@@ -237,7 +254,7 @@ export default {
 	margin-top: 20px;
 }
 .privacy_title {
-	color: #2979FF;
+	color: #2979ff;
 	text-decoration: underline;
 }
 .web_box {

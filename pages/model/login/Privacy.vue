@@ -4,6 +4,13 @@
 
 <script>
 export default {
+	mounted() {
+		uni.showModal({
+			title: '提示',
+			content: '请认真阅读隐私政策，阅读完毕后请点击左上角返回按钮',
+			showCancel:false,
+		})
+	},
 	onBackPress(options) {
 		if (options.from === 'navigateBack') {
 			return false
