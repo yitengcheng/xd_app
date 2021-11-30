@@ -47,14 +47,21 @@
 		onLoad() {
 			this.getCarList(1);
 			uni.$on('car', () => {
-				this.getCarList(1);
-			})
+				this.list = [];
+				this.current = 0,
+				this.$nextTick(() => {
+					this.getCarList(1);
+				});
+			});
 		},
 		onReachBottom() {
 			this.getCarList(this.pageNo);
 		},
 		onPullDownRefresh() {
-			this.getCarList(1);
+			this.list = [];
+			this.$nextTick(() => {
+				this.getCarList(1);
+			});
 		},
 		methods: {
 			itemTap(item) {
@@ -101,7 +108,7 @@
 					if (res?.rows.length !== 0) {
 						let tmp = [];
 						res.rows.forEach((item) => {
-							let img = item.carPhotos.split(',')[0];
+							let img = item.carPhotos?.split(',')[0];
 							tmp.push({
 								image: img ? `${config.IMG_URL}${img}` : '/static/img/defalut.png',
 								nickName: item.carBrand,

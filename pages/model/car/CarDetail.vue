@@ -251,6 +251,8 @@
 							errorMessage: '请输入车主身份证'
 						}, {
 							validateFunction: ( rule, value, data, callback ) => {
+								let card18 = new RegExp(card18);
+								let card15 = new RegExp(card15);
 								if ( value.length !== 15 || value.length !== 18 ) {
 									callback( '身份证长度有误' );
 								}
@@ -415,7 +417,6 @@
 				this.gasolineType = uni.getStorageSync( 'fuel_number' );
 				this.lossInsuranceType = uni.getStorageSync( 'insurance_status' );
 				this.violateType = uni.getStorageSync( 'violate_type' );
-				console.log(uni.getStorageSync( 'violate_type' ));
 			} );
 			this.carId = option.id;
 			this.complany = this._.find(this.user.complany, o => { return o.id === uni.getStorageSync('complanyId') });
@@ -559,9 +560,9 @@
 				api.carInfo( id ).then( ( res = {} ) => {
 					let { data } = res;
 					if ( data ) {
-						let files = data.carPhotos.split( ',' );
+						let files = data.carPhotos?.split( ',' );
 						let carsPhotos = [];
-						files.forEach( ( item, index ) => {
+						files?.forEach( ( item, index ) => {
 							carsPhotos.push(formattingPhoto(item));
 							this.carPhotos.push(item);
 						} );

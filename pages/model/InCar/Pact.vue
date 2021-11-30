@@ -18,7 +18,7 @@
 		data() {
 			return {
 				src: '',
-				orderId: '',
+				orderId: undefined,
 				webviewStyles: {
 					progress: {
 						color: '#FF3333'

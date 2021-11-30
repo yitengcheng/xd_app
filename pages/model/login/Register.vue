@@ -80,6 +80,8 @@ export default {
 						{ required: true, errorMessage: '请填写法人身份证号' },
 						{
 							validateFunction: (rule, value, data, callback) => {
+								let card18 = new RegExp(card18);
+								let card15 = new RegExp(card15);
 								if (value.length !== 15 || value.length !== 18) {
 									callback('身份证长度有误');
 								}

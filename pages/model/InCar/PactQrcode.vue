@@ -13,6 +13,8 @@
 		data() {
 			return {
 				timer: undefined,
+				pactId: '',
+				orderId: undefined,
 			};
 		},
 		onBackPress(e) {
@@ -20,17 +22,22 @@
 		},
 		onLoad(option) {
 			this.pactId = option.pactId;
-			this.timer = setInterval(() => {
-				api.orderDetail(option.orderId, false).then((res = {}) => {
-					let { data } = res;
-					if (data?.signStatus === 2) {
-						clearInterval(this.timer);
-						uni.navigateTo({
-							url: `/pages/model/InCar/Finish`,
+			this.orderId = option.orderId;
+			this.$nextTick(() => {
+				this.timer = setInterval(() => {
+					if(this.orderId){
+						api.orderDetail(this.orderId, false).then((res = {}) => {
+							let { data } = res;
+							if (data?.signStatus === 2) {
+								clearInterval(this.timer);
+								uni.navigateTo({
+									url: `/pages/model/InCar/Finish`,
+								})
+							}
 						})
 					}
-				})
-			}, 3000);
+				}, 3000);
+			});
 		},
 		onReady() {
 			uQRCode.make({

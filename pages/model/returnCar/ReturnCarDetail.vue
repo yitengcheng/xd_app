@@ -16,8 +16,8 @@
 			<text>【租车保证金】{{ ((carInfo || {}).wxOrder || {}).bondMoney || '无' }} 元</text>
 			<text>【违章保证金】{{ ((carInfo || {}).wxOrder || {}).violationBondMoney || '无' }} 元</text>
 			<text>
-				【租车时间】{{ dayjs(((carInfo || {}).wxOrder || {}).wantCarTime).format('YYYY-MM-DD') }}至{{
-					dayjs(((carInfo || {}).wxOrder || {}).estimateReturnTime).format('YYYY-MM-DD')
+				【租车时间】{{ dayjs(((carInfo || {}).wxOrder || {}).wantCarTime).format('YYYY-MM-DD HH:mm:ss') }}至{{
+					dayjs(((carInfo || {}).wxOrder || {}).estimateReturnTime).format('YYYY-MM-DD HH:mm:ss')
 				}}
 			</text>
 			<text>【租车天数】{{ ((carInfo || {}).wxOrder || {}).rentCarDays }} 天</text>
@@ -62,6 +62,9 @@
 			<u-button class="btn" type="primary" @click="normalReturnCar">正常一键还车</u-button>
 			<u-button class="btn" @click="abnormalReturnCar">异常还车</u-button>
 		</view>
+		<view class="btn_box" v-if="hasRelet">
+			<u-button class="btn" type="primary" @click="reletCar">确认续租</u-button>
+		</view>
 	</view>
 </template>
 
@@ -88,6 +91,8 @@ export default {
 			reletDate: '',
 			deductBondMoney: 0,
 			makeUpRent: '',
+			returnDate: '',
+			selectDate: '',
 		};
 	},
 	onLoad(option) {
@@ -97,23 +102,7 @@ export default {
 		changeRelet(e) {
 			this.hasRelet = e;
 		},
-		changeDate(e) {
-			let selectDate = this.dayjs(e);
-			let returnDate = this.dayjs(this.carInfo.estimateReturnTime);
-			if (selectDate.isBefore(returnDate)) {
-				uni.showModal({
-					content: '请选择正确的续租时间',
-					showCancel: false
-				});
-				return;
-			}
-			if (selectDate.diff(returnDate, 'day') < 1) {
-				uni.showModal({
-					content: '续租最少一天',
-					showCancel: false
-				});
-				return;
-			}
+		reletCar(){
 			if (this.makeUpRent < 0) {
 				uni.showModal({
 					content: '租金不能为负数',
@@ -124,8 +113,8 @@ export default {
 			api.reletCar({
 				orderId: this.carInfo.wxOrder.orderId,
 				carId: this.carInfo.id,
-				beginTime: returnDate.format('YYYY-MM-DD HH:mm:ss'),
-				endTime: selectDate.format('YYYY-MM-DD HH:mm:ss'),
+				beginTime: this.returnDate.format('YYYY-MM-DD HH:mm:ss'),
+				endTime: this.selectDate.format('YYYY-MM-DD HH:mm:ss'),
 				makeUpRent: this.makeUpRent ?? 0,
 				status: false
 			}).then(res => {
@@ -164,6 +153,27 @@ export default {
 				}
 			});
 		},
+		changeDate(e) {
+			let selectDate = this.dayjs(e);
+			let returnDate = this.dayjs(this.carInfo.estimateReturnTime);
+			if (selectDate.isBefore(returnDate)) {
+				uni.showModal({
+					content: '请选择正确的续租时间',
+					showCancel: false
+				});
+				return;
+			}
+			if (selectDate.diff(returnDate, 'day') < 1) {
+				uni.showModal({
+					content: '续租最少一天',
+					showCancel: false
+				});
+				return;
+			}
+			this.selectDate = selectDate;
+			this.returnDate = returnDate;
+			
+		},
 		change(e) {
 			this.current = e.detail.current;
 		},
@@ -171,7 +181,7 @@ export default {
 			api.returnCarInfo(id).then((res = {}) => {
 				if (res.data) {
 					let tmp = [];
-					res.data.carPhotos.split(',').forEach(o => {
+					res?.data?.carPhotos?.split(',').forEach(o => {
 						tmp.push(`${config.IMG_URL}${o}`);
 					});
 					delete res.data.carPhotos;
@@ -263,6 +273,7 @@ export default {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+	font-weight: bold;
 	height: 42rpx;
 }
 .line {
