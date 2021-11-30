@@ -61,6 +61,18 @@
                     "entitlements" : {
                         "com.apple.developer.associated-domains" : [ "applinks:xd.qiantur.com" ]
                     }
+                },
+                "privacyDescription" : {
+                    "NSLocationWhenInUseUsageDescription" : "该应用需要你的地理位置，以便为你提供当前位置信息",
+                    "NSLocationAlwaysAndWhenInUseUsageDescription" : "该应用需要你的地理位置，以便为你提供当前位置信息",
+                    "NSPhotoLibraryUsageDescription" : "该应用需要读取你的相册，以便为你编辑信息",
+                    "NSPhotoLibraryAddUsageDescription" : "该应用需要读取你的相册，以便为你编辑信息",
+                    "NSCameraUsageDescription" : "该应用需要你的相机，以便你拍摄上传信息",
+                    "NSMicrophoneUsageDescription" : "该应用需要使用你的麦克风，以便语音播放",
+                    "NSContactsUsageDescription" : "该应用需要读取你的通讯录，以便商家与客户联系",
+                    "NSLocationAlwaysUsageDescription" : "该应用需要你的地理位置，以便为你提供当前位置信息",
+                    "NSCalendarsUsageDescription" : "该应用需要获取你的日历，以便更好的体验",
+                    "NSRemindersUsageDescription" : "为了更好的体验，后面请同意授权选项"
                 }
             },
             /* SDK配置 */
@@ -68,7 +80,7 @@
                 "ad" : {},
                 "payment" : {
                     "weixin" : {
-                        "__platform__" : [ "android" ],
+                        "__platform__" : [ "ios", "android" ],
                         "appid" : "wx71599fafed8de89c",
                         "UniversalLinks" : "https://xd.qiantur.com/"
                     }
@@ -81,7 +93,7 @@
                 },
                 "geolocation" : {
                     "amap" : {
-                        "__platform__" : [ "android" ],
+                        "__platform__" : [ "ios", "android" ],
                         "appkey_ios" : "22cc6c30f7a7232bcd2613d237ce6b55",
                         "appkey_android" : "5a4bf3768245e2cfd59f1bdda269f01a"
                     }
