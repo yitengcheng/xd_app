@@ -51,8 +51,8 @@
 			};
 		},
 		onLoad(option) {
-			this.type = option.type; // 0 列表进入 1 新订单确认或取消 2 退款确认 3交车
-			this.handleId = option.handleId;
+			this.type = option?.type ?? '0'; // 0 列表进入 1 新订单确认或取消 2 退款确认 3交车
+			this.handleId = option.handleId ?? '';
 			this.initOrderDetail(option.id);
 		},
 		onBackPress() {
@@ -72,7 +72,7 @@
 							o ? tmp.push(`${config.IMG_URL}${o}`) : tmp.push('/static/img/defalut.png');
 						});
 						delete res?.data?.car?.carPhotos;
-						if(res?.data?.comfirStatus && this.type !== '3'){
+						if(res?.data?.comfirStatus && this.type !== '3' && this.type !== '0'){
 							this.type = '2';
 						}
 						this.orderInfo = {

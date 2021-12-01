@@ -11,7 +11,7 @@
 			<FormInput v-show="flag === 3" :formData="formData" name="complanyAddress" label="注册地址" />
 			<FormInput v-show="flag === 3" :formData="formData" name="juridiclName" label="法人姓名" />
 			<FormInput v-show="flag === 3" :formData="formData" name="juridicalZjhm" label="法人身份证号" />
-			<FormInput v-show="flag === 3" :formData="formData" name="capital" label="注册资本" />
+			<FormInput v-show="flag === 3" :formData="formData" name="capital" label="注册资本" :required="false"/>
 			<FormInput v-show="flag === 3" :formData="formData" name="reallyCapital" label="实收资本" :required="false" />
 			<FormInput v-show="flag === 3" :formData="formData" name="complanyType" label="公司类型" />
 			<FormInput v-show="flag === 3" :formData="formData" name="establishTime" label="成立日期(yyyy年mm月dd日)" />
@@ -95,7 +95,6 @@ export default {
 						}
 					]
 				},
-				capital: { rules: [{ required: true, errorMessage: '请填写注册资本' }] },
 				complanyType: { rules: [{ required: true, errorMessage: '请填写公司类型' }] },
 				establishTime: { rules: [{ required: true, errorMessage: '请填写成立日期' }, { pattern: dateFormatCHRegex, errorMessage: '请输入正确的成立日期' }] },
 				phoneNumber: { rules: [{ required: true, errorMessage: '请填写法人电话' }, { pattern: phoneRegex, errorMessage: '请输入正确的法人电话号码' }] },

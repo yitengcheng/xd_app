@@ -7,7 +7,7 @@
 					<span style="font-size: 8px;margin-left: 10px;" @click="() => user.complany.length > 1 ? show = true : ''">{{user.complany.length > 1 ? '点击切换公司' : ''}}</span>
 				</text>
 				<text style="font-size: 14px;margin-bottom: 20px;">ID：{{ _.random(100000000, 999999999, false) || 'youxingxiaodi'}}</text>
-				<view style="font-size: 10px;" @click="loginWeb">登录网页版</view>
+				<view class="login_web" @click="loginWeb">登录网页版</view>
 			</view>
 		</view>
 		<view class="menus_box">
@@ -19,6 +19,7 @@
 				<u-icon name="arrow-right" color="#999999"></u-icon>
 			</view>
 		</view>
+		<text class="privacy_text" @click="goPrivacy">隐私政策</text>
 		<text class="complany">贵州小滴科技有限公司 版权所有</text>
 		<u-popup :show="show" mode="bottom" :overlay="true" :closeOnClickOverlay="true" @close="() => show = false">
 			<view class="popup_box">
@@ -122,6 +123,11 @@
 			},
 			loginWeb(){
 				plus.runtime.openURL('https://xd.qiantur.com/');
+			},
+			goPrivacy(){
+				uni.navigateTo({
+					url: '/pages/model/login/Privacy'
+				})
 			}
 		}
 	}
@@ -214,8 +220,22 @@
 		color: #333333;
 	}
 	.complany {
-		margin-top: 40rpx;
+		margin-top: 20rpx;
+		margin-bottom: 20rpx;
 		font-size: 12px;
 		color: #bebebe;
+	}
+	.privacy_text {
+		margin-top: 10rpx;
+		font-size: 12px;
+		text-decoration: underline;
+		color: #1785FF;
+	}
+	.login_web {
+		font-size: 10px;
+		padding: 10px;
+		width: 50px;
+		border-radius: 10px;
+		border: #f3f3f3 1px solid;
 	}
 </style>

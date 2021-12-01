@@ -23,6 +23,12 @@ export default {
 			success: e => {
 				uni.$emit('operation', e.confirm);
 				uni.setStorageSync('privacyFlag', e.confirm);
+				if(e.cancel){
+					uni.reLaunch({
+						url: '/pages/model/login/Login'
+					});
+					return
+				}
 				uni.navigateBack();
 			}
 		});
