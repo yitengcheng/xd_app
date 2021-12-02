@@ -15,21 +15,7 @@
 			</view>
 			<view @click="register">快速注册</view>
 		</view>
-		<!-- <view class="privacy_box">
-			<u-image src="/static/img/select.png" v-if="!select" width="18px" height="18px" @click="toPrivacy"></u-image>
-			<u-image src="/static/img/select_active.png" v-if="select" width="18px" height="18px" @click="refused"></u-image>
-			<view>
-				我已同意
-				<span class="privacy_title" @click="toPrivacy">《隐私政策》</span>
-			</view>
-		</view> -->
 		<u-button type="primary" class="login" @click="login">账号登录</u-button>
-		<!-- <u-popup :show="show" mode="center">
-			<view class="download_box">
-				<text>当前进度{{ progress }}%</text>
-				<u-line-progress height="8" :percentage="progress" activeColor="#3c9cff" inactiveColor="#f3f3f3" />
-			</view>
-		</u-popup> -->
 	</view>
 </template>
 
@@ -48,9 +34,7 @@ export default {
 				password: ''
 			},
 			appVersion: '',
-			progress: 0,
-			// show: false,
-			// select: uni.getStorageSync('privacyFlag')
+			progress: 0
 		};
 	},
 	mounted() {
@@ -70,11 +54,6 @@ export default {
 		uni.$on('operation', flag => (this.select = flag));
 	},
 	methods: {
-		// toPrivacy() {
-		// 	uni.navigateTo({
-		// 		url: '/pages/model/login/Privacy'
-		// 	});
-		// },
 		refused() {
 			this.select = false;
 			uni.setStorageSync('privacyFlag', false);
@@ -88,18 +67,6 @@ export default {
 			});
 		},
 		login() {
-			// if(!this.select){
-			// 	uni.showModal({
-			// 		title: '提示',
-			// 		content: '请先同意隐私政策',
-			// 		showCancel:false,
-			// 		confirmText: '前往隐私政策',
-			// 		success: () => {
-			// 			this.toPrivacy();
-			// 		}
-			// 	});
-			// 	return;
-			// }
 			this.$refs.form
 				.validate()
 				.then(data => {
@@ -114,33 +81,39 @@ export default {
 									content: '当前使用版本过低，请更新',
 									showCancel: false,
 									success: e => {
-										if (e.confirm) {
-											if (uni.getSystemInfoSync().platform == 'android') {
-												const downloadTask = uni.downloadFile({
-													url: 'http://www.fanzehua.cn/uploads/xd-app.apk',
-													success: downloadResult => {
-														plus.runtime.install(downloadResult.tempFilePath, { force: false }, () => {
-															plus.runtime.restart();
-														});
-													},
-													fail: () => {
-														uni.showToast({
-															title: '更新失败',
-															icon: 'error'
-														});
-													}
+										const downloadTask = uni.downloadFile({
+											url: 'http://www.fanzehua.cn/uploads/xd-app.apk',
+											success: downloadResult => {
+												plus.runtime.install(downloadResult.tempFilePath, { force: false }, () => {
+													plus.runtime.restart();
 												});
-												downloadTask.onProgressUpdate(res => {
-													this.show = true;
-													this.progress = res.progress;
+											},
+											fail: () => {
+												uni.showToast({
+													title: '更新失败',
+													icon: 'error'
 												});
-											} else if (uni.getSystemInfoSync().platform == 'ios') {
-												plus.ios
-													.import('UIApplication')
-													.sharedApplication()
-													.performSelector('exit');
 											}
-										}
+										});
+										downloadTask.onProgressUpdate(res => {
+											this.show = true;
+											this.progress = res.progress;
+										});
+									}
+								});
+								return;
+							} else if (uni.getSystemInfoSync().platform == 'ios' && this.appVersion * 1 < res.appleVersion * 1) {
+								uni.showModal({
+									content: '当前使用版本过低，请到应用商店更新',
+									showCancel: false,
+									success: e => {
+										let appleId = 1597034670;
+										plus.runtime.launchApplication({
+												action: `itms-apps://itunes.apple.com/cn/app/id${appleId}?mt=8`
+											},(e) => {
+												console.log('Open system default browser failed: ' + e.message);
+											}
+										);
 									}
 								});
 								return;

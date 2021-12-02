@@ -49,7 +49,7 @@
 				v-if="hasRelet"
 				type="date"
 				:value="reletDate"
-				:start="dayjs(((carInfo || {}).wxOrder || {}).estimateReturnTime).format('YYYY-MM-DD')"
+				:start="dayjs(((carInfo || {}).wxOrder || {}).estimateReturnTime).add(1,'day').format('YYYY-MM-DD')"
 				@change="changeDate"
 			></uni-datetime-picker>
 			<view v-if="!hasRelet" class="margin_box">
@@ -159,13 +159,6 @@ export default {
 			if (selectDate.isBefore(returnDate)) {
 				uni.showModal({
 					content: '请选择正确的续租时间',
-					showCancel: false
-				});
-				return;
-			}
-			if (selectDate.diff(returnDate, 'day') < 1) {
-				uni.showModal({
-					content: '续租最少一天',
 					showCancel: false
 				});
 				return;
