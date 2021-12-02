@@ -15,21 +15,21 @@
 			</view>
 			<view @click="register">快速注册</view>
 		</view>
-		<view class="privacy_box">
+		<!-- <view class="privacy_box">
 			<u-image src="/static/img/select.png" v-if="!select" width="18px" height="18px" @click="toPrivacy"></u-image>
 			<u-image src="/static/img/select_active.png" v-if="select" width="18px" height="18px" @click="refused"></u-image>
 			<view>
 				我已同意
 				<span class="privacy_title" @click="toPrivacy">《隐私政策》</span>
 			</view>
-		</view>
+		</view> -->
 		<u-button type="primary" class="login" @click="login">账号登录</u-button>
-		<u-popup :show="show" mode="center">
+		<!-- <u-popup :show="show" mode="center">
 			<view class="download_box">
 				<text>当前进度{{ progress }}%</text>
 				<u-line-progress height="8" :percentage="progress" activeColor="#3c9cff" inactiveColor="#f3f3f3" />
 			</view>
-		</u-popup>
+		</u-popup> -->
 	</view>
 </template>
 
@@ -49,8 +49,8 @@ export default {
 			},
 			appVersion: '',
 			progress: 0,
-			show: false,
-			select: uni.getStorageSync('privacyFlag')
+			// show: false,
+			// select: uni.getStorageSync('privacyFlag')
 		};
 	},
 	mounted() {
@@ -70,19 +70,16 @@ export default {
 		uni.$on('operation', flag => (this.select = flag));
 	},
 	methods: {
-		toPrivacy() {
-			uni.navigateTo({
-				url: '/pages/model/login/Privacy'
-			});
-		},
+		// toPrivacy() {
+		// 	uni.navigateTo({
+		// 		url: '/pages/model/login/Privacy'
+		// 	});
+		// },
 		refused() {
 			this.select = false;
 			uni.setStorageSync('privacyFlag', false);
 		},
 		forgetPassword() {
-			// uni.navigateTo({
-			// 	url:'/pages/model/login/ForgetPassword'
-			// })
 			plus.runtime.openURL('https://work.weixin.qq.com/kfid/kfcfc9e2a601d6b5d2d');
 		},
 		register(e) {
@@ -91,18 +88,18 @@ export default {
 			});
 		},
 		login() {
-			if(!this.select){
-				uni.showModal({
-					title: '提示',
-					content: '请先同意隐私政策',
-					showCancel:false,
-					confirmText: '前往隐私政策',
-					success: () => {
-						this.toPrivacy();
-					}
-				});
-				return;
-			}
+			// if(!this.select){
+			// 	uni.showModal({
+			// 		title: '提示',
+			// 		content: '请先同意隐私政策',
+			// 		showCancel:false,
+			// 		confirmText: '前往隐私政策',
+			// 		success: () => {
+			// 			this.toPrivacy();
+			// 		}
+			// 	});
+			// 	return;
+			// }
 			this.$refs.form
 				.validate()
 				.then(data => {

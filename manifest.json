@@ -2,8 +2,8 @@
     "name" : "优行小滴",
     "appid" : "__UNI__1ECB71E",
     "description" : "",
-    "versionName" : "1.4.0",
-    "versionCode" : 140,
+    "versionName" : "1.4.1",
+    "versionCode" : 141,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -139,6 +139,9 @@
                         "spotlight@3x" : "unpackage/res/icons/120x120.png"
                     }
                 }
+            },
+            "splashscreen" : {
+                "useOriginalMsgbox" : true
             }
         },
         "nativePlugins" : {

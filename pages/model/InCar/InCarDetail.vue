@@ -513,7 +513,7 @@ export default {
 									});
 							});
 						});
-						if (checks.length === 0 && typeof this.carInfo.complany.subMchId === 'string') {
+						if (checks.length === 0 && this.carInfo.wxOrder.payStatus === 'SUCCESS') {
 							uni.redirectTo({
 								url: `/pages/model/InCar/Step?orderId=${this.carInfo.orderId}&idcard=${this.formData.idcard}&name=${this.formData.name}&pactFlag=false`
 							});

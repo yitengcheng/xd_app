@@ -28,6 +28,9 @@ const regionalManage = {
 	getChangeCarList: (data)=>{
 		return request.globalRequest(`/system/car/change/car`, 'post', data);
 	},
+	stayBackCarList: (data) => {
+		return request.globalRequest(`/system/car/leased/list`, 'get', data);
+	}
 }
 
 

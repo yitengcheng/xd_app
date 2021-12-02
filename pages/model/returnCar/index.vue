@@ -1,19 +1,20 @@
 <template>
 	<view class="content" style="align-items: center;">
 		<view class="search_box">
-			<uni-easyinput v-model="keyword" placeholder="请输入关键字搜索" prefixIcon="search" :inputBorder="false" style="background-color: #FFD101;border-radius: 20px;border: 1px solid #FFD101;margin-right: 20px;"/>
+			<uni-easyinput v-model="keyword" placeholder="请输入车牌号搜索" prefixIcon="search" :inputBorder="false" style="background-color: #FFD101;border-radius: 20px;border: 1px solid #FFD101;margin-right: 20px;"/>
 			<view @click="getData(1)" class="search_text">搜索</view>
 		</view>
 		<u-image src="/static/img/empty_data.png" v-if="data.length === 0"></u-image>
-		<view v-for="(car, index) in data" :key="index" class="car_box">
+		<view v-for="(car, index) in data" :key="index" class="car_box" @click="clickItem(car)">
 			<u-image :showError="false" :src="car.carPhoto" width="80" height="55" shape="square" style="margin-right: 10px;"></u-image>
 			<view class="car_box_info" style="flex: 1;">
-				<view class="car_box_info_title">{{car.carBrand}}</view>
-				<view class="car_box_info_plate">{{car.carNum}}</view>
+				<view class="car_box_info_title">{{car.carNum}}</view>
+				<view class="car_box_info_plate">{{car.customer.name}}</view>
 			</view>
 			<view class="car_box_info">
-				<u-button type="primary" class="look_btn" @click="clickItem(car)">查看</u-button>
-				<view class="car_box_date">{{dayjs(((car || {}).wxOrder || {}).estimateReturnTime).format('YYYY-MM-DD')}}</view>
+				<u-button type="primary" class="look_btn">查看</u-button>
+				<view class="car_box_date">租车时间：{{dayjs(((car || {}).wxOrder || {}).crvTime).format('YYYY-MM-DD HH:mm:ss')}}</view>
+				<view class="car_box_date">预计还车：{{dayjs(((car || {}).wxOrder || {}).estimateReturnTime).format('YYYY-MM-DD HH:mm:ss')}}</view>
 			</view>
 		</view>
 	</view>
@@ -44,11 +45,11 @@ export default {
 	},
 	methods: {
 		getData(pageNum) {
-			api.carList({
+			api.stayBackCarList({
 				pageNum,
 				pageSize: 10,
-				status: 1,
-				keyword: this.keyword,
+				complanyId: uni.getStorageSync('complanyId'),
+				carNum: this.keyword,
 			}).then(res =>{
 				uni.stopPullDownRefresh();
 				let tmp = [];
@@ -125,13 +126,16 @@ export default {
 		font-size: 10px;
 		font-family: Microsoft YaHei;
 		padding: 3px;
-		width: 51px;
+		width: 50px;
+		text-align: center;
 	}
 	.look_btn {
 		width: 50px;
 		height: 20px;
 		border-radius: 25px;
 		font-size: 12px;
+		margin: 0;
+		align-self: flex-end;
 	}
 	.car_box_date {
 		font-size: 10px;

@@ -19,7 +19,11 @@
 				<u-icon name="arrow-right" color="#999999"></u-icon>
 			</view>
 		</view>
-		<text class="privacy_text" @click="goPrivacy">隐私政策</text>
+		<view class="web_box">
+			<text class="privacy_text" @click="goWeb('https://xd.qiantur.com/treaty')">用户协议</text>
+			<text class="privacy_text">|</text>
+			<text class="privacy_text" @click="goWeb('https://xd.qiantur.com/policy')">隐私政策</text>
+		</view>
 		<text class="complany">贵州小滴科技有限公司 版权所有</text>
 		<u-popup :show="show" mode="bottom" :overlay="true" :closeOnClickOverlay="true" @close="() => show = false">
 			<view class="popup_box">
@@ -107,6 +111,7 @@
 				uni.setStorageSync('userName',userName);
 				uni.setStorageSync('password',password);
 				uni.setStorageSync('privacyFlag',privacyFlag);
+				this.$store.dispatch('CLOSE_SOCKET');
 				uni.reLaunch({url: '/pages/model/login/Login'});
 			},
 			clear(){
@@ -124,9 +129,9 @@
 			loginWeb(){
 				plus.runtime.openURL('https://xd.qiantur.com/');
 			},
-			goPrivacy(){
+			goWeb(url){
 				uni.navigateTo({
-					url: '/pages/model/login/Privacy'
+					url: `/pages/model/login/Web?url=${url}`
 				})
 			}
 		}
@@ -237,5 +242,9 @@
 		width: 50px;
 		border-radius: 10px;
 		border: #f3f3f3 1px solid;
+	}
+	.web_box {
+		display: flex;
+		flex-direction: row;
 	}
 </style>
