@@ -10,6 +10,9 @@ const pay = {
 	deduct:(data)=>{
 		return request.globalRequest(`/system/complany/deduct`, 'post', data);
 	},
+	qrCode:(data)=>{
+		return request.globalRequest(`/direct/pay/native/create`, 'post', data);
+	}
 }
 
 

@@ -15,7 +15,11 @@
 			<text>【租车单价】{{ carInfo.unitPrice || '无' }} 元/天</text>
 			<text>【租车保证金】{{ carInfo.bondMoney || '无' }} 元</text>
 			<text>【违章保证金】{{ carInfo.violationBondMoney || '无' }} 元</text>
-			<text>【预约租车时间】{{ dayjs((carInfo.wxOrder || {}).wantCarTime).format('YYYY-MM-DD HH:mm:ss') }}至{{ dayjs((carInfo.wxOrder || {}).estimateReturnTime).format('YYYY-MM-DD HH:mm:ss') }}</text>
+			<text>
+				【预约租车时间】{{ dayjs((carInfo.wxOrder || {}).wantCarTime).format('YYYY-MM-DD HH:mm:ss') }}至{{
+					dayjs((carInfo.wxOrder || {}).estimateReturnTime).format('YYYY-MM-DD HH:mm:ss')
+				}}
+			</text>
 			<text>【租车天数】{{ ((carInfo || {}).wxOrder || {}).rentCarDays }} 天</text>
 			<uni-forms ref="formOrder" v-model="formOrderData" :rules="orderRules" :labelWidth="100" class="form_box">
 				<FormInput v-if="(carInfo.wxOrder || {}).payStatus !== 'SUCCESS'" :formData="formOrderData" name="unitPrice" label="租车单价" decoration type="number" />
@@ -23,7 +27,13 @@
 				<FormInput :formData="formOrderData" name="bondMoney" label="租车保证金" decoration type="number" />
 				<FormInput :formData="formOrderData" name="violationBondMoney" label="违章保证金" decoration type="number" />
 			</uni-forms>
-			<view v-if="formOrderData.unitPrice * 1 - carInfo.unitPrice * 1 !== 0">【优惠】{{ formOrderData.unitPrice * 1 - carInfo.unitPrice * 1 > 0 ? `增加${formOrderData.unitPrice * 1 - carInfo.unitPrice * 1}元` : `减少${carInfo.unitPrice * 1 - formOrderData.unitPrice * 1}元` }}</view>
+			<view v-if="formOrderData.unitPrice * 1 - carInfo.unitPrice * 1 !== 0">
+				【优惠】{{
+					formOrderData.unitPrice * 1 - carInfo.unitPrice * 1 > 0
+						? `增加${formOrderData.unitPrice * 1 - carInfo.unitPrice * 1}元`
+						: `减少${carInfo.unitPrice * 1 - formOrderData.unitPrice * 1}元`
+				}}
+			</view>
 		</view>
 		<view class="info_box">
 			<view class="info_title">
@@ -44,12 +54,32 @@
 			<view class="line"></view>
 			<uni-forms ref="form" v-model="formData" :rules="rules" :labelWidth="100">
 				<FormUpload :formData="formData" name="idcardFront" label="身份证" :limit="1" @getOcrData="getIdCard" url="/tool/ocr/idcard?type=2" :required="false"></FormUpload>
-				<FormUpload :formData="formData" name="licenseMainUrl" label="驾照主页" :limit="1" @getOcrData="getLicenseMain" url="/tool/ocr/driving?type=8" :required="false"></FormUpload>
-				<FormUpload :formData="formData" name="licenseViceUrl" label="驾照副页" :limit="1" @getOcrData="getLicenseVice" url="/tool/ocr/driving?type=9" :required="false"></FormUpload>
+				<FormUpload
+					:formData="formData"
+					name="licenseMainUrl"
+					label="驾照主页"
+					:limit="1"
+					@getOcrData="getLicenseMain"
+					url="/tool/ocr/driving?type=8"
+					:required="false"
+				></FormUpload>
+				<FormUpload
+					:formData="formData"
+					name="licenseViceUrl"
+					label="驾照副页"
+					:limit="1"
+					@getOcrData="getLicenseVice"
+					url="/tool/ocr/driving?type=9"
+					:required="false"
+				></FormUpload>
 				<FormUpload ref="photoScan" :formData="formData" name="photoScan" label="现场照片" :limit="3" :required="false"></FormUpload>
 				<u-button @click="readIdcard" class="readIdcard" type="primary">身份证阅读器</u-button>
-				<uni-forms-item label="姓名" :name="formData.name" :required="true" decoration><Combox :value="formData.name" :candidates="candidates" :isJSON="true" keyName="name" @getValue="getComboxValue" class="form_combox"></Combox></uni-forms-item>
-				<uni-forms-item label="移交车辆" :name="formData.carId" :required="true" decoration><Combox :value="formData.carId" :candidates="carList" :isJSON="true" keyName="text" @getValue="getCarValue" class="form_combox"></Combox></uni-forms-item>
+				<uni-forms-item label="姓名" :name="formData.name" :required="true" decoration>
+					<Combox :value="formData.name" :candidates="candidates" :isJSON="true" keyName="name" @getValue="getComboxValue" class="form_combox"></Combox>
+				</uni-forms-item>
+				<uni-forms-item label="移交车辆" :name="formData.carId" :required="true" decoration>
+					<Combox :value="formData.carId" :candidates="carList" :isJSON="true" keyName="text" @getValue="getCarValue" class="form_combox"></Combox>
+				</uni-forms-item>
 				<FormInput :formData="formData" name="idcard" label="身份证号" decoration />
 				<FormInput :formData="formData" name="archivesNum" label="档案编号" decoration />
 				<FormPicker :formData="formData" name="sex" label="性别" :localdata="sexList" decoration @change="changeSex" />
@@ -57,11 +87,16 @@
 				<FormInput :formData="formData" name="urgentPhone" label="紧急联系人" decoration />
 				<FormInput :formData="formData" name="nowAddress" label="当前居住地" decoration :required="false" />
 				<FormSwitch :formData="formData" name="preferredUse" label="代金券" @change="changePreferredUse" :required="false" decoration />
+				<FormSwitch :formData="formData" name="qrCode" label="对方支付" @change="changeQrCode" :required="false" decoration />
 				<FormRadio :required="false" :multiple="true" :formData="formData" name="check" :localdata="checkList" label="附加核验" @change="changeCheck" decoration />
 			</uni-forms>
 		</view>
 		<u-button type="primary" class="btn" @click="submit">提交</u-button>
 		<u-button class="btn" @click="reset">重置</u-button>
+		<u-popup :show="showQr" mode="center">
+			<image :src="src"></image>
+			<u-button style="margin-bottom: 20px;" @click="qrCode(serviceInfoMoney, serviceRemark, serviceStatus)" type="primary">刷新二维码</u-button>
+		</u-popup>
 	</view>
 </template>
 
@@ -106,7 +141,8 @@ export default {
 				sex: '',
 				photoScan: [],
 				birthday: '',
-				archivesNum: ''
+				archivesNum: '',
+				qrCode: false,
 			},
 			customerId: '',
 			checkList: [],
@@ -243,7 +279,13 @@ export default {
 				}
 			},
 			driveType: '',
-			nation: ''
+			nation: '',
+			src: '',
+			showQr: false,
+			serviceInfoMoney:'',
+			serviceRemark:'',
+			serviceStatus:'',
+			timer: undefined,
 		};
 	},
 	onLoad(option) {
@@ -268,6 +310,9 @@ export default {
 			this.candidates = res?.data ?? [];
 		});
 		this.getCarInfo(option.id);
+	},
+	onBackPress() {
+		this.timer && clearInterval(this.timer);
 	},
 	methods: {
 		changeCheck(e) {
@@ -296,6 +341,9 @@ export default {
 		},
 		changePreferredUse(e) {
 			this.formData.preferredUse = e;
+		},
+		changeQrCode(e) {
+			this.formData.qrCode = e;
 		},
 		getComboxValue(e) {
 			this.customerId = this.candidates[e]?.id;
@@ -523,8 +571,7 @@ export default {
 							api.checkService({
 								complanyId: this.carInfo.complany.id,
 								money: this._.sum(this._.map(checks, 'value'))
-							})
-								.then(res => {
+							}).then(res => {
 									if (res) {
 										if (res.data) {
 											uni.showModal({
@@ -537,12 +584,16 @@ export default {
 														money: this._.sum(this._.map(checks, 'value'))
 													}).then(result => {
 														if (result) {
-															if (this.carInfo.wxOrder.payStatus !== '到店付款') {
+															if (this.carInfo.wxOrder.payStatus === 'SUCCESS') {
 																uni.redirectTo({
 																	url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idcard=${this.formData.idcard}&name=${this.formData.name}&orderId=${this.carInfo.orderId}`
 																});
 															} else {
-																this.payOrder(0, this._.map(checks, 'text').join(','), this.formData);
+																if(this.formData.qrCode){
+																	this.qrCode(0, this._.map(checks, 'text').join(','), true);
+																}else {
+																	this.payOrder(0, this._.map(checks, 'text').join(','));
+																}
 															}
 														}
 													});
@@ -553,14 +604,18 @@ export default {
 												title: `剩余代金券${res.msg}元不足以支付本次费用${this._.sum(this._.map(checks, 'value'))}元`,
 												success: e => {
 													if (e.confirm) {
-														this.payOrder(this._.sum(this._.map(checks, 'value')), this._.map(checks, 'text').join(','), this.formData);
+														if(this.formData.qrCode){
+															this.qrCode(this._.sum(this._.map(checks, 'value')), this._.map(checks, 'text').join(','), false);
+														}else {
+															this.payOrder(this._.sum(this._.map(checks, 'value')), this._.map(checks, 'text').join(','));
+														}
+
 													}
 												}
 											});
 										}
 									}
-								})
-								.catch(err => {
+								}).catch(err => {
 									uni.showModal({
 										title: '提示',
 										content: '必填项请填写完整',
@@ -568,7 +623,11 @@ export default {
 									});
 								});
 						} else {
-							this.payOrder(this._.sum(this._.map(checks, 'value')), this._.map(checks, 'text').join(','), this.formData);
+							if(this.formData.qrCode){
+								this.qrCode(this._.sum(this._.map(checks, 'value')), this._.map(checks, 'text').join(','), false);
+							}else {
+								this.payOrder(this._.sum(this._.map(checks, 'value')), this._.map(checks, 'text').join(','));
+							}
 						}
 					})
 					.catch(err => {
@@ -589,7 +648,7 @@ export default {
 			this.formData.licenseMainUrl = [];
 			this.formData.licenseViceUrl = [];
 		},
-		payOrder(serviceInfoMoney, serviceRemark, data) {
+		payOrder(serviceInfoMoney, serviceRemark) {
 			let currentCar = this._.find(this.carList, o => {
 				return o.text === this.formData.carId;
 			});
@@ -609,11 +668,42 @@ export default {
 						orderInfo: info,
 						success: () => {
 							uni.redirectTo({
-								url: `/pages/model/InCar/Step?checks=${serviceRemark}&idcard=${data.idcard}&name=${this.formData.name}&orderId=${this.carInfo.orderId}`
+								url: `/pages/model/InCar/Step?checks=${serviceRemark}&idcard=${this.formData.idcard}&name=${this.formData.name}&orderId=${this.carInfo.orderId}`
 							});
 						}
 					});
 				}
+			});
+		},
+		qrCode(serviceInfoMoney, serviceRemark,serviceStatus){
+			let flag = this.carInfo.wxOrder.payStatus === 'SUCCESS';
+			this.serviceRemark = serviceRemark;
+			this.serviceInfoMoney = serviceInfoMoney;
+			this.serviceStatus = serviceStatus;
+			this.$nextTick(() => {
+				api.qrCode({
+					serviceMoney: this.serviceInfoMoney,
+					serviceInfo: this.serviceRemark,
+					infoOrderId: this.carInfo.wxOrder.orderId,
+					flag,
+					serviceStatus: this.serviceStatus,
+					complanyId: this.carInfo.complany.id,
+				}).then(res => {
+					this.showQr = true;
+					this.$nextTick(() => {
+						this.src = 'data:image/gif;base64,' + res.img;
+					});
+					this.timer = setInterval(()=>{
+						api.orderDetail(res.orderId, false).then(data => {
+							if(data.data.payStatus === 'SUCCESS'){
+								clearInterval(this.timer);
+								uni.redirectTo({
+									url: `/pages/model/InCar/Step?checks=${this.serviceRemark}&idcard=${this.formData.idcard}&name=${this.formData.name}&orderId=${this.carInfo.orderId}`
+								});
+							}
+						});
+					}, 3000);
+				});
 			});
 		}
 	}

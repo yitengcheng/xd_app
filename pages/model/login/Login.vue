@@ -16,6 +16,12 @@
 			<view @click="register">快速注册</view>
 		</view>
 		<u-button type="primary" class="login" @click="login">账号登录</u-button>
+		<u-popup :show="show" mode="center">
+			<view class="download_box">
+				<text>当前进度{{progress}}%</text>
+				<u-line-progress height="8" :percentage="progress" active-color="#3c9cff" inactive-color="#f3f3f3"></u-line-progress>
+			</view>
+		</u-popup>
 	</view>
 </template>
 
@@ -34,7 +40,8 @@ export default {
 				password: ''
 			},
 			appVersion: '',
-			progress: 0
+			progress: 0,
+			show:false,
 		};
 	},
 	mounted() {
@@ -93,7 +100,7 @@ export default {
 													title: '更新失败',
 													icon: 'error'
 												});
-											}
+											},
 										});
 										downloadTask.onProgressUpdate(res => {
 											this.show = true;
