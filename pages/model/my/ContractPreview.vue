@@ -1,6 +1,6 @@
 <template>
-	<view>
-		<u-image v-if="!flag" :src='contract'></u-image>
+	<view class="content" style="align-items: center;justify-content: center;">
+		<u-image v-if="!flag" :src="contract" ></u-image>
 		<web-view v-else :src="contract"></web-view>
 	</view>
 </template>
@@ -15,7 +15,7 @@
 				const res = await api.lookContract(option.id);
 				this.contract = `${res.data}`;
 			} else {
-				this.contract =`${config.IMG_URL}option.id`;
+				this.contract =`${config.IMG_URL}${option.id}`;
 			}
 		},
 		data() {

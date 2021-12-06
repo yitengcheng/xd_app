@@ -115,18 +115,20 @@ export default {
 							break;
 						case 1:
 							let url = '';
-							let suffix = ''
+							let suffix = '';
+							let method = 'POST';
 							if (this.carInfo.wxOrder.contract.indexOf('/') === -1) {
 								url = `${config.API_URL}/qys/download/${this.carInfo.wxOrder.contract}`;
 								suffix = `${this.carInfo.wxOrder.contract}.PDF`
 							} else {
 								let name = this.carInfo.wxOrder.contract?.substring( this.carInfo.wxOrder.contract?.lastIndexOf( '/' ) + 1 );
-								let extname = this.carInfo.wxOrder.contract?.substring( this.carInfo.wxOrder.contract?.lastIndexOf('.' ) + 1 );
 								url = `${config.IMG_URL}${this.carInfo.wxOrder.contract}`;
-								suffix = `${name}${extname}`;
+								suffix = `${name}`;
+								method = 'GET'
 							}
 							let dtask = null
-							dtask = plus.downloader.createDownload(url, { filename: '_downloads/' + suffix, method: 'POST' }, (d, status) => {
+						
+							dtask = plus.downloader.createDownload(url, { filename: '_downloads/' + suffix, method, }, (d, status) => {
 								//d为下载的文件对象
 								if (status == 200) {
 									uni.hideLoading();

@@ -53,15 +53,22 @@
 					error: false,
 				})
 			});
-			if (!checks && option.pactFlag === 'false') {
+			if (option?.pactFlag === 'false') {
 				this.pactFlag = true;
-			} else if(option.pactFlag === 'true') {
+			} else if(option?.pactFlag === 'true') {
 				this.options = [{
 					name: '电子合同',
 					error: false,
 				}];
-			} else {
+			} else if(checks?.length > 0 && !!checks[0]) {
 				this.autoCheck();
+			} else {
+				this.active = 0;
+				this.pactFlag = true;
+			}
+			if(this.options.length === 0){
+				this.active = -1;
+				this.pactFlag = true;
 			}
 		},
 		methods: {
@@ -152,7 +159,7 @@
 					success: (e) => {
 						if(e.confirm){
 							uni.chooseImage({
-								count: 3,
+								count: 1,
 								success: (res) => {
 									uni.showLoading({
 										mask: true,
@@ -170,16 +177,15 @@
 											success: (res) => {
 												uni.hideLoading();
 												let result = JSON.parse(res.data);
-												tmp.push(result.data);
-											}
-										});
-									});
-									api.finishCar({
-										orderId: this.orderId,
-										contracts: tmp.join(','),
-									}).then(res => {
-										uni.navigateTo({
-											url: '/pages/model/InCar/Finish'
+												api.finishCar({
+													orderId: this.orderId,
+													contracts: result.data,
+												}).then(res => {
+													uni.navigateTo({
+														url: '/pages/model/InCar/Finish'
+													});
+												});
+											},
 										});
 									});
 								}
