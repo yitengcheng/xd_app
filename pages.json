@@ -151,7 +151,7 @@
             "path" : "pages/model/my/HistoryOrders",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "历史订单",
+                "navigationBarTitleText": "还车历史",
                 "enablePullDownRefresh": true
             }
             
@@ -169,7 +169,7 @@
             "path" : "pages/model/my/ContractTemplate",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "合同模板",
+                "navigationBarTitleText": "合同管理",
                 "enablePullDownRefresh": false
             }
             
@@ -226,6 +226,15 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/model/my/ContractPreview",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "查看合同",
                 "enablePullDownRefresh": false
             }
             

@@ -45,7 +45,6 @@
 			<text>【身份证号】{{ customer.idcard || '无' }}</text>
 			<text>【手机号】{{ customer.phoneNumber || '无' }}</text>
 		</view>
-		<button></button>
 		<view class="info_box">
 			<view class="info_title">
 				<view class="adorn"></view>
@@ -194,9 +193,10 @@ export default {
 							errorMessage: '请填写身份证号'
 						},
 						{
-							validateFunction: (rule, value, data, callback) => {
+							validateFunction: (rule, val, data, callback) => {
 								let card18 = new RegExp(card18);
 								let card15 = new RegExp(card15);
+								let value = val.trim();
 								if (value.length !== 15 && value.length !== 18) {
 									callback('身份证长度有误');
 								}

@@ -61,6 +61,7 @@
 		<view class="btn_box" v-if="!hasRelet">
 			<u-button class="btn" type="primary" @click="normalReturnCar">正常一键还车</u-button>
 			<u-button class="btn" @click="abnormalReturnCar">异常还车</u-button>
+			<u-button v-show="!!(carInfo.wxOrder || {}).contract" @click="pact"  class="btn">合同</u-button>
 		</view>
 		<view class="btn_box" v-if="hasRelet">
 			<u-button class="btn" type="primary" @click="reletCar">确认续租</u-button>
@@ -101,6 +102,54 @@ export default {
 	methods: {
 		changeRelet(e) {
 			this.hasRelet = e;
+		},
+		pact() {
+			uni.showActionSheet({
+				itemList: ['查看合同', '下载合同'],
+				success: res => {
+					switch (res.tapIndex) {
+						case 0:
+							uni.navigateTo({
+								url: `/pages/model/my/ContractPreview?id=${this.carInfo.wxOrder.contract}`
+							});
+							break;
+						case 1:
+							let url = '';
+							let suffix = ''
+							if (this.carInfo.wxOrder.contract.indexOf('/') === -1) {
+								url = `${config.API_URL}/qys/download/${this.carInfo.wxOrder.contract}`;
+								suffix = `${this.carInfo.wxOrder.contract}.PDF`
+							} else {
+								let name = this.carInfo.wxOrder.contract?.substring( this.carInfo.wxOrder.contract?.lastIndexOf( '/' ) + 1 );
+								let extname = this.carInfo.wxOrder.contract?.substring( this.carInfo.wxOrder.contract?.lastIndexOf('.' ) + 1 );
+								url = `${config.IMG_URL}${this.carInfo.wxOrder.contract}`;
+								suffix = `${name}${extname}`;
+							}
+							let dtask = null
+							dtask = plus.downloader.createDownload(url, { filename: '_downloads/' + suffix, method: 'POST' }, (d, status) => {
+								//d为下载的文件对象
+								if (status == 200) {
+									uni.hideLoading();
+									//下载成功,d.filename是文件在保存在本地的相对路径，使用下面的API可转为平台绝对路径
+									let fileSaveUrl = plus.io.convertLocalFileSystemURL(d.filename);
+									plus.runtime.openFile(d.filename); //选择软件打开文件
+								} else {
+									uni.hideLoading();
+									//下载失败
+									plus.downloader.clear(); //清除下载任务
+								}
+							});
+							uni.showLoading({
+								title: '下载中',
+								mask: true,
+							});
+							dtask.setRequestHeader('Authorization', 'Bearer ' + uni.getStorageSync('tonken'));
+							dtask.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+							dtask.start();
+							break;
+					}
+				}
+			});
 		},
 		reletCar(){
 			if (this.makeUpRent < 0) {

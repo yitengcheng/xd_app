@@ -2,7 +2,7 @@
 	<view class="content" style="align-items: center;">
 		<view v-for="(order, index) in orders" :key="index" class="row_item" @click="clickItem(order)">
 			<view class="row_item_image">
-				<u-image :src="order.thumb" width="30px" height="30px" shape="circle"></u-image>
+				<u-image :src="order.thumb" width="50px" height="50px" shape="circle"></u-image>
 			</view>
 			<view class="row_item_info">
 				<view class="row_item_info_row">
@@ -12,6 +12,10 @@
 				<view class="row_item_info_row">
 					<view class="row_item_info_time"><view class="row_item_circle"></view>{{order.note}}</view>
 					<view class="row_item_info_time" style="margin-right: 10px;">{{order.time}}</view>
+				</view>
+				<view class="row_item_info_row">
+					<view class="row_item_info_time"><view class="row_item_circle"></view>{{order.note1}}</view>
+					<view class="row_item_info_time" style="margin-right: 10px;">{{order.time1}}</view>
 				</view>
 			</view>
 		</view>
@@ -45,7 +49,7 @@
 		methods: {
 			initOrders(pageNum) {
 				let status = this.current === 0 ? undefined : this.current === 1 ? 0 : 1;
-				api.orders({
+				api.returnHistoryList({
 					pageNum,
 					pageSize: 10,
 				}).then((res = {}) => {
@@ -59,12 +63,14 @@
 								orderId: o?.orderId,
 								thumb: carPhoto,
 								title: o?.car?.carNum,
-								time: this.dayjs(o?.wantCarTime).format('HH:mm:ss'),
-								note: `交车：${this.dayjs(o?.wantCarTime).format('YYYY年MM月DD日')}`,
-								rightText: `${o?.payStatus === 'SUCCESS' ? '支付成功' : o?.payStatus ===
-									'NOTPAY' ? "等待付款" : o?.payStatus === 'REFUNDED' ? '退款完成' : o
-									?.payStatus === 'CLOSED' ? '订单关闭' : o?.payStatus ===
-									'REFUSE' ? '已拒绝' : o?.payStatus}`,
+								time: this.dayjs(o?.leaseTime).format('HH:mm:ss'),
+								time1: this.dayjs(o?.returnTime).format('HH:mm:ss'),
+								note: `交车：${this.dayjs(o?.leaseTime).format('YYYY年MM月DD日')}`,
+								note1: `还车：${this.dayjs(o?.returnTime).format('YYYY年MM月DD日')}`,
+								rightText: `${o?.order?.payStatus === 'SUCCESS' ? '支付成功' : o?.order?.payStatus ===
+									'NOTPAY' ? "等待付款" : o?.order?.payStatus === 'REFUNDED' ? '退款完成' : o
+									?.payStatus === 'CLOSED' ? '订单关闭' : o?.order?.payStatus ===
+									'REFUSE' ? '已拒绝' : o?.order?.payStatus}`,
 							});
 						});
 						pageNum === 1 ? this.orders = tmp : this.orders = this._.concat(this.orders, tmp);
@@ -97,8 +103,8 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 40px;
-	height: 40px;
+	width: 60px;
+	height: 60px;
 	border-radius: 50%;
 	background-color: #FFD101;
 }

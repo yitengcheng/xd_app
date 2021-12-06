@@ -30,6 +30,9 @@ const regionalManage = {
 	},
 	stayBackCarList: (data) => {
 		return request.globalRequest(`/system/car/leased/list`, 'get', data);
+	},
+	returnHistoryList: (data) => {
+		return request.globalRequest(`/system/car/return/list`, 'get', data);
 	}
 }
 

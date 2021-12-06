@@ -65,9 +65,10 @@
 		<uni-fab v-show="carId" :content="content" horizontal="right" vertical="bottom" direction="vertical"
 			@trigger="trigger"></uni-fab>
 		<view v-if="showQR" class="qrcode_box">
+			<text>请出示二维码或分享车辆给承租人下单</text>
 			<Qrcode ref="qrcode" :size="400" :val="val" :onval="true" background="#FFFFFF" foreground="#000000"></Qrcode>
 			<uni-data-checkbox style="margin-top: 50rpx;" v-model="payment" :localdata="paymentList" @change="changePayment"></uni-data-checkbox>
-			<u-button type="primary" style="margin-top: 50rpx;" @click="share(payment)">分享车辆小程序</u-button>
+			<u-button type="primary" style="margin-top: 50rpx;" @click="share(payment)">分享车辆下单</u-button>
 			<u-button style="margin-top: 50rpx;" @click="() => showQR = false" type="error">关闭二维码</u-button>
 		</view>
 	</view>
@@ -246,14 +247,12 @@
 						} ]
 					},
 					cardId: {
-						rules: [ {
-							required: true,
-							errorMessage: '请输入车主身份证'
-						}, {
-							validateFunction: ( rule, value, data, callback ) => {
+						rules: [{
+							validateFunction: ( rule, val, data, callback ) => {
 								let card18 = new RegExp(card18);
 								let card15 = new RegExp(card15);
-								if ( value.length !== 15 || value.length !== 18 ) {
+								let value = val.trim();
+								if ( value.length !== 15 && value.length !== 18 ) {
 									callback( '身份证长度有误' );
 								}
 								if ( value.length === 15 && !card15.test( value ) ) {
@@ -263,7 +262,7 @@
 								}
 								return true;
 							}
-						} ]
+						}]
 					},
 					phoneNum: {
 						rules: [ {

@@ -10,6 +10,9 @@ const qys = {
 	getContract: (data)=>{
 		return request.globalRequest(`/qys/signurl`, 'post', data);
 	},
+	lookContract: (data)=>{
+		return request.globalRequest(`/qys/view?contractId=${data}`, 'get');
+	}
 }
 
 

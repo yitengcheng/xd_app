@@ -5,7 +5,7 @@
 			<text class="page_title_text">欢迎来到优行小滴</text>
 		</view>
 		<uni-forms border v-model="formData" class="form" ref="form">
-			<FormInput :formData="formData" name="userName" label="" :inputBorder="false" :required="false" placeholder="请输入手机号" />
+			<FormInput :formData="formData" name="userName" label="" :inputBorder="false" :required="false" placeholder="请输入手机号/账号" />
 			<FormInput :formData="formData" name="password" label="" type="password" :inputBorder="false" :required="false" placeholder="请输入密码" />
 		</uni-forms>
 		<view class="login_option">

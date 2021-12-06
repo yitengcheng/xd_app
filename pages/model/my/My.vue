@@ -47,8 +47,8 @@
 			return {
 				data: [
 					{title: '接单/通知',  icon: '/static/img/my_notice.png', path: '/pages/model/my/Todo'},
-					{title: '历史订单',  icon: '/static/img/history_orders.png', path: '/pages/model/my/HistoryOrders'},
-					{title: '合同模板',  icon: '/static/img/pact.png', path: '/pages/model/my/ContractTemplate'},
+					{title: '还车历史',  icon: '/static/img/history_orders.png', path: '/pages/model/my/HistoryOrders'},
+					{title: '合同管理',  icon: '/static/img/pact.png', path: '/pages/model/my/ContractTemplate'},
 					{title: '修改密码',  icon: '/static/img/modify_password.png', path: '/pages/model/login/ResetPassword'},
 					{title: '公司信息',  icon: '/static/img/company_info.png', path: '/pages/model/my/UpdateComplanyInfo'},
 					{title: '硬件设备',  icon: '/static/img/devices.png', path: '/pages/model/my/Equipment'},

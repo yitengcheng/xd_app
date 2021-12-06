@@ -79,10 +79,11 @@ export default {
 					rules: [
 						{ required: true, errorMessage: '请填写法人身份证号' },
 						{
-							validateFunction: (rule, value, data, callback) => {
+							validateFunction: (rule, val, data, callback) => {
 								let card18 = new RegExp(card18);
 								let card15 = new RegExp(card15);
-								if (value.length !== 15 || value.length !== 18) {
+								let value = val.trim();
+								if (value.length !== 15 && value.length !== 18) {
 									callback('身份证长度有误');
 								}
 								if (value.length === 15 && !card15.test(value)) {
