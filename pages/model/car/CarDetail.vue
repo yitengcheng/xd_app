@@ -11,7 +11,7 @@
 			<FormPicker :disabled="disabled" :formData="formData" name="source" :localdata="sourceType" label="车辆来源"
 				@change="sourceChange" />
 			<FormPicker :disabled="disabled" :formData="formData" name="operatorId" :localdata="gpsVendorType"
-				label="GPS厂商" @change="e => formData.operatorId = e.value" />
+				label="GPS厂商" @change="e => formData.operatorId = e.value" :required="false"/>
 			<FormInput :disabled="disabled" :formData="formData" name="carNum" label="车牌号" />
 			<FormInput :disabled="disabled" :formData="formData" name="carBrand" label="车辆品牌" />
 			<FormPicker :disabled="disabled" :formData="formData" name="type" :localdata="carType" label="车辆类型"
@@ -27,11 +27,11 @@
 			<FormInput :disabled="disabled" :formData="formData" name="thirdLiabilityInsurance"
 				:candidates="['30', '50', '100']" label="第三者责任险(万元)" />
 			<FormSwitch :disabled="disabled" :formData="formData" name="thirdNoDeductible" type="checkbox"
-				label="第三者责任险是否不计免赔" />
+				label="第三者责任险是否不计免赔" :required="false"/>
 			<FormPicker :disabled="disabled" :formData="formData" name="lossInsurance" :localdata="lossInsuranceType"
 				label="机动车损失险" @change="e =>formData.lossInsurance = e.value" />
 			<FormSwitch :disabled="disabled" :formData="formData" name="lossNoDeductible" type="checkbox"
-				label="机动车损失险是否不计免赔" />
+				label="机动车损失险是否不计免赔" :required="false"/>
 			<FormInput :disabled="disabled" :formData="formData" name="price" label="车辆价值(元)" />
 			<FormInput :disabled="disabled" :formData="formData" name="unitPrice" label="租车单价(元/天)" />
 			<FormInput v-show="source !== '1'" :disabled="disabled" :formData="formData" name="name" label="车主姓名" />
@@ -131,12 +131,6 @@
 							errorMessage: '请选择车辆来源'
 						} ]
 					},
-					operatorId: {
-						rules: [ {
-							required: true,
-							errorMessage: '请选择gps厂商'
-						} ]
-					},
 					carNum: {
 						rules: [ {
 							required: true,
@@ -203,22 +197,10 @@
 							errorMessage: '请输入正确的三责险金额'
 						} ]
 					},
-					thirdNoDeductible: {
-						rules: [ {
-							required: true,
-							errorMessage: '请选择第三者责任险是否不计免赔'
-						} ]
-					},
 					lossInsurance: {
 						rules: [ {
 							required: true,
 							errorMessage: '请选择机动车损失险'
-						} ]
-					},
-					lossNoDeductible: {
-						rules: [ {
-							required: true,
-							errorMessage: '请选择机动车损失险是否不计免赔'
 						} ]
 					},
 					price: {
@@ -659,21 +641,18 @@
 			getLicenseFront( e = {} ) {
 				let { url, ocr } = e;
 				this.licenseFrontUrl = url;
-				if ( url && !!ocr ) {
-					this.formData.engineNum = ocr.engineNumber;
-					this.formData.carNum = ocr.plateNumber;
-					this.formData.carBrand = ocr.model;
-					this.formData.type = ocr.vehicleType;
-					this.formData.frameNum = ocr.vin;
-				}
+				this.formData.engineNum = ocr?.engineNumber;
+				this.formData.carNum = ocr?.plateNumber;
+				this.formData.carBrand = ocr?.model;
+				this.formData.type = ocr?.vehicleType;
+				this.formData.frameNum = ocr?.vin;
+				this.formData.name = ocr?.owner;
 			},
 			getLicenseBack( e = {} ) {
 				let { url, ocr } = e;
 				this.licenseBackUrl = url;
-				if ( url && !!ocr ) {
-					this.formData.maxManned = ocr.approvedPassengerCapacity;
-					this.formData.fuelType = ocr.energyType;
-				}
+				this.formData.maxManned = ocr?.approvedPassengerCapacity;
+				this.formData.fuelType = ocr?.energyType;
 			},
 			showMoreItems() {
 				this.moreItemsFlag = !this.moreItemsFlag;

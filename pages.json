@@ -239,6 +239,47 @@
             }
             
         }
+        ,{
+            "path" : "pages/model/my/Approve",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "企业认证",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/model/my/QysUrl",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/model/my/Customer",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "客户管理",
+                "enablePullDownRefresh": true,
+				"app-plus": {
+                    "titleNView": {
+                        "buttons": [{"text":"筛选","fontSize":"16px"}]
+                    }
+                }
+            }
+            
+        }
+        ,{
+            "path" : "pages/model/my/CustomerDetail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "客户详情",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"tabBar": {
 		"color": "#606266",

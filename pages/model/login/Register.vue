@@ -9,7 +9,7 @@
 			<FormInput v-show="flag === 3" :formData="formData" name="complanyCode" label="营业执照编号" />
 			<FormInput v-show="flag === 3" :formData="formData" name="complanyYxq" label="营业执照有效期" />
 			<FormInput v-show="flag === 3" :formData="formData" name="complanyAddress" label="注册地址" />
-			<FormInput v-show="flag === 3" :formData="formData" name="juridiclName" label="法人姓名" />
+			<FormInput v-show="flag === 3" :formData="formData" name="juridicalName" label="法人姓名" />
 			<FormInput v-show="flag === 3" :formData="formData" name="juridicalZjhm" label="法人身份证号" />
 			<FormInput v-show="flag === 3" :formData="formData" name="capital" label="注册资本" :required="false"/>
 			<FormInput v-show="flag === 3" :formData="formData" name="reallyCapital" label="实收资本" :required="false" />
@@ -55,7 +55,7 @@ export default {
 				complanyYxq: '',
 				complanyAddress: '',
 				complanyAddressId: '',
-				juridiclName: '',
+				juridicalName: '',
 				juridicalZjhm: '',
 				capital: '',
 				reallyCapital: '',
@@ -74,7 +74,7 @@ export default {
 				complanyYxq: { rules: [{ required: true, errorMessage: '请填写营业执照有效期' }] },
 				complanyAddress: { rules: [{ required: true, errorMessage: '请填写注册地址' }] },
 				complanyAddressId: { rules: [{ required: true, errorMessage: '请选择所属地区' }] },
-				juridiclName: { rules: [{ required: true, errorMessage: '请填写法人姓名' }] },
+				juridicalName: { rules: [{ required: true, errorMessage: '请填写法人姓名' }] },
 				juridicalZjhm: {
 					rules: [
 						{ required: true, errorMessage: '请填写法人身份证号' },
@@ -137,7 +137,7 @@ export default {
 				this.formData.nature = ocr.business;
 				this.formData.complanyYxq = ocr.validPeriod;
 				this.formData.complanyAddress = ocr.address;
-				this.formData.juridiclName = ocr.legalPerson;
+				this.formData.juridicalName = ocr.legalPerson;
 				this.formData.complanyType = ocr.type;
 				this.formData.capital = ocr.capital;
 				this.formData.establishTime = ocr.establishDate;
@@ -202,7 +202,7 @@ export default {
 		},
 		submit() {
 			this.$refs.form.validate().then(res => {
-				if (res.juridiclName === this.idCard.name) {
+				if (res.juridicalName === this.idCard.name) {
 					delete res.photoComplanyCode;
 					delete res.idcardFront;
 					delete res.idcardBack;

@@ -12,7 +12,23 @@ const qys = {
 	},
 	lookContract: (data)=>{
 		return request.globalRequest(`/qys/view?contractId=${data}`, 'get');
-	}
+	},
+	authComplany: (data)=>{
+		return request.globalRequest(`/system/complany/auth/qys?complanyId=${data}`, 'get');
+	},
+	getQYSAuthPage: (data)=>{
+		return request.globalRequest(`/qys/complany/apply/${data}`, 'post');
+	},
+	payAuthMoney: (data)=>{
+		return request.globalRequest(`/direct/pay/native/contract/create`, 'post', data);
+	},
+	qysLogin: (data)=>{
+		return request.globalRequest(`/qys/sso/login`, 'post', data);
+	},
+	saveContract: (data)=>{
+		return request.globalRequest(`/system/complany/conctrat/text`, 'post', data);
+	},
+	
 }
 
 

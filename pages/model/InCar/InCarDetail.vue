@@ -322,10 +322,17 @@ export default {
 						uni.showModal({
 							title: '认证提示',
 							content: `${res.msg}`,
-							showCancel: false,
-							success: () => {
-								e.detail.value.pop();
-								this.formData.check = e.detail.value;
+							confirmText:'前往电子合同认证',
+							cancelText: '取消',
+							success: (e) => {
+								if(e.confirm){
+									uni.navigateTo({
+										url: '/pages/model/my/ContractTemplate'
+									})
+								} else {
+									e.detail.value.pop();
+									this.formData.check = e.detail.value;
+								}
 							}
 						});
 					} else if (res.data === 2) {
@@ -468,18 +475,18 @@ export default {
 					this.formOrderData.rentCarDays = res?.data?.wxOrder?.rentCarDays;
 					this.oldCarId = res?.data?.id;
 					this.carList = this._.uniqBy(this.carList, 'text');
-					if (res?.data?.wxOrder?.contract) {
-						uni.redirectTo({
-							url: `/pages/model/InCar/Pact?orderId=${res?.data?.wxOrder?.orderId}&pactId=${res?.data?.wxOrder?.contract}`
-						});
-						return;
-					}
-					if (res?.data?.wxOrder?.infoFlag || res?.data?.wxOrder?.conctratInfoFlag) {
-						uni.redirectTo({
-							url: `/pages/model/InCar/Step?orderId=${res?.data?.wxOrder?.orderId}&pactFlag=${res?.data?.wxOrder?.conctratInfoFlag}`
-						});
-						return;
-					}
+					// if (res?.data?.wxOrder?.contract) {
+					// 	uni.redirectTo({
+					// 		url: `/pages/model/InCar/Pact?orderId=${res?.data?.wxOrder?.orderId}&pactId=${res?.data?.wxOrder?.contract}`
+					// 	});
+					// 	return;
+					// }
+					// if (res?.data?.wxOrder?.infoFlag || res?.data?.wxOrder?.conctratInfoFlag) {
+					// 	uni.redirectTo({
+					// 		url: `/pages/model/InCar/Step?orderId=${res?.data?.wxOrder?.orderId}&pactFlag=${res?.data?.wxOrder?.conctratInfoFlag}`
+					// 	});
+					// 	return;
+					// }
 				}
 			});
 		},
@@ -533,7 +540,7 @@ export default {
 							customerId: this.customerId,
 							name: this.formData.name,
 							idcard: this.formData.idcard,
-							phoneNumber: this.formData.phoneNumber,
+							phoneNumber: this.formData.phone,
 							orderId: this.formData.orderId,
 							nowAddress: this.formData.nowAddress,
 							birthday: this.formData.birthday,

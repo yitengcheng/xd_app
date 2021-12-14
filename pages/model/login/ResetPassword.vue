@@ -59,7 +59,7 @@
 					}
 					api.resetPassword({
 						newPassword: data.newPassword1,
-						userId: user.user.userId,
+						oldPassword: data.oldPassword,
 					}).then(res => {
 						if(!!res.msg){
 							uni.showToast({

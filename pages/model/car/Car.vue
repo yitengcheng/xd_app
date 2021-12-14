@@ -59,9 +59,9 @@
 		},
 		onPullDownRefresh() {
 			this.list = [];
-			this.$nextTick(() => {
+			setTimeout(()=>{
 				this.getCarList(1);
-			});
+			},1000);
 		},
 		methods: {
 			itemTap(item) {
@@ -100,6 +100,7 @@
 					pageSize: 10,
 					status,
 				}).then((res) => {
+					uni.stopPullDownRefresh();
 					if(res?.total === 0){
 						this.list = [];
 						this.pageNo = 1;
@@ -120,7 +121,7 @@
 						pageNum === 1 ? this.list = tmp : this.list = this._.concat(this.list, tmp);
 						pageNum === 1 ? this.pageNo = 2 : this.pageNo = this.pageNo + 1;
 					}
-					uni.stopPullDownRefresh();
+					
 				});
 			}
 		}

@@ -43,7 +43,8 @@
 				<u-switch v-model="hasRelet" @change="changeRelet" active-color="#FFD101"></u-switch>
 			</view>
 			<u-input v-if="hasRelet" v-model="makeUpRent" placeholder="请输入续租租金" type="number" border="bottom" shape="circle" inputAlign="right"></u-input>
-			<uni-datetime-picker
+			<u-input v-if="hasRelet" v-model="renewalDay" placeholder="请输入续租天数" type="number" border="bottom" shape="circle" inputAlign="right"></u-input>
+			<!-- <uni-datetime-picker
 				ref="pickerDate"
 				class="reletDate"
 				v-if="hasRelet"
@@ -51,7 +52,7 @@
 				:value="reletDate"
 				:start="dayjs(((carInfo || {}).wxOrder || {}).estimateReturnTime).add(1,'day').format('YYYY-MM-DD')"
 				@change="changeDate"
-			></uni-datetime-picker>
+			></uni-datetime-picker> -->
 			<view v-if="!hasRelet" class="margin_box">
 				<text>【已扣除租车保证金】</text>
 				<u-input v-model="deductBondMoney" placeholder="请输入已扣除租车保证金" type="number" border="bottom" shape="circle" inputAlign="right"></u-input>
@@ -94,6 +95,7 @@ export default {
 			makeUpRent: '',
 			returnDate: '',
 			selectDate: '',
+			renewalDay: '',
 		};
 	},
 	onLoad(option) {
@@ -164,8 +166,7 @@ export default {
 			api.reletCar({
 				orderId: this.carInfo.wxOrder.orderId,
 				carId: this.carInfo.id,
-				beginTime: this.returnDate.format('YYYY-MM-DD HH:mm:ss'),
-				endTime: this.selectDate.format('YYYY-MM-DD HH:mm:ss'),
+				renewalDay: this.renewalDay,
 				makeUpRent: this.makeUpRent ?? 0,
 				status: false
 			}).then(res => {
@@ -186,8 +187,8 @@ export default {
 								api.reletCar({
 									orderId: this.carInfo.wxOrder.orderId,
 									carId: this.carInfo.id,
-									beginTime: returnDate.format('YYYY-MM-DD HH:mm:ss'),
-									endTime: selectDate.format('YYYY-MM-DD HH:mm:ss'),
+									renewalDay: this.renewalDay,
+									makeUpRent: this.makeUpRent ?? 0,
 									status: true
 								}).then(result => {
 									uni.showModal({
@@ -216,7 +217,6 @@ export default {
 			}
 			this.selectDate = selectDate;
 			this.returnDate = returnDate;
-			
 		},
 		change(e) {
 			this.current = e.detail.current;

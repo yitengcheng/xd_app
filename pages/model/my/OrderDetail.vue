@@ -94,6 +94,14 @@ export default {
 		},
 		orderHandle(type) {
 			// 1 确认接单 2 取消接单 3 确认退款
+			if(!this.orderInfo?.car?.id && (type === 1 || type === 4)){
+				uni.showModal({
+					title: '提示',
+					content: '订单异常，请取消后重新下单',
+					showCancel:false,
+				});
+				return
+			}
 			let func = type === 1 ? api.orderConfirm : type === 2 ? api.orderCannel : type === 3 ? api.orderCannel : undefined;
 			if (type === 4) {
 				uni.navigateTo({

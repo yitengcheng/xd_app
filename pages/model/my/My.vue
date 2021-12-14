@@ -11,7 +11,7 @@
 			</view>
 		</view>
 		<view class="menus_box">
-			<view v-for="(item,index) in data" :key="index" @click="toPage(item)" class="item_row" :style="{borderBottom: index === (data.length - 1) ? '' : '1px solid #E0E0E0'}">
+			<view v-for="(item,index) in data" :key="index" @click="toPage(item)" class="item_row" :style="{borderBottom: index === (data.length - 1) ? '' : '1px solid #E0E0E0'}" v-if="item.permissions">
 				<view style="display: flex; flex-direction: row;flex: 1;align-items: center;">
 					<u-image :src="item.icon" width="30px" height="30px"></u-image>
 					<text class="item_text">{{item.title}}</text>
@@ -45,17 +45,7 @@
 	export default {
 		data() {
 			return {
-				data: [
-					{title: '接单/通知',  icon: '/static/img/my_notice.png', path: '/pages/model/my/Todo'},
-					{title: '还车历史',  icon: '/static/img/history_orders.png', path: '/pages/model/my/HistoryOrders'},
-					{title: '合同管理',  icon: '/static/img/pact.png', path: '/pages/model/my/ContractTemplate'},
-					{title: '修改密码',  icon: '/static/img/modify_password.png', path: '/pages/model/login/ResetPassword'},
-					{title: '公司信息',  icon: '/static/img/company_info.png', path: '/pages/model/my/UpdateComplanyInfo'},
-					{title: '硬件设备',  icon: '/static/img/devices.png', path: '/pages/model/my/Equipment'},
-					{title: '硬件订单',  icon: '/static/img/indent.png', path: '/pages/model/mall/EquipmentOrder'},
-					{title: '清理缓存',  icon: '/static/img/clear.png', func: 'clear'},
-					{title: '退出登录',  icon: '/static/img/logout.png', func: 'logout'},
-				],
+				data: [],
 				user: uni.getStorageSync('user'),
 				complanys: [],
 				complanyId: '',
@@ -65,8 +55,23 @@
 		},
 		mounted() {
 			this.initComplany();
+			this.initMenuList();
 		},
 		methods: {
+			initMenuList(){
+				this.data = [
+					{title: '接单/通知',  icon: '/static/img/my_notice.png', path: '/pages/model/my/Todo', permissions: true},
+					{title: '还车历史',  icon: '/static/img/history_orders.png', path: '/pages/model/my/HistoryOrders',permissions: true},
+					{title: '合同管理',  icon: '/static/img/pact.png', path: '/pages/model/my/ContractTemplate', permissions: this._.includes(this.user.roles, 'complany_main')},
+					{title: '客户管理',  icon: '/static/img/kehuguanli.png', path: '/pages/model/my/Customer',permissions: true},
+					{title: '修改密码',  icon: '/static/img/modify_password.png', path: '/pages/model/login/ResetPassword',permissions: true},
+					{title: '公司信息',  icon: '/static/img/company_info.png', path: '/pages/model/my/UpdateComplanyInfo',permissions: true},
+					{title: '硬件设备',  icon: '/static/img/devices.png', path: '/pages/model/my/Equipment',permissions: true},
+					{title: '硬件订单',  icon: '/static/img/indent.png', path: '/pages/model/mall/EquipmentOrder',permissions: true},
+					{title: '清理缓存',  icon: '/static/img/clear.png', func: 'clear', permissions: true},
+					{title: '退出登录',  icon: '/static/img/logout.png', func: 'logout', permissions: true},
+				]
+			},
 			initComplany() {
 				let { complany } = this.user;
 				if(complany){

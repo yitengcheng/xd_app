@@ -147,7 +147,8 @@ export default {
 									key: 'user',
 									data: {
 										user: info.user,
-										complany: info.complany
+										complany: info.complany,
+										roles: info.roles,
 									},
 									success: () => {
 										uni.switchTab({

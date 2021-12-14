@@ -8,6 +8,7 @@ import handle from './modules/handle.js'
 import pay from './modules/pay.js'
 import qys from './modules/qys.js'
 import product from './modules/product.js'
+import customer from './modules/customer.js'
 const api = {
 	...user,
 	...regionalManage,
@@ -19,5 +20,6 @@ const api = {
 	...pay,
 	...qys,
 	...product,
+	...customer,
 }
 export default api

@@ -11,11 +11,14 @@ const user = {
 		return request.globalRequest('/system/complany/insert', 'post', data);
 	},
 	resetPassword: (data) => {
-		return request.globalRequest('/system/user/resetPwd', 'put', data);
+		return request.globalRequest(`/system/user/profile/updatePwd?oldPassword=${data.oldPassword}&newPassword=${data.newPassword}`, 'put');
 	},
 	updateComplany: (data) => {
 		return request.globalRequest('/system/complany/app/update', 'put', data);
 	},
+	getComplanyInfo: (data) => {
+		return request.globalRequest(`/system/complany/${data}`, 'get');
+	}
 }
 
 
