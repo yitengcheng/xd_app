@@ -280,6 +280,28 @@
             }
             
         }
+        ,{
+            "path" : "pages/model/my/StaffManagement",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "员工管理",
+                "enablePullDownRefresh": true,
+				"app-plus": {
+				    "titleNView": {
+				        "buttons": [{"text":"筛选","fontSize":"16px"}]
+				    }
+				}
+            }
+            
+        },{
+            "path" : "pages/model/my/StaffDetail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "员工详情",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"tabBar": {
 		"color": "#606266",

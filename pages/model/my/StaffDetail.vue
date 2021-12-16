@@ -12,27 +12,7 @@
 					:required="false"
 					:disabled="disabled"
 				></FormUpload>
-				<FormUpload
-					:formData="formData"
-					name="licenseMainUrl"
-					label="驾照主页"
-					:limit="1"
-					@getOcrData="getLicenseMain"
-					url="/tool/ocr/driving?type=8"
-					:disabled="disabled"
-					:required="false"
-				></FormUpload>
-				<FormUpload
-					:formData="formData"
-					name="licenseViceUrl"
-					label="驾照副页"
-					:limit="1"
-					@getOcrData="getLicenseVice"
-					:disabled="disabled"
-					url="/tool/ocr/driving?type=9"
-					:required="false"
-				></FormUpload>
-				<FormInput :formData="formData" name="name" label="姓名" decoration :disabled="disabled"></FormInput>
+				<FormInput :formData="formData" name="realName" label="姓名" decoration :disabled="disabled"></FormInput>
 				<FormInput
 					:formData="formData"
 					name="idcard"
@@ -53,38 +33,8 @@
 				<FormInput :formData="formData" name="nation" label="民族" decoration :disabled="disabled"></FormInput>
 				<FormInput
 					:formData="formData"
-					name="driveType"
-					label="准驾车型"
-					decoration
-					:disabled="disabled"
-				></FormInput>
-				<FormInput
-					:formData="formData"
-					name="archivesNum"
-					label="档案编号"
-					decoration
-					:disabled="disabled"
-				></FormInput>
-				<FormDatePicker
-					:formData="formData"
-					name="receiveCarTime"
-					label="初次领证日期"
-					@change="changeReceiveCarTime"
-					decoration
-					:disabled="disabled"
-				></FormDatePicker>
-				<FormDatePicker
-					:formData="formData"
-					name="invalidCarTime"
-					label="驾照有效期"
-					@change="changeInvalidCarTime"
-					decoration
-					:disabled="disabled"
-				></FormDatePicker>
-				<FormInput
-					:formData="formData"
 					name="address"
-					label="身份证地址"
+					label="地址"
 					decoration
 					:disabled="disabled"
 				></FormInput>
@@ -97,33 +47,19 @@
 				></FormInput>
 				<FormInput
 					:formData="formData"
-					name="phoneNumber"
+					name="phonenumber"
 					label="用户电话"
 					decoration
 					type="number"
 					:disabled="disabled"
 				></FormInput>
 				<FormInput
+					v-if="!staffId"
 					:formData="formData"
-					name="nowAddress"
-					label="现居住地"
+					name="password"
+					label="登录密码"
 					decoration
-					:required="false"
-					:disabled="disabled"
-				></FormInput>
-				<FormInput
-					:formData="formData"
-					name="urgentConcat"
-					label="紧急联系人"
-					decoration
-					:disabled="disabled"
-				></FormInput>
-				<FormInput
-					:formData="formData"
-					name="urgentPhone"
-					label="紧急联系电话"
-					decoration
-					type="number"
+					type="password"
 					:disabled="disabled"
 				></FormInput>
 			</uni-forms>
@@ -144,37 +80,28 @@ export default {
 	components: {
 		FormUpload,
 		FormInput,
-		FormDatePicker,
 		FormPicker,
 	},
 	onLoad(option) {
-		this.customerId = option?.id;
-		option?.id && this.initCustomer(option?.id);
+		this.staffId = option?.id;
+		option?.id && this.initStaff(option?.id);
 		if(option?.edit === 'look') this.disabled = true
 	},
 	data() {
 		return {
 			formData: {
 				idcardFront: [],
-				licenseMainUrl: [],
-				licenseViceUrl: [],
-				name: '',
+				realName: '',
 				idcard: '',
 				sex: 0,
 				nation: '',
-				driveType: '',
-				archivesNum: '',
-				receiveCarTime: '',
-				invalidCarTime: '',
 				address: '',
 				birthday: '',
-				phoneNumber: '',
-				nowAddress: '',
-				urgentConcat: '',
-				urgentPhone: '',
+				phonenumber: '',
+				password: '',
 			},
 			rules: {
-				name: {
+				realName: {
 					rules: [
 						{
 							required: true,
@@ -206,38 +133,6 @@ export default {
 						},
 					],
 				},
-				driveType: {
-					rules: [
-						{
-							required: true,
-							errorMessage: '请填写准驾车型',
-						},
-					],
-				},
-				archivesNum: {
-					rules: [
-						{
-							required: true,
-							errorMessage: '请填写驾驶证档案编号',
-						},
-					],
-				},
-				receiveCarTime: {
-					rules: [
-						{
-							required: true,
-							errorMessage: '请选择初次领证日期',
-						},
-					],
-				},
-				invalidCarTime: {
-					rules: [
-						{
-							required: true,
-							errorMessage: '请选择驾照有效期',
-						},
-					],
-				},
 				address: {
 					rules: [
 						{
@@ -254,7 +149,7 @@ export default {
 						},
 					],
 				},
-				phoneNumber: {
+				phonenumber: {
 					rules: [
 						{
 							required: true,
@@ -262,28 +157,10 @@ export default {
 						},
 					],
 				},
-				urgentConcat: {
-					rules: [
-						{
-							required: true,
-							errorMessage: '请填写紧急联系人',
-						},
-					],
-				},
-				urgentPhone: {
-					rules: [
-						{
-							required: true,
-							errorMessage: '请填写紧急联系电话',
-						},
-					],
-				},
 			},
-			licenseMainUrl: '',
-			licenseViceUrl: '',
 			idcardFront: '',
 			sexList: [{ value: 0, text: '男' }, { value: 1, text: '女' }],
-			customerId: undefined,
+			staffId: undefined,
 			disabled: false,
 		};
 	},
@@ -292,49 +169,27 @@ export default {
 			let { url, ocr } = e;
 			this.formData.idcardFront = [formattingPhoto(url)];
 			this.idcardFront = url;
-			this.formData.name = ocr?.name;
+			this.formData.realName = ocr?.name;
 			this.formData.idcard = ocr?.idnumber;
 			this.formData.address = ocr?.address;
 			this.formData.birthday = ocr?.birthday ? this.dayjs(ocr?.birthday) : '';
 			this.formData.sex = ocr?.gender === '男' ? 0 : 1;
 			this.nation = ocr?.nationality;
 		},
-		getLicenseMain(e = {}) {
-			let { url, ocr } = e;
-			this.formData.licenseMainUrl = [formattingPhoto(url)];
-			this.licenseMainUrl = url;
-			this.driveType = ocr?.vehicleType;
-		},
-		getLicenseVice(e = {}) {
-			let { url, ocr } = e;
-			this.formData.licenseViceUrl = [formattingPhoto(url)];
-			this.licenseViceUrl = url;
-			this.formData.archivesNum = ocr?.archiveNumber;
-		},
-		changeReceiveCarTime(e) {
-			this.formData.receiveCarTime = e;
-		},
-		changeInvalidCarTime(e) {
-			this.formData.invalidCarTime = e;
-		},
 		changeSex(e) {
 			this.formData.sex = e.value;
 		},
 		sumbit() {
-			let func = this.customerId ? api.updateCustomer :  api.addCustomer;
+			let func = this.staffId ? api.updateStaff :  api.addStaff;
 			delete this.formData.idcardFront;
-			delete this.formData.licenseMainUrl;
-			delete this.formData.licenseViceUrl;
 			this.$refs.form.validate().then(async () => {
 				const res = await func({
 					...this.formData,
 					complanyId: uni.getStorageSync('complanyId'),
 					idcardFront: this.idcardFront,
-					licenseMainUrl: this.licenseMainUrl,
-					licenseViceUrl: this.licenseViceUrl,
 				});
 				if (res) {
-					uni.$emit('customer');
+					uni.$emit('staff');
 					uni.navigateBack();
 				}
 			});
@@ -342,22 +197,14 @@ export default {
 		reset() {
 			this.$refs.form.resetFields();
 		},
-		async initCustomer(id) {
-			const res = await api.customerDetail(id);
+		async initStaff(id) {
+			const res = await api.staffDetail(id);
 			if (res) {
 				let idcardFront = [formattingPhoto(res.data.idcardFront)];
 				this.idcardFront = res.data.idcardFront;
-				let licenseMainUrl = [formattingPhoto(res.data.licenseMainUrl)];
-				this.licenseMainUrl = res.data.licenseMainUrl;
-				let licenseViceUrl = [formattingPhoto(res.data.licenseViceUrl)];
-				this.licenseViceUrl = res.data.licenseViceUrl;
 				delete res.data.idcardFront;
-				delete res.data.licenseMainUrl;
-				delete res.data.licenseViceUrl;
 				this.formData = {
 					idcardFront,
-					licenseMainUrl,
-					licenseViceUrl,
 					...res.data,
 				};
 			}

@@ -4,38 +4,31 @@
 			<u-button type="primary" size="mini" style="margin: 0;" @click="operation">新增</u-button>
 		</view>
 
-		<view
-			v-if="customerList.length !== 0"
-			class="customer_box"
-			v-for="(customer, index) in customerList"
-			:key="index"
-			@longpress="showActions(customer)"
-		>
+		<view class="staff_box" v-if="staffList.length !== 0" v-for="(staff, index) in staffList" :key="index" @longpress="showActions(staff)">
 			<view class="info_title">
 				<view class="adorn"></view>
-				<text>客户信息</text>
+				<text>员工信息</text>
 			</view>
 			<view class="line"></view>
-			<view class="customer_row">
-				<view>姓名：{{ customer.name }}</view>
-				<view>电话：{{ customer.phoneNumber }}</view>
+			<view class="staff_row">
+				<view>姓名：{{ staff.realName }}</view>
+				<view>电话：{{ staff.phonenumber }}</view>
 			</view>
-			<view class="customer_row">
-				<view>身份证：{{ customer.idcard }}</view>
-				<view>性别：{{ customer.sex === '1' ? '女' : '男' }}</view>
+			<view class="staff_row">
+				<view>身份证：{{ staff.idcard }}</view>
+				<view>性别：{{ staff.sex === '1' ? '女' : '男' }}</view>
 			</view>
-			<view>准驾车型：{{ customer.driveType }}</view>
-			<view>现居住地：{{ customer.nowAddress }}</view>
+			<view>地址：{{ staff.address }}</view>
 		</view>
-		<u-image v-if="customerList.length === 0" src="/static/img/defalut.png"></u-image>
+		<u-image v-if="staffList.length === 0" src="/static/img/defalut.png"></u-image>
 
 		<u-popup :show="show" mode="right" closeable safeAreaInsetTop @close="() => (show = false)">
 			<u-form labelPosition="top" labelWidth="100" :model="searchForm" ref="search" class="search_box">
-				<u-form-item label="姓名" prop="name" borderBottom>
-					<u-input v-model="searchForm.name" border="none" placeholder="请输入姓名"></u-input>
+				<u-form-item label="姓名" prop="realName" borderBottom>
+					<u-input v-model="searchForm.realName" border="none" placeholder="请输入姓名"></u-input>
 				</u-form-item>
-				<u-form-item label="电话号码" prop="phoneNumber" borderBottom>
-					<u-input v-model="searchForm.phoneNumber" border="none" placeholder="请输入电话号码"></u-input>
+				<u-form-item label="电话号码" prop="phonenumber" borderBottom>
+					<u-input v-model="searchForm.phonenumber" border="none" placeholder="请输入电话号码"></u-input>
 				</u-form-item>
 				<u-form-item label="性别" prop="sex" borderBottom @click="pickSex">
 					<u-input
@@ -68,12 +61,13 @@ export default {
 		return {
 			pageNum: 1,
 			searchForm: {
-				name: '',
-				phoneNumber: '',
+				realName: '',
+				phonenumber: '',
 				sex: '',
 			},
 			show: false,
 			showSex: false,
+			staffList: [],
 			actions: [
 				{
 					name: '男',
@@ -82,43 +76,37 @@ export default {
 					name: '女',
 				},
 			],
-			customerList: [],
 		};
 	},
 	mounted() {
-		this.getCustomerList(1);
-		uni.$on('customer',()=>{
-			this.getCustomerList(1);
+		this.getStaffList(1);
+		uni.$on('staff',()=>{
+			this.getStaffList(1);
 		})
 	},
 	onNavigationBarButtonTap() {
 		this.show = true;
 	},
 	onPullDownRefresh() {
-		this.getCustomerList(1);
+		this.getStaffList(1);
 	},
 	onReachBottom() {
-		this.getCustomerList(this.pageNum);
+		this.getStaffList(this.pageNum);
 	},
 	methods: {
-		operation(id, flag){
-			if(flag){
+		operation(id, flag) {
+			if (flag) {
 				uni.navigateTo({
-					url: `/pages/model/my/CustomerDetail?id=${id}&edit=look`
+					url: `/pages/model/my/StaffDetail?id=${id}&edit=look`,
 				});
 			} else {
 				uni.navigateTo({
-					url: `/pages/model/my/CustomerDetail?${id ? 'id='+id : ''}`
+					url: `/pages/model/my/StaffDetail?${id ? 'id=' + id : ''}`,
 				});
 			}
 		},
-		pickSex() {
-			this.showSex = true;
-			uni.hideKeyboard();
-		},
-		showActions(customer) {
-			let options = [{ title: '修改' }, { title: '承租人详情' }, { title: '删除' }];
-			!customer.black && options.push({ title: '黑名单' });
+		showActions(staff) {
+			let options = [{ title: '修改' }, { title: '删除' }];
 			plus.nativeUI.actionSheet(
 				{
 					title: '功能',
@@ -126,38 +114,30 @@ export default {
 					buttons: options,
 				},
 				e => {
-					switch(e.index){
+					switch (e.index) {
 						case 1:
-							this.operation(customer.id);
+							this.operation(staff.userId);
 							break;
 						case 2:
-							this.operation(customer.id, true);
-							break;
-						case 3:
-							this.deleteCustomer(customer.id);
-							break;
-						case 4:
-							uni.showLoading({
-								mask:true,
-								title: '开发中，请移步电脑端'
-							})
+							this.operation(staff.userId, true);
 							break;
 					}
 				}
 			);
 		},
-		async deleteCustomer(id){
+		async deleteCustomer(id) {
 			const res = await api.deleteCustomer(id);
-			res && uni.showModal({
-				title: '提示',
-				content: '删除成功',
-				showCancel:false,
-				success: () => {
-					this.getCustomerList(1);
-				}
-			})
+			res &&
+				uni.showModal({
+					title: '提示',
+					content: '删除成功',
+					showCancel: false,
+					success: () => {
+						this.getCustomerList(1);
+					},
+				});
 		},
-		async getCustomerList(pageNo) {
+		async getStaffList(pageNo) {
 			let sex = undefined;
 			if (this.searchForm.sex === '男') {
 				sex = '0';
@@ -165,7 +145,7 @@ export default {
 				sex = '1';
 			}
 			delete this.searchForm.sex;
-			const list = await api.getCustomerList({
+			const list = await api.getstaffList({
 				pageNum: pageNo ?? this.pageNum,
 				pageSize: 10,
 				sex,
@@ -173,14 +153,14 @@ export default {
 			});
 			uni.stopPullDownRefresh();
 			if (list?.total === 0) {
-				this.customerList = [];
+				this.staffList = [];
 				this.pageNum = 1;
 				return;
 			}
 			if (list?.rows.length > 0) {
 				pageNo === 1
-					? (this.customerList = list.rows)
-					: (this.customerList = this._.concat(this.customerList, list.rows));
+					? (this.staffList = list.rows)
+					: (this.staffList = this._.concat(this.staffList, list.rows));
 				pageNo === 1 ? (this.pageNum = 2) : (this.pageNum = this.pageNum + 1);
 			}
 		},
@@ -189,8 +169,8 @@ export default {
 		},
 		resetForm() {
 			this.searchForm = {
-				name: '',
-				phoneNumber: '',
+				realName: '',
+				phonenumber: '',
 				sex: '',
 			};
 			this.$nextTick(() => {
@@ -201,18 +181,22 @@ export default {
 			this.show = false;
 			this.getCustomerList(1);
 		},
+		pickSex() {
+			this.showSex = true;
+			uni.hideKeyboard();
+		},
 	},
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .search_box {
 	margin: 0 10px;
 }
 .btn {
 	margin-top: 20px;
 }
-.customer_box {
+.staff_box {
 	display: flex;
 	flex-direction: column;
 	width: 90%;
@@ -221,7 +205,7 @@ export default {
 	background-color: #ffffff;
 	border-radius: 5px;
 }
-.customer_row {
+.staff_row {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
