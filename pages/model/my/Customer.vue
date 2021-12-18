@@ -9,11 +9,13 @@
 			class="customer_box"
 			v-for="(customer, index) in customerList"
 			:key="index"
-			@longpress="showActions(customer)"
 		>
 			<view class="info_title">
-				<view class="adorn"></view>
-				<text>客户信息</text>
+				<view style="height: 42rpx; display: flex; flex-direction: row; align-items: center;">
+					<view class="adorn"></view>
+					<text>客户信息</text>
+				</view>
+				<view @touchstart="showActions(customer)">操作</view>
 			</view>
 			<view class="line"></view>
 			<view class="customer_row">
@@ -236,8 +238,8 @@ export default {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+	justify-content: space-between;
 	font-weight: bold;
-	height: 42rpx;
 }
 .line {
 	width: 100%;

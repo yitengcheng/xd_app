@@ -10,6 +10,7 @@ import qys from './modules/qys.js'
 import product from './modules/product.js'
 import customer from './modules/customer.js'
 import staff from './modules/staff.js'
+import black from './modules/black.js'
 const api = {
 	...user,
 	...regionalManage,
@@ -23,5 +24,6 @@ const api = {
 	...product,
 	...customer,
 	...staff,
+	...black,
 }
 export default api

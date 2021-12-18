@@ -10,7 +10,7 @@
 			<FormUpload ref="carPhotos" :readonly="disabled" :formData="formData" name="carPhotos" label="车辆图片" :decoration="true"/>
 			<FormPicker :disabled="disabled" :formData="formData" name="source" :localdata="sourceType" label="车辆来源"
 				@change="sourceChange" />
-			<FormPicker :disabled="disabled || gpsInstall === 1" :formData="formData" name="operatorId" :localdata="gpsVendorType"
+			<FormPicker :disabled="disabled && gpsInstall === 1" :formData="formData" name="operatorId" :localdata="gpsVendorType"
 				label="GPS厂商" @change="e => formData.operatorId = e.value" :required="false"/>
 			<FormInput :disabled="disabled" :formData="formData" name="carNum" label="车牌号" />
 			<FormInput :disabled="disabled" :formData="formData" name="carBrand" label="车辆品牌" />

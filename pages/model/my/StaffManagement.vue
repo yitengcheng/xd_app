@@ -4,10 +4,13 @@
 			<u-button type="primary" size="mini" style="margin: 0;" @click="operation">新增</u-button>
 		</view>
 
-		<view class="staff_box" v-if="staffList.length !== 0" v-for="(staff, index) in staffList" :key="index" @longpress="showActions(staff)">
+		<view class="staff_box" v-if="staffList.length !== 0" v-for="(staff, index) in staffList" :key="index">
 			<view class="info_title">
-				<view class="adorn"></view>
-				<text>员工信息</text>
+				<view style="height: 42rpx; display: flex; flex-direction: row; align-items: center;">
+					<view class="adorn"></view>
+					<text>员工信息</text>
+				</view>
+				<view @touchstart="showActions(staff)">操作</view>
 			</view>
 			<view class="line"></view>
 			<view class="staff_row">
@@ -220,8 +223,8 @@ export default {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+	justify-content: space-between;
 	font-weight: bold;
-	height: 42rpx;
 }
 .line {
 	width: 100%;

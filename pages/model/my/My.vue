@@ -106,6 +106,12 @@ export default {
 					permissions: true,
 				},
 				{
+					title: '黑名单管理',
+					icon: '/static/img/kehuguanli.png',
+					path: '/pages/model/my/Blacklist',
+					permissions: true,
+				},
+				{
 					title: '修改密码',
 					icon: '/static/img/modify_password.png',
 					path: '/pages/model/login/ResetPassword',

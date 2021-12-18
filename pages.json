@@ -302,6 +302,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/model/my/Blacklist",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "黑名单管理",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"tabBar": {
 		"color": "#606266",
