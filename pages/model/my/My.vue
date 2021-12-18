@@ -107,7 +107,7 @@ export default {
 				},
 				{
 					title: '黑名单管理',
-					icon: '/static/img/kehuguanli.png',
+					icon: '/static/img/black.png',
 					path: '/pages/model/my/Blacklist',
 					permissions: true,
 				},

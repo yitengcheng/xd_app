@@ -19,15 +19,15 @@
 			</view>
 			<view class="line"></view>
 			<view class="customer_row">
-				<view>姓名：{{ customer.name }}</view>
-				<view>电话：{{ customer.phoneNumber }}</view>
+				<view>【姓名】{{ customer.name }}</view>
+				<view>【电话】{{ customer.phoneNumber }}</view>
 			</view>
 			<view class="customer_row">
-				<view>身份证：{{ customer.idcard }}</view>
-				<view>性别：{{ customer.sex === '1' ? '女' : '男' }}</view>
+				<view>【身份证】{{ customer.idcard }}</view>
+				<view>【性别】{{ customer.sex === '1' ? '女' : '男' }}</view>
 			</view>
-			<view>准驾车型：{{ customer.driveType }}</view>
-			<view>现居住地：{{ customer.nowAddress }}</view>
+			<view>【准驾车型】{{ customer.driveType }}</view>
+			<view>【现居住地】{{ customer.nowAddress }}</view>
 		</view>
 		<u-image v-if="customerList.length === 0" src="/static/img/defalut.png"></u-image>
 

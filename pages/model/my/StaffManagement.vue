@@ -14,14 +14,14 @@
 			</view>
 			<view class="line"></view>
 			<view class="staff_row">
-				<view>姓名：{{ staff.realName }}</view>
-				<view>电话：{{ staff.phonenumber }}</view>
+				<view>【姓名】{{ staff.realName }}</view>
+				<view>【电话】{{ staff.phonenumber }}</view>
 			</view>
 			<view class="staff_row">
-				<view>身份证：{{ staff.idcard }}</view>
-				<view>性别：{{ staff.sex === '1' ? '女' : '男' }}</view>
+				<view>【身份证】{{ staff.idcard }}</view>
+				<view>【性别】{{ staff.sex === '1' ? '女' : '男' }}</view>
 			</view>
-			<view>地址：{{ staff.address }}</view>
+			<view>【地址】{{ staff.address }}</view>
 		</view>
 		<u-image v-if="staffList.length === 0" src="/static/img/defalut.png"></u-image>
 

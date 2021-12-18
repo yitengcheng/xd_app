@@ -6,7 +6,7 @@ import config from './config.js';
 const request = {}
 const headers = {}
 
-request.globalRequest = (url, method, data, showLoading = true) => {
+request.globalRequest = (url, method, data, showLoading = true, optionFlag = true) => {
 	showLoading && uni.showLoading({
 		title: '加载中...',
 		mask:true,
@@ -17,9 +17,12 @@ request.globalRequest = (url, method, data, showLoading = true) => {
 	header['content-type'] = 'application/json';
 
 	//接口公共参数
-	const obj = {
-		complanyIds: uni.getStorageSync('complanyId'),
-		complanyId: uni.getStorageSync('complanyId'),
+	let obj;
+	if(optionFlag) {
+		obj = {
+			complanyIds: uni.getStorageSync('complanyId'),
+			complanyId: uni.getStorageSync('complanyId'),
+		}
 	}
 	let JSONParams = {
 		url: `${config.API_URL}${url}`,
