@@ -78,3 +78,8 @@ export function toChinese(num) {
 	}
 	return re;
 };
+
+// 拼接照片地址
+export function verbUrl(url){
+	return `${config.IMG_URL}${url}`;
+}

@@ -15,7 +15,7 @@
 					<view class="adorn"></view>
 					<text>客户信息</text>
 				</view>
-				<view @touchstart="showActions(customer)">操作</view>
+				<u-button size="mini" style="margin: 0;" type="primary" @touchstart="showActions(customer)">操作</u-button>
 			</view>
 			<view class="line"></view>
 			<view class="customer_row">

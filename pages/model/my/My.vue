@@ -5,17 +5,15 @@
 			<view class="page_top_info">
 				<text class="name">
 					{{ complanyName }}
-					<span
-						style="font-size: 8px;margin-left: 10px;"
-						@click="() => (user.complany.length > 1 ? (show = true) : '')"
-					>
+					<span style="font-size: 8px;margin-left: 10px;" @click="() => (user.complany.length > 1 ? (show = true) : '')">
 						{{ user.complany.length > 1 ? '点击切换公司' : '' }}
 					</span>
 				</text>
-				<text style="font-size: 14px;margin-bottom: 20px;">
-					ID：{{ _.random(100000000, 999999999, false) || 'youxingxiaodi' }}
-				</text>
-				<view class="login_web" @click="loginWeb">登录网页版</view>
+				<text style="font-size: 14px;margin-bottom: 20px;">ID：{{ _.random(100000000, 999999999, false) || 'youxingxiaodi' }}</text>
+				<view class="top_btn_box">
+					<view class="login_web" @click="loginWeb">登录网页版</view>
+					<view class="login_web" @click="showQrCode">企业二维码</view>
+				</view>
 			</view>
 		</view>
 		<view class="menus_box">
@@ -39,7 +37,7 @@
 			<text class="privacy_text">|</text>
 			<text class="privacy_text" @click="goWeb('https://xd.qiantur.com/policy')">隐私政策</text>
 		</view>
-		<text class="complany">贵州小滴科技有限公司 版权所有</text>
+		<text class="complany">贵州瑞普普瑞有限公司 版权所有</text>
 		<u-popup :show="show" mode="bottom" :overlay="true" :closeOnClickOverlay="true" @close="() => (show = false)">
 			<view class="popup_box">
 				<view class="popup_box_title">公司切换</view>
@@ -53,11 +51,21 @@
 				</view>
 			</view>
 		</u-popup>
+		<u-modal :show="showQR" title="企业二维码" closeOnClickOverlay @confirm="closeModal">
+			<Qrcode ref="qrcode" :size="400" :val="val" :onval="true" background="#FFFFFF" foreground="#000000"></Qrcode>
+		</u-modal>
 	</view>
 </template>
 
 <script>
+import Qrcode from '../../../components/tki-qrcode/tki-qrcode.vue';
+import config from '../../../common/config.js';
+import api from '../../../api/index.js';
+import { base64ToPath } from 'image-tools'
 export default {
+	components: {
+		Qrcode
+	},
 	data() {
 		return {
 			data: [],
@@ -66,6 +74,8 @@ export default {
 			complanyId: '',
 			complanyName: '',
 			show: false,
+			showQR: false,
+			val: ''
 		};
 	},
 	mounted() {
@@ -79,61 +89,61 @@ export default {
 					title: '接单/通知',
 					icon: '/static/img/my_notice.png',
 					path: '/pages/model/my/Todo',
-					permissions: true,
+					permissions: true
 				},
 				{
 					title: '还车历史',
 					icon: '/static/img/history_orders.png',
 					path: '/pages/model/my/HistoryOrders',
-					permissions: true,
+					permissions: true
 				},
 				{
 					title: '合同管理',
 					icon: '/static/img/pact.png',
 					path: '/pages/model/my/ContractTemplate',
-					permissions: this._.includes(this.user.roles, 'complany_main'),
+					permissions: this._.includes(this.user.roles, 'complany_main')
 				},
 				{
 					title: '员工管理',
 					icon: '/static/img/yuangong.png',
 					path: '/pages/model/my/StaffManagement',
-					permissions: this._.includes(this.user.roles, 'complany_main'),
+					permissions: this._.includes(this.user.roles, 'complany_main')
 				},
 				{
 					title: '客户管理',
 					icon: '/static/img/kehuguanli.png',
 					path: '/pages/model/my/Customer',
-					permissions: true,
+					permissions: true
 				},
 				{
 					title: '黑名单管理',
 					icon: '/static/img/black.png',
 					path: '/pages/model/my/Blacklist',
-					permissions: true,
+					permissions: true
 				},
 				{
 					title: '修改密码',
 					icon: '/static/img/modify_password.png',
 					path: '/pages/model/login/ResetPassword',
-					permissions: true,
+					permissions: true
 				},
 				{
 					title: '公司信息',
 					icon: '/static/img/company_info.png',
 					path: '/pages/model/my/UpdateComplanyInfo',
-					permissions: true,
+					permissions: true
 				},
 				{
 					title: '硬件设备',
 					icon: '/static/img/devices.png',
 					path: '/pages/model/my/Equipment',
-					permissions: true,
+					permissions: true
 				},
 				{
 					title: '硬件订单',
 					icon: '/static/img/indent.png',
 					path: '/pages/model/mall/EquipmentOrder',
-					permissions: true,
+					permissions: true
 				},
 				{ title: '清理缓存', icon: '/static/img/clear.png', func: 'clear', permissions: true },
 				{ title: '退出登录', icon: '/static/img/logout.png', func: 'logout', permissions: true },
@@ -146,7 +156,7 @@ export default {
 					this.complanys.push({
 						text: o.complanyName,
 						value: o.id,
-						data: o,
+						data: o
 					});
 				});
 				this.complanys = this._.uniqBy(this.complanys, 'value');
@@ -170,16 +180,27 @@ export default {
 		toPage(e) {
 			if (e?.path) {
 				uni.navigateTo({
-					url: e.path,
+					url: e.path
 				});
 			} else {
 				this[(e?.func)]();
 			}
 		},
+		showQrCode() {
+			this.showQR = true;
+			this.$nextTick(() => {
+				this.val = `${config.API_URL}/applet?complanyId=${uni.getStorageSync('complanyId')}`;
+			});
+		},
+		closeModal(){
+			this.showQR = false;
+			this.val = '';
+		},
 		logout() {
 			let userName = uni.getStorageSync('userName');
 			let password = uni.getStorageSync('password');
 			let privacyFlag = uni.getStorageSync('privacyFlag');
+			api.logout();
 			uni.clearStorageSync();
 			uni.setStorageSync('userName', userName);
 			uni.setStorageSync('password', password);
@@ -196,7 +217,7 @@ export default {
 			uni.setStorageSync('password', password);
 			uni.setStorageSync('privacyFlag', privacyFlag);
 			uni.showToast({
-				title: '清理完毕',
+				title: '清理完毕'
 			});
 		},
 		loginWeb() {
@@ -204,10 +225,10 @@ export default {
 		},
 		goWeb(url) {
 			uni.navigateTo({
-				url: `/pages/model/login/Web?url=${url}`,
+				url: `/pages/model/login/Web?url=${url}`
 			});
-		},
-	},
+		}
+	}
 };
 </script>
 
@@ -319,5 +340,10 @@ export default {
 .web_box {
 	display: flex;
 	flex-direction: row;
+}
+.top_btn_box {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
 }
 </style>

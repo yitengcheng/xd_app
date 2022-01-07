@@ -18,7 +18,11 @@ const user = {
 	},
 	getComplanyInfo: (data) => {
 		return request.globalRequest(`/system/complany/${data}`, 'get');
-	}
+	},
+	logout: (data) => {
+		return request.globalRequest(`/auth/logout`, 'delete');
+	},
+	
 }
 
 

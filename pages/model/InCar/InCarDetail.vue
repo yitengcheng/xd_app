@@ -1,9 +1,7 @@
 <template>
 	<view class="content" style="align-items: center;">
 		<swiper class="swiper_box" @change="e => (current = e.detail.current)">
-			<swiper-item v-for="(item, index) in (carInfo || {}).carPhotos" :key="index">
-				<image :src="item" class="swiper_img" mode="aspectFill"></image>
-			</swiper-item>
+			<swiper-item v-for="(item, index) in (carInfo || {}).carPhotos" :key="index"><image :src="item" class="swiper_img" mode="aspectFill"></image></swiper-item>
 		</swiper>
 		<view class="info_box">
 			<view class="info_title">
@@ -24,30 +22,10 @@
 			</text>
 			<text>【租车天数】{{ ((carInfo || {}).wxOrder || {}).rentCarDays }} 天</text>
 			<uni-forms ref="formOrder" v-model="formOrderData" :rules="orderRules" :labelWidth="100" class="form_box">
-				<FormInput
-					v-if="(carInfo.wxOrder || {}).payStatus !== 'SUCCESS'"
-					:formData="formOrderData"
-					name="unitPrice"
-					label="租车单价"
-					decoration
-					type="number"
-				/>
-				<FormInput
-					v-if="(carInfo.wxOrder || {}).payStatus !== 'SUCCESS'"
-					:formData="formOrderData"
-					name="rentCarDays"
-					label="租车天数"
-					decoration
-					type="number"
-				/>
+				<FormInput v-if="(carInfo.wxOrder || {}).payStatus !== 'SUCCESS'" :formData="formOrderData" name="unitPrice" label="租车单价" decoration type="number" />
+				<FormInput v-if="(carInfo.wxOrder || {}).payStatus !== 'SUCCESS'" :formData="formOrderData" name="rentCarDays" label="租车天数" decoration type="number" />
 				<FormInput :formData="formOrderData" name="bondMoney" label="租车保证金" decoration type="number" />
-				<FormInput
-					:formData="formOrderData"
-					name="violationBondMoney"
-					label="违章保证金"
-					decoration
-					type="number"
-				/>
+				<FormInput :formData="formOrderData" name="violationBondMoney" label="违章保证金" decoration type="number" />
 			</uni-forms>
 			<view v-if="formOrderData.unitPrice * 1 - carInfo.unitPrice * 1 !== 0">
 				【优惠】{{
@@ -74,15 +52,7 @@
 			</view>
 			<view class="line"></view>
 			<uni-forms ref="form" v-model="formData" :rules="rules" :labelWidth="100">
-				<FormUpload
-					:formData="formData"
-					name="idcardFront"
-					label="身份证"
-					:limit="1"
-					@getOcrData="getIdCard"
-					url="/tool/ocr/idcard?type=2"
-					:required="false"
-				></FormUpload>
+				<FormUpload :formData="formData" name="idcardFront" label="身份证" :limit="1" @getOcrData="getIdCard" url="/tool/ocr/idcard?type=2" :required="false"></FormUpload>
 				<FormUpload
 					:formData="formData"
 					name="licenseMainUrl"
@@ -101,88 +71,31 @@
 					url="/tool/ocr/driving?type=9"
 					:required="false"
 				></FormUpload>
-				<FormUpload
-					ref="photoScan"
-					:formData="formData"
-					name="photoScan"
-					label="现场照片"
-					:limit="3"
-					:required="false"
-				></FormUpload>
+				<FormUpload ref="photoScan" :formData="formData" name="photoScan" label="现场照片" :limit="3" :required="false"></FormUpload>
 				<u-button @click="readIdcard" class="readIdcard" type="primary">身份证阅读器</u-button>
 				<uni-forms-item label="姓名" :name="formData.name" :required="true" decoration>
-					<Combox
-						:value="formData.name"
-						:candidates="candidates"
-						:isJSON="true"
-						keyName="name"
-						@getValue="getComboxValue"
-						class="form_combox"
-					></Combox>
+					<Combox :value="formData.name" :candidates="candidates" :isJSON="true" keyName="name" @getValue="getComboxValue" class="form_combox"></Combox>
 				</uni-forms-item>
 				<uni-forms-item label="移交车辆" :name="formData.carId" :required="true" decoration>
-					<Combox
-						:value="formData.carId"
-						:candidates="carList"
-						:isJSON="true"
-						keyName="text"
-						@getValue="getCarValue"
-						class="form_combox"
-					></Combox>
+					<Combox :value="formData.carId" :candidates="carList" :isJSON="true" keyName="text" @getValue="getCarValue" class="form_combox"></Combox>
 				</uni-forms-item>
 				<FormInput :formData="formData" name="idcard" label="身份证号" decoration />
 				<FormInput :formData="formData" name="archivesNum" label="档案编号" decoration />
-				<FormPicker
-					:formData="formData"
-					name="sex"
-					label="性别"
-					:localdata="sexList"
-					decoration
-					@change="changeSex"
-				/>
+				<FormPicker :formData="formData" name="sex" label="性别" :localdata="sexList" decoration @change="changeSex" />
 				<FormInput :formData="formData" name="phone" label="手机号" decoration />
 				<FormInput :formData="formData" name="urgentPhone" label="紧急联系人" decoration />
 				<FormInput :formData="formData" name="nowAddress" label="当前居住地" decoration :required="false" />
 				<FormInput :formData="formData" name="goDirection" label="去向" decoration :required="false" />
-				<FormSwitch
-					:formData="formData"
-					name="preferredUse"
-					label="代金券"
-					@change="changePreferredUse"
-					:required="false"
-					decoration
-				/>
-				<FormSwitch
-					:formData="formData"
-					name="qrCode"
-					label="对方支付"
-					@change="changeQrCode"
-					:required="false"
-					decoration
-				/>
-				<FormRadio
-					:required="false"
-					:multiple="true"
-					:formData="formData"
-					name="check"
-					:localdata="checkList"
-					label="附加核验"
-					@change="changeCheck"
-					decoration
-				/>
+				<FormSwitch :formData="formData" name="preferredUse" label="代金券" @change="changePreferredUse" :required="false" decoration />
+				<FormSwitch :formData="formData" name="qrCode" label="对方支付" @change="changeQrCode" :required="false" decoration />
+				<FormRadio :required="false" :multiple="true" :formData="formData" name="check" :localdata="checkList" label="附加核验" @change="changeCheck" decoration />
 			</uni-forms>
 		</view>
 		<u-button type="primary" class="btn" @click="submit">提交</u-button>
 		<u-button class="btn" @click="reset">重置</u-button>
 		<u-popup :show="showQr" mode="center">
 			<image :src="src"></image>
-			<u-button
-				style="margin-bottom: 20px;"
-				@click="qrCode(serviceInfoMoney, serviceRemark, serviceStatus)"
-				type="primary"
-			>
-				刷新二维码
-			</u-button>
+			<u-button style="margin-bottom: 20px;" @click="qrCode(serviceInfoMoney, serviceRemark, serviceStatus)" type="primary">刷新二维码</u-button>
 		</u-popup>
 	</view>
 </template>
@@ -198,6 +111,7 @@ import FormSwitch from '../../../components/form/FormSwitch.vue';
 import FormUpload from '../../../components/form/FormUpload.vue';
 import { formattingPhoto } from '../../../common/utils.js';
 import { card15, card18, phoneRegex } from '../../../common/regex.js';
+import { base64ToPath } from 'image-tools'
 export default {
 	components: {
 		FormRadio,
@@ -205,7 +119,7 @@ export default {
 		Combox,
 		FormPicker,
 		FormSwitch,
-		FormUpload,
+		FormUpload
 	},
 	data() {
 		return {
@@ -230,7 +144,7 @@ export default {
 				birthday: '',
 				archivesNum: '',
 				qrCode: false,
-				goDirection: '',
+				goDirection: ''
 			},
 			customerId: '',
 			checkList: [],
@@ -239,47 +153,47 @@ export default {
 					rules: [
 						{
 							required: true,
-							errorMessage: '请填写姓名',
-						},
-					],
+							errorMessage: '请填写姓名'
+						}
+					]
 				},
 				archivesNum: {
 					rules: [
 						{
 							required: true,
-							errorMessage: '请填写档案编号',
-						},
-					],
+							errorMessage: '请填写档案编号'
+						}
+					]
 				},
 				sex: {
 					rules: [
 						{
 							required: true,
-							errorMessage: '请选择性别',
-						},
-					],
+							errorMessage: '请选择性别'
+						}
+					]
 				},
 				carId: {
 					rules: [
 						{
 							required: true,
-							errorMessage: '请选择移交车辆',
-						},
-					],
+							errorMessage: '请选择移交车辆'
+						}
+					]
 				},
 				urgentPhone: {
 					rules: [
 						{
 							required: true,
-							errorMessage: '请填写紧急联系人',
-						},
-					],
+							errorMessage: '请填写紧急联系人'
+						}
+					]
 				},
 				idcard: {
 					rules: [
 						{
 							required: true,
-							errorMessage: '请填写身份证号',
+							errorMessage: '请填写身份证号'
 						},
 						{
 							validateFunction: (rule, val, data, callback) => {
@@ -295,22 +209,22 @@ export default {
 									callback('请输入正确的身份证');
 								}
 								return true;
-							},
-						},
-					],
+							}
+						}
+					]
 				},
 				phone: {
 					rules: [
 						{
 							required: true,
-							errorMessage: '请填写手机号',
+							errorMessage: '请填写手机号'
 						},
 						{
 							pattern: phoneRegex,
-							errorMessage: '请输入正确的电话号码',
-						},
-					],
-				},
+							errorMessage: '请输入正确的电话号码'
+						}
+					]
+				}
 			},
 			current: 0,
 			candidates: [],
@@ -323,14 +237,14 @@ export default {
 				unitPrice: '',
 				rentCarDays: '',
 				bondMoney: '',
-				violationBondMoney: '',
+				violationBondMoney: ''
 			},
 			orderRules: {
 				unitPrice: {
 					rules: [
 						{
 							required: true,
-							errorMessage: '请填写租车单价',
+							errorMessage: '请填写租车单价'
 						},
 						{
 							validateFunction: (rule, value, data, callback) => {
@@ -338,34 +252,34 @@ export default {
 									callback('租车单价最低不能低于20元');
 								}
 								return true;
-							},
-						},
-					],
+							}
+						}
+					]
 				},
 				rentCarDays: {
 					rules: [
 						{
 							required: true,
-							errorMessage: '请填写租车天数',
-						},
-					],
+							errorMessage: '请填写租车天数'
+						}
+					]
 				},
 				bondMoney: {
 					rules: [
 						{
 							required: true,
-							errorMessage: '请填写租车保证金',
-						},
-					],
+							errorMessage: '请填写租车保证金'
+						}
+					]
 				},
 				violationBondMoney: {
 					rules: [
 						{
 							required: true,
-							errorMessage: '请填写违章保证金',
-						},
-					],
-				},
+							errorMessage: '请填写违章保证金'
+						}
+					]
+				}
 			},
 			driveType: '',
 			nation: '',
@@ -374,7 +288,7 @@ export default {
 			serviceInfoMoney: '',
 			serviceRemark: '',
 			serviceStatus: '',
-			timer: undefined,
+			timer: undefined
 		};
 	},
 	onLoad(option) {
@@ -383,14 +297,14 @@ export default {
 		});
 		let user = uni.getStorageSync('user');
 		api.getChangeCarList({
-			complanyIds: this._.map(user.complany, 'id').join(','),
+			complanyIds: this._.map(user.complany, 'id').join(',')
 		}).then(res => {
 			if (res.data) {
 				let { data } = res;
 				data.forEach(car => {
 					this.carList.push({
 						value: car.id,
-						text: car.carNum,
+						text: car.carNum
 					});
 				});
 			}
@@ -416,13 +330,13 @@ export default {
 							success: e => {
 								if (e.confirm) {
 									uni.navigateTo({
-										url: '/pages/model/my/ContractTemplate',
+										url: '/pages/model/my/ContractTemplate'
 									});
 								} else {
 									e.detail.value.pop();
 									this.formData.check = e.detail.value;
 								}
-							},
+							}
 						});
 					} else if (res.data === 2) {
 						this.formData.check = e.detail.value;
@@ -448,17 +362,11 @@ export default {
 			this.formData.archivesNum = this.candidates[e]?.archivesNum ?? '';
 			this.formData.phone = this.candidates[e]?.phoneNumber ?? '';
 			this.formData.nowAddress = this.candidates[e]?.nowAddress ?? '';
-			this.formData.idcardFront = formattingPhoto(this.candidates[e]?.idcardFront)
-				? [formattingPhoto(this.candidates[e]?.idcardFront)]
-				: [];
+			this.formData.idcardFront = formattingPhoto(this.candidates[e]?.idcardFront) ? [formattingPhoto(this.candidates[e]?.idcardFront)] : [];
 			this.idcardFront = this.candidates[e]?.idcardFront ?? '';
-			this.formData.licenseMainUrl = formattingPhoto(this.candidates[e]?.licenseMainUrl)
-				? [formattingPhoto(this.candidates[e]?.licenseMainUrl)]
-				: [];
+			this.formData.licenseMainUrl = formattingPhoto(this.candidates[e]?.licenseMainUrl) ? [formattingPhoto(this.candidates[e]?.licenseMainUrl)] : [];
 			this.licenseMainUrl = this.candidates[e]?.licenseMainUrl ?? '';
-			this.formData.licenseViceUrl = formattingPhoto(this.candidates[e]?.licenseViceUrl)
-				? [formattingPhoto(this.candidates[e]?.licenseViceUrl)]
-				: [];
+			this.formData.licenseViceUrl = formattingPhoto(this.candidates[e]?.licenseViceUrl) ? [formattingPhoto(this.candidates[e]?.licenseViceUrl)] : [];
 			this.licenseViceUrl = this.candidates[e]?.licenseViceUrl ?? '';
 			this.formData.urgentPhone = this.candidates[e]?.urgentPhone;
 			this.formData.sex = this.candidates[e]?.sex;
@@ -479,62 +387,73 @@ export default {
 									if (devices[0].name.search('ST710') !== -1) {
 										uni.showLoading({
 											mask: true,
-											title: '识别中...',
+											title: '识别中...'
 										});
 										uni.stopBluetoothDevicesDiscovery({
 											success: () => {
 												let device = devices[0];
-												if (
-													this._.includes(
-														this._.map(this.carInfo.complany.macInfo, 'macAddress'),
-														device.deviceId
-													)
-												) {
+												if (this._.includes(this._.map(this.carInfo.complany.macInfo, 'macAddress'), device.deviceId)) {
 													const idcard = uni.requireNativePlugin('plugin_idcardModule');
-													idcard.readIdcard({ mac: device.deviceId }, e => {
-														if (e.data.length < 20) {
+													idcard.readIdcard(device.deviceId, e => {
+														let data = JSON.parse(e);
+														if (!data?.cardNo) {
 															uni.showToast({
 																title: '识别失败，请重新点击识别按钮',
-																icon: 'none',
+																icon: 'none'
 															});
-														} else {
-															let data = JSON.parse(e?.data);
-															this.formData.name = '';
-															this.$nextTick(() => {
-																this.formData.name = data?.姓名;
-																this.formData.idcard = data?.身份证号;
-																this.formData.nowAddress = data?.地址;
-																this.formData.sex = data?.性别 === '男' ? 0 : 1;
-																this.nation = data?.民族;
-															});
+															return;
 														}
+														base64ToPath(`data:image/jpeg;base64,${data?.pictureBase64}`).then(path => {
+															this.formData.name = '';
+															uni.uploadFile({
+																url: `${config.API_URL}/idcard/pic?name=${data?.name}&sex=${data?.gender}&nation=${data?.ethnicity}&year=${this.dayjs(data?.birth).format('YYYY')}&month=${this.dayjs(data?.birth).format('MM')}&day=${this.dayjs(data?.birth).format('DD')}&address=${data?.address}&idcard=${data?.cardNo}&lssueOffice=${data?.authority}&lssueTime=${this.dayjs(data?.startDate).format('YYYY.MM.DD')}&invalidTime=${this.dayjs(data?.endDate).format('YYYY.MM.DD')}`,
+																filePath: path,
+																name: 'file',
+																header: {
+																	Authorization: 'Bearer ' + uni.getStorageSync('tonken')
+																},
+																success: (res) => {
+																	this.formData.idcardFront = [];
+																	let result = JSON.parse(res?.data);
+																	this.$nextTick(() => {
+																		this.formData.name = data?.name;
+																		this.formData.idcard = data?.cardNo;
+																		this.formData.nowAddress = data?.address;
+																		this.formData.sex = data?.gender === '男' ? 0 : 1;
+																		this.nation = data?.ethnicity;
+																		this.idcardFront = result?.data?.face;
+																		this.formData.idcardFront = [formattingPhoto(result?.data?.face)]
+																	});
+																}
+															});
+														});
 													});
 												} else {
 													uni.showToast({
 														title: `未授权设备`,
-														icon: 'error',
+														icon: 'error'
 													});
 												}
 												uni.hideLoading();
 												uni.closeBluetoothAdapter();
-											},
+											}
 										});
 									}
 								});
-							},
+							}
 						});
 					},
 					fail: () => {
 						uni.showToast({
 							title: '蓝牙启动失败',
-							icon: 'none',
+							icon: 'none'
 						});
-					},
+					}
 				});
 			} else {
 				uni.showToast({
 					title: '该功能暂时仅限安卓系统手机使用',
-					icon: 'none',
+					icon: 'none'
 				});
 			}
 		},
@@ -548,7 +467,7 @@ export default {
 					delete res?.data?.carPhotos;
 					this.carInfo = {
 						carPhotos: tmp,
-						...res.data,
+						...res.data
 					};
 					this.carList.push({ value: res?.data?.id, text: res?.data?.carNum });
 					this.customerId = res?.data?.customer?.id;
@@ -630,11 +549,11 @@ export default {
 						if (currentCar.value !== this.oldCarId) {
 							params = {
 								newCarId: currentCar.value,
-								oldCarId: this.oldCarId,
+								oldCarId: this.oldCarId
 							};
 						} else {
 							params = {
-								newCarId: this.oldCarId,
+								newCarId: this.oldCarId
 							};
 						}
 						api.insertUserInfo({
@@ -658,7 +577,7 @@ export default {
 							urgentPhone: this.formData.urgentPhone,
 							photoScan: this.$refs.photoScan.getFileList().join(','),
 							...this.formOrderData,
-							...params,
+							...params
 						});
 						let checks = [];
 						this.checkList.forEach(o => {
@@ -666,22 +585,20 @@ export default {
 								o.value === item &&
 									checks.push({
 										value: o.value * 1,
-										text: o.text,
+										text: o.text
 									});
 							});
 						});
 						if (checks.length === 0 && this.carInfo.wxOrder.payStatus === 'SUCCESS') {
 							uni.redirectTo({
-								url: `/pages/model/InCar/Step?orderId=${this.carInfo.orderId}&idcard=${
-									this.formData.idcard
-								}&name=${this.formData.name}&pactFlag=false`,
+								url: `/pages/model/InCar/Step?orderId=${this.carInfo.orderId}&idcard=${this.formData.idcard}&name=${this.formData.name}&pactFlag=false`
 							});
 							return;
 						}
 						if (this.formData.preferredUse) {
 							api.checkService({
 								complanyId: this.carInfo.complany.id,
-								money: this._.sum(this._.map(checks, 'value')),
+								money: this._.sum(this._.map(checks, 'value'))
 							})
 								.then(res => {
 									if (res) {
@@ -693,57 +610,38 @@ export default {
 												success: e => {
 													api.deduct({
 														complanyId: this.carInfo.complany.id,
-														money: this._.sum(this._.map(checks, 'value')),
+														money: this._.sum(this._.map(checks, 'value'))
 													}).then(result => {
 														if (result) {
 															if (this.carInfo.wxOrder.payStatus === 'SUCCESS') {
 																uni.redirectTo({
-																	url: `/pages/model/InCar/Step?checks=${this._.map(
-																		checks,
-																		'text'
-																	).join(',')}&idcard=${this.formData.idcard}&name=${
-																		this.formData.name
-																	}&orderId=${this.carInfo.orderId}`,
+																	url: `/pages/model/InCar/Step?checks=${this._.map(checks, 'text').join(',')}&idcard=${
+																		this.formData.idcard
+																	}&name=${this.formData.name}&orderId=${this.carInfo.orderId}`
 																});
 															} else {
 																if (this.formData.qrCode) {
-																	this.qrCode(
-																		0,
-																		this._.map(checks, 'text').join(','),
-																		true
-																	);
+																	this.qrCode(0, this._.map(checks, 'text').join(','), true);
 																} else {
-																	this.payOrder(
-																		0,
-																		this._.map(checks, 'text').join(',')
-																	);
+																	this.payOrder(0, this._.map(checks, 'text').join(','));
 																}
 															}
 														}
 													});
-												},
+												}
 											});
 										} else {
 											uni.showModal({
-												title: `剩余代金券${res.msg}元不足以支付本次费用${this._.sum(
-													this._.map(checks, 'value')
-												)}元`,
+												title: `剩余代金券${res.msg}元不足以支付本次费用${this._.sum(this._.map(checks, 'value'))}元`,
 												success: e => {
 													if (e.confirm) {
 														if (this.formData.qrCode) {
-															this.qrCode(
-																this._.sum(this._.map(checks, 'value')),
-																this._.map(checks, 'text').join(','),
-																false
-															);
+															this.qrCode(this._.sum(this._.map(checks, 'value')), this._.map(checks, 'text').join(','), false);
 														} else {
-															this.payOrder(
-																this._.sum(this._.map(checks, 'value')),
-																this._.map(checks, 'text').join(',')
-															);
+															this.payOrder(this._.sum(this._.map(checks, 'value')), this._.map(checks, 'text').join(','));
 														}
 													}
-												},
+												}
 											});
 										}
 									}
@@ -752,21 +650,14 @@ export default {
 									uni.showModal({
 										title: '提示',
 										content: '必填项请填写完整',
-										showCancel: false,
+										showCancel: false
 									});
 								});
 						} else {
 							if (this.formData.qrCode) {
-								this.qrCode(
-									this._.sum(this._.map(checks, 'value')),
-									this._.map(checks, 'text').join(','),
-									false
-								);
+								this.qrCode(this._.sum(this._.map(checks, 'value')), this._.map(checks, 'text').join(','), false);
 							} else {
-								this.payOrder(
-									this._.sum(this._.map(checks, 'value')),
-									this._.map(checks, 'text').join(',')
-								);
+								this.payOrder(this._.sum(this._.map(checks, 'value')), this._.map(checks, 'text').join(','));
 							}
 						}
 					})
@@ -774,7 +665,7 @@ export default {
 						uni.showModal({
 							title: '提示',
 							content: '必填项请填写完整',
-							showCancel: false,
+							showCancel: false
 						});
 					});
 			});
@@ -799,7 +690,7 @@ export default {
 				estimateReturnTime: this.carInfo.wxOrder.estimateReturnTime,
 				serviceRemark,
 				carId: currentCar.value,
-				infoOrderId: this.carInfo.orderId,
+				infoOrderId: this.carInfo.orderId
 			}).then((res = {}) => {
 				let info = res.data;
 				if (info) {
@@ -808,11 +699,9 @@ export default {
 						orderInfo: info,
 						success: () => {
 							uni.redirectTo({
-								url: `/pages/model/InCar/Step?checks=${serviceRemark}&idcard=${
-									this.formData.idcard
-								}&name=${this.formData.name}&orderId=${this.carInfo.orderId}`,
+								url: `/pages/model/InCar/Step?checks=${serviceRemark}&idcard=${this.formData.idcard}&name=${this.formData.name}&orderId=${this.carInfo.orderId}`
 							});
-						},
+						}
 					});
 				}
 			});
@@ -829,7 +718,7 @@ export default {
 					infoOrderId: this.carInfo.wxOrder.orderId,
 					flag,
 					serviceStatus: this.serviceStatus,
-					complanyId: this.carInfo.complany.id,
+					complanyId: this.carInfo.complany.id
 				}).then(res => {
 					this.showQr = true;
 					this.$nextTick(() => {
@@ -840,17 +729,17 @@ export default {
 							if (data.data.payStatus === 'SUCCESS') {
 								clearInterval(this.timer);
 								uni.redirectTo({
-									url: `/pages/model/InCar/Step?checks=${this.serviceRemark}&idcard=${
-										this.formData.idcard
-									}&name=${this.formData.name}&orderId=${this.carInfo.orderId}`,
+									url: `/pages/model/InCar/Step?checks=${this.serviceRemark}&idcard=${this.formData.idcard}&name=${this.formData.name}&orderId=${
+										this.carInfo.orderId
+									}`
 								});
 							}
 						});
 					}, 3000);
 				});
 			});
-		},
-	},
+		}
+	}
 };
 </script>
 

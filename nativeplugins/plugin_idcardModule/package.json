@@ -10,7 +10,7 @@
                 {
                     "type": "module",
                     "name": "plugin_idcardModule",
-                    "class": "com.example.bmpligin.testmodule.TestModule"
+                    "class": "com.xd.bmplugin.testmodel.Sdcard"
                 }
             ],
             "permissions": [

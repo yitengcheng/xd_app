@@ -5,17 +5,16 @@
 			<FormUpload :formData="formData" name="idcardFront" label="法人身份证正面" :limit="1" @getOcrData="getIdcardFront" url="/tool/ocr/idcard?type=2" />
 			<FormUpload :formData="formData" name="idcardBack" label="法人身份证背面" :limit="1" @getOcrData="getIdcardBack" url="/tool/ocr/idcard?type=3" />
 			<FormInput v-show="flag === 3" :formData="formData" name="complanyName" label="公司名称" />
-			<FormInput v-show="flag === 3" :formData="formData" name="creditCode" label="社会信用代码" />
-			<FormInput v-show="flag === 3" :formData="formData" name="complanyCode" label="营业执照编号" />
-			<FormInput v-show="flag === 3" :formData="formData" name="complanyYxq" label="营业执照有效期" />
-			<FormInput v-show="flag === 3" :formData="formData" name="complanyAddress" label="注册地址" />
+			<FormInput v-show="flag === 3" :formData="formData" name="creditCode" label="统一社会信用代码" />
+			<FormInput v-show="flag === 3" :formData="formData" name="complanyYxq" label="营业期限" />
+			<FormInput v-show="flag === 3" :formData="formData" name="complanyAddress" label="住所" />
 			<FormInput v-show="flag === 3" :formData="formData" name="juridicalName" label="法人姓名" />
 			<FormInput v-show="flag === 3" :formData="formData" name="juridicalZjhm" label="法人身份证号" />
 			<FormInput v-show="flag === 3" :formData="formData" name="capital" label="注册资本" :required="false"/>
 			<FormInput v-show="flag === 3" :formData="formData" name="reallyCapital" label="实收资本" :required="false" />
 			<FormInput v-show="flag === 3" :formData="formData" name="complanyType" label="公司类型" />
 			<FormInput v-show="flag === 3" :formData="formData" name="establishTime" label="成立日期(yyyy年mm月dd日)" />
-			<FormInput v-show="flag === 3" :formData="formData" name="componentType" label="组成类型" :required="false" />
+			<FormInput v-show="flag === 3" :formData="formData" name="componentType" label="类型" :required="false" />
 			<FormInput v-show="flag === 3" :formData="formData" name="taxRegistration" label="税务登记号" :required="false" />
 			<FormPickAddress v-show="flag === 3" :formData="formData" name="complanyAddressId" label="所属地区" @change="onChange" />
 			<FormInput v-show="flag === 3" :formData="formData" name="phoneNumber" label="法人电话" />
@@ -51,7 +50,6 @@ export default {
 				idcardBack: [],
 				complanyName: '',
 				creditCode: '',
-				complanyCode: '',
 				complanyYxq: '',
 				complanyAddress: '',
 				complanyAddressId: '',
@@ -70,9 +68,8 @@ export default {
 			rules: {
 				complanyName: { rules: [{ required: true, errorMessage: '请填写公司名称' }] },
 				creditCode: { rules: [{ required: true, errorMessage: '请填写社会信用代码' }] },
-				complanyCode: { rules: [{ required: true, errorMessage: '请填写营业执照编号' }] },
-				complanyYxq: { rules: [{ required: true, errorMessage: '请填写营业执照有效期' }] },
-				complanyAddress: { rules: [{ required: true, errorMessage: '请填写注册地址' }] },
+				complanyYxq: { rules: [{ required: true, errorMessage: '请填写营业期限' }] },
+				complanyAddress: { rules: [{ required: true, errorMessage: '请填写住所' }] },
 				complanyAddressId: { rules: [{ required: true, errorMessage: '请选择所属地区' }] },
 				juridicalName: { rules: [{ required: true, errorMessage: '请填写法人姓名' }] },
 				juridicalZjhm: {
