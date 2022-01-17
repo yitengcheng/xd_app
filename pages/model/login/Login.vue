@@ -42,23 +42,16 @@ export default {
 			appVersion: '',
 			progress: 0,
 			show:false,
+			autoLogin: '',
 		};
 	},
 	mounted() {
-		uni.getStorage({
-			key: 'userName',
-			success: res => {
-				this.formData.userName = res?.data;
-			}
-		});
-		uni.getStorage({
-			key: 'password',
-			success: res => {
-				this.formData.password = res?.data;
-			}
-		});
+		this.formData.userName = uni.getStorageSync('userName');
+		this.formData.password = uni.getStorageSync('password');
+		this.autoLogin = uni.getStorageSync('autoLogin');
 		this.appVersion = plus.runtime.versionCode;
 		uni.$on('operation', flag => (this.select = flag));
+		if(this.formData.password && this.formData.userName && this.autoLogin === 'login') this.login();
 	},
 	methods: {
 		refused() {
@@ -138,6 +131,10 @@ export default {
 							uni.setStorage({
 								key: 'password',
 								data: data.password
+							});
+							uni.setStorage({
+								key: 'autoLogin',
+								data: 'login'
 							});
 							api.info(uni.getStorageSync('token')).then(info => {
 								// 开启websocket

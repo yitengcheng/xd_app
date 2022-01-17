@@ -4,8 +4,18 @@
         <view class="item-info" >
 			<image :src="(item|| {}).avatar" mode="aspectFill" class="info-avatar"/>
 			<view class="info_box">
+				<view class="info_top" v-if="item.complanyName && item.leave">
+					<view class="info_complany_name">{{(item || {}).complanyName}}</view>
+					<view class="info_star_box">
+						<view class="info_star_num">{{(item || {}).leave}}</view>
+						<u-icon name="star-fill" size="10" color="#FFD101"></u-icon>
+					</view>
+				</view>
 				<view class="info_top">
-					<view class="info-nickname" >{{ (item|| {}).nickName }}</view>
+					<view class="info-nickname" >
+						<view>{{ (item|| {}).nickName }}</view>
+						<u-image v-if="((item || {}).carInfo || {}).shuntId" src="/static/img/shunt.png" width="14" height="14"></u-image>
+					</view>
 					<u-icon class="info-to" name="arrow-right" size="24"></u-icon>
 				</view>
 				<view class="info-plate" v-if="item.plate">{{ (item|| {}).plate }}</view>
@@ -79,6 +89,9 @@ export default {
 }
 
 .info-nickname {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
     font-size: 14px;
     font-family: Microsoft YaHei;
     font-weight: bold;
@@ -101,5 +114,23 @@ export default {
 	color: #FF4343;
 	font-size: 18px;
 	font-family: 'MicrosoftYaHei';
+}
+.info_complany_name {
+	font-size: 8px;
+	color: #666666;
+	width: 30vw;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	line-height: 2vh;
+	height: 2vh;
+}
+.info_star_box {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+.info_star_num {
+	font-size: 10px;
 }
 </style>

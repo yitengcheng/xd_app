@@ -11,6 +11,7 @@ import product from './modules/product.js'
 import customer from './modules/customer.js'
 import staff from './modules/staff.js'
 import black from './modules/black.js'
+import shuntCar from './modules/shuntCar.js'
 const api = {
 	...user,
 	...regionalManage,
@@ -25,5 +26,6 @@ const api = {
 	...customer,
 	...staff,
 	...black,
+	...shuntCar,
 }
 export default api

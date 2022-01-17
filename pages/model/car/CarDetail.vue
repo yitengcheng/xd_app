@@ -1,7 +1,20 @@
 <template>
 	<view class="backgroud_box content">
-		<u-image :src="(photo[0] || {}).url" class="title_img" width="100%" height="300rpx" :showError="false"></u-image>
-		<uni-forms ref="form" v-model="formData" label-position="top" :label-width="280" :rules="rules" class="form_box">
+		<u-image
+			:src="(photo[0] || {}).url"
+			class="title_img"
+			width="100%"
+			height="300rpx"
+			:showError="false"
+		></u-image>
+		<uni-forms
+			ref="form"
+			v-model="formData"
+			label-position="top"
+			:label-width="280"
+			:rules="rules"
+			class="form_box"
+		>
 			<FormUpload
 				:readonly="disabled"
 				:formData="formData"
@@ -24,8 +37,22 @@
 				:otherData="{ type: 7 }"
 				:decoration="true"
 			/>
-			<FormUpload ref="carPhotos" :readonly="disabled" :formData="formData" name="carPhotos" label="车辆图片" :decoration="true" />
-			<FormPicker :disabled="disabled" :formData="formData" name="source" :localdata="sourceType" label="车辆来源" @change="sourceChange" />
+			<FormUpload
+				ref="carPhotos"
+				:readonly="disabled"
+				:formData="formData"
+				name="carPhotos"
+				label="车辆图片"
+				:decoration="true"
+			/>
+			<FormPicker
+				:disabled="disabled"
+				:formData="formData"
+				name="source"
+				:localdata="sourceType"
+				label="车辆来源"
+				@change="sourceChange"
+			/>
 			<FormPicker
 				:disabled="disabled && gpsInstall === 1"
 				:formData="formData"
@@ -37,15 +64,59 @@
 			/>
 			<FormInput :disabled="disabled" :formData="formData" name="carNum" label="车牌号" />
 			<FormInput :disabled="disabled" :formData="formData" name="carBrand" label="车辆品牌" />
-			<FormPicker :disabled="disabled" :formData="formData" name="type" :localdata="carType" label="车辆类型" @change="e => (formData.type = e.value)" />
-			<FormPicker :disabled="disabled" :formData="formData" name="cartype" :localdata="violateType" label="违章查询车辆类型" @change="e => (formData.cartype = e.value)" />
+			<FormPicker
+				:disabled="disabled"
+				:formData="formData"
+				name="type"
+				:localdata="carType"
+				label="车辆类型"
+				@change="e => (formData.type = e.value)"
+			/>
+			<FormPicker
+				:disabled="disabled"
+				:formData="formData"
+				name="cartype"
+				:localdata="violateType"
+				label="违章查询车辆类型"
+				@change="e => (formData.cartype = e.value)"
+			/>
 			<FormInput :disabled="disabled" :formData="formData" name="color" label="车身颜色" />
 			<FormInput :disabled="disabled" :formData="formData" name="frameNum" label="车架号" />
-			<FormInput :disabled="disabled" :formData="formData" name="engineNum" label="发动机号" />
-			<FormInput :disabled="disabled" :formData="formData" name="maxManned" label="荷载人数" />
-			<FormPicker :disabled="disabled" :formData="formData" name="fuelType" label="燃油编号" :localdata="gasolineType" @change="e => (formData.fuelType = e.value)" />
-			<FormInput :disabled="disabled" :formData="formData" name="thirdLiabilityInsurance" :candidates="['30', '50', '100']" label="第三者责任险(万元)" />
-			<FormSwitch :disabled="disabled" :formData="formData" name="thirdNoDeductible" type="checkbox" label="第三者责任险是否不计免赔" :required="false" />
+			<FormInput
+				:disabled="disabled"
+				:formData="formData"
+				name="engineNum"
+				label="发动机号"
+			/>
+			<FormInput
+				:disabled="disabled"
+				:formData="formData"
+				name="maxManned"
+				label="荷载人数"
+			/>
+			<FormPicker
+				:disabled="disabled"
+				:formData="formData"
+				name="fuelType"
+				label="燃油编号"
+				:localdata="gasolineType"
+				@change="e => (formData.fuelType = e.value)"
+			/>
+			<FormInput
+				:disabled="disabled"
+				:formData="formData"
+				name="thirdLiabilityInsurance"
+				:candidates="['30', '50', '100']"
+				label="第三者责任险(万元)"
+			/>
+			<FormSwitch
+				:disabled="disabled"
+				:formData="formData"
+				name="thirdNoDeductible"
+				type="checkbox"
+				label="第三者责任险是否不计免赔"
+				:required="false"
+			/>
 			<FormPicker
 				:disabled="disabled"
 				:formData="formData"
@@ -54,14 +125,62 @@
 				label="机动车损失险"
 				@change="e => (formData.lossInsurance = e.value)"
 			/>
-			<FormSwitch :disabled="disabled" :formData="formData" name="lossNoDeductible" type="checkbox" label="机动车损失险是否不计免赔" :required="false" />
-			<FormInput :disabled="disabled" :formData="formData" name="price" label="车辆价值(元)" />
-			<FormInput :disabled="disabled" :formData="formData" name="unitPrice" label="租车单价(元/天)" />
-			<FormInput v-show="source !== '1'" :disabled="disabled" :formData="formData" name="name" label="车主姓名" />
-			<FormInput v-show="source !== '1'" :disabled="disabled" :formData="formData" name="idcard" label="车主身份证号" />
-			<FormInput :disabled="disabled" :formData="formData" name="phoneNum" label="车主手机号码" />
-			<FormInput :disabled="disabled" v-show="moreItemsFlag" :formData="formData" name="bondMoney" label="租车保证金(元)" :required="false" />
-			<FormInput :disabled="disabled" v-show="moreItemsFlag" :formData="formData" name="violationBondMoney" label="违章保证金(元)" :required="false" />
+			<FormSwitch
+				:disabled="disabled"
+				:formData="formData"
+				name="lossNoDeductible"
+				type="checkbox"
+				label="机动车损失险是否不计免赔"
+				:required="false"
+			/>
+			<FormInput
+				:disabled="disabled"
+				:formData="formData"
+				name="price"
+				label="车辆价值(元)"
+			/>
+			<FormInput
+				:disabled="disabled"
+				:formData="formData"
+				name="unitPrice"
+				label="租车单价(元/天)"
+			/>
+			<FormInput
+				v-show="source !== '1'"
+				:disabled="disabled"
+				:formData="formData"
+				name="name"
+				label="车主姓名"
+			/>
+			<FormInput
+				v-show="source !== '1'"
+				:disabled="disabled"
+				:formData="formData"
+				name="idcard"
+				label="车主身份证号"
+			/>
+			<FormInput
+				:disabled="disabled"
+				:formData="formData"
+				name="phoneNum"
+				label="车主手机号码"
+			/>
+			<FormInput
+				:disabled="disabled"
+				v-show="moreItemsFlag"
+				:formData="formData"
+				name="bondMoney"
+				label="租车保证金(元)"
+				:required="false"
+			/>
+			<FormInput
+				:disabled="disabled"
+				v-show="moreItemsFlag"
+				:formData="formData"
+				name="violationBondMoney"
+				label="违章保证金(元)"
+				:required="false"
+			/>
 			<FormDatePicker
 				:disabled="disabled"
 				v-show="moreItemsFlag"
@@ -89,9 +208,32 @@
 				:required="false"
 				@change="changeAnnualReview"
 			/>
-			<FormInput :disabled="disabled" v-show="moreItemsFlag" :formData="formData" name="maxMileage" label="每日平均最高行驶里程(公里)" :required="false" />
-			<FormInput :disabled="disabled" v-show="moreItemsFlag" :formData="formData" name="maxMileagePrice" label="超过里程每公里收取金额(公里)" :required="false" />
-			<FormInput :disabled="disabled" v-show="moreItemsFlag" :formData="formData" name="remark" label="车辆备注说明" :required="false" autoHeight type="textarea" />
+			<FormInput
+				:disabled="disabled"
+				v-show="moreItemsFlag"
+				:formData="formData"
+				name="maxMileage"
+				label="每日平均最高行驶里程(公里)"
+				:required="false"
+			/>
+			<FormInput
+				:disabled="disabled"
+				v-show="moreItemsFlag"
+				:formData="formData"
+				name="maxMileagePrice"
+				label="超过里程每公里收取金额(公里)"
+				:required="false"
+			/>
+			<FormInput
+				:disabled="disabled"
+				v-show="moreItemsFlag"
+				:formData="formData"
+				name="remark"
+				label="车辆备注说明"
+				:required="false"
+				autoHeight
+				type="textarea"
+			/>
 			<view class="more" @click="showMoreItems">
 				{{ moreTitle }}
 				<uni-icons :type="iconType"></uni-icons>
@@ -101,13 +243,48 @@
 				<u-button @click="reset" type="error" class="bottomBtn">重置</u-button>
 			</view>
 		</uni-forms>
-		<uni-fab v-show="carId" :content="content" horizontal="right" vertical="bottom" direction="vertical" @trigger="trigger"></uni-fab>
+		<uni-fab
+			v-show="carId"
+			:content="content"
+			horizontal="right"
+			vertical="bottom"
+			direction="vertical"
+			@trigger="trigger"
+		></uni-fab>
+		<u-popup :show="show" mode="center" :overlay="true" :closeOnClickOverlay="true" @close="() => (show = false)">
+			<view class="popup_box">
+				<view class="popup_box_title">归还车辆</view>
+				<view class="line"></view>
+				<uni-rate value="evaluateLevel" activeColor="#ffd101" :margin='5'></uni-rate>
+				<uni-easyinput type="textarea" v-model="evaluate" placeholder="请输入评论" :maxlength="200"></uni-easyinput>
+				<view>
+					<u-button type="primary" @click="returnShuntCar">确认</u-button>
+					<u-button style="margin-top: 10px;" type="error" @click="()=>show =false">取消</u-button>
+				</view>
+			</view>
+		</u-popup>
 		<view v-if="showQR" class="qrcode_box">
 			<text>请出示二维码或分享车辆给承租人下单</text>
-			<Qrcode ref="qrcode" :size="400" :val="val" :onval="true" background="#FFFFFF" foreground="#000000"></Qrcode>
-			<uni-data-checkbox style="margin-top: 50rpx;" v-model="payment" :localdata="paymentList" @change="changePayment"></uni-data-checkbox>
-			<u-button type="primary" style="margin-top: 50rpx;" @click="share(payment)">分享车辆下单</u-button>
-			<u-button style="margin-top: 50rpx;" @click="() => (showQR = false)" type="error">关闭二维码</u-button>
+			<Qrcode
+				ref="qrcode"
+				:size="400"
+				:val="val"
+				:onval="true"
+				background="#FFFFFF"
+				foreground="#000000"
+			></Qrcode>
+			<uni-data-checkbox
+				style="margin-top: 50rpx;"
+				v-model="payment"
+				:localdata="paymentList"
+				@change="changePayment"
+			></uni-data-checkbox>
+			<u-button type="primary" style="margin-top: 50rpx;" @click="share(payment)">
+				分享车辆下单
+			</u-button>
+			<u-button style="margin-top: 50rpx;" @click="() => (showQR = false)" type="error">
+				关闭二维码
+			</u-button>
 		</view>
 	</view>
 </template>
@@ -120,7 +297,16 @@ import FormUpload from '../../../components/form/FormUpload.vue';
 import FormDatePicker from '../../../components/form/FormDatePicker.vue';
 import Qrcode from '../../../components/tki-qrcode/tki-qrcode.vue';
 import { formattingPhoto } from '../../../common/utils.js';
-import { plateRegex, integerRegex, positiveRegex, socialCodeRegex, card18, card15, phoneRegex, dateFormatRegex } from '../../../common/regex.js';
+import {
+	plateRegex,
+	integerRegex,
+	positiveRegex,
+	socialCodeRegex,
+	card18,
+	card15,
+	phoneRegex,
+	dateFormatRegex
+} from '../../../common/regex.js';
 import api from '../../../api/index.js';
 import config from '../../../common/config.js';
 export default {
@@ -135,6 +321,8 @@ export default {
 	},
 	data() {
 		return {
+			evaluateLevel: 5,
+			evaluate: '',
 			rules: {
 				carPhotos: {
 					rules: [
@@ -461,7 +649,7 @@ export default {
 					iconPath: '../../../static/img/qrcode.png',
 					selectedIconPath: '',
 					text: '二维码'
-				}
+				},
 			],
 			complany: [],
 			user: uni.getStorageSync('user'),
@@ -471,9 +659,15 @@ export default {
 			scrollY: true,
 			complanyName: '',
 			showQR: true,
-			paymentList: [{ value: '1', text: '线上支付', disable: true }, { value: '2', text: '线下支付' }],
+			paymentList: [
+				{ value: '1', text: '线上支付', disable: true },
+				{ value: '2', text: '线下支付' }
+			],
 			val: '',
-			photo: []
+			photo: [],
+			upper: 0,
+			shuntId: '',
+			show: false,
 		};
 	},
 	onLoad(option) {
@@ -483,7 +677,13 @@ export default {
 		this.disabled = option.type === 'add' ? false : true;
 		this.showQR = option.showQR === 'true';
 		this.getGpsList();
-		this.dictInit('car_type', 'sources_vehicle', 'fuel_number', 'insurance_status', 'violate_type').then(() => {
+		this.dictInit(
+			'car_type',
+			'sources_vehicle',
+			'fuel_number',
+			'insurance_status',
+			'violate_type'
+		).then(() => {
 			this.carType = uni.getStorageSync('car_type');
 			this.sourceType = uni.getStorageSync('sources_vehicle');
 			this.gasolineType = uni.getStorageSync('fuel_number');
@@ -515,7 +715,9 @@ export default {
 					title: `${this.formData.carBrand}`,
 					miniProgram: {
 						id: 'gh_4be764c63360',
-						path: `/pages/index/Index?complanyId=${this.complanyId}&carId=${this.carId}&payment=${paymethod}`,
+						path: `/pages/index/Index?complanyId=${this.complanyId}&carId=${
+							this.carId
+						}&payment=${paymethod}`,
 						type: 0,
 						webUrl: 'http://uniapp.dcloud.io'
 					}
@@ -539,7 +741,9 @@ export default {
 								title: `${this.formData.carBrand}`,
 								miniProgram: {
 									id: 'gh_4be764c63360',
-									path: `/pages/index/Index?complanyId=${this.complanyId}&carId=${this.carId}&payment=${payment}`,
+									path: `/pages/index/Index?complanyId=${this.complanyId}&carId=${
+										this.carId
+									}&payment=${payment}`,
 									type: 0,
 									webUrl: 'http://uniapp.dcloud.io'
 								}
@@ -577,14 +781,18 @@ export default {
 				duration: 200
 			});
 			this.$nextTick(() => {
-				this.val = `${config.API_URL}/applet?complanyId=${this.complanyId}=${this.carId}=${this.payment}`;
+				this.val = `${config.API_URL}/applet?complanyId=${this.complanyId}=${this.carId}=${
+					this.payment
+				}`;
 			});
 		},
 		changePayment(e) {
 			this.payment = e.detail.value;
 			uni.setStorageSync('payment', e.detail.value);
 			this.$nextTick(() => {
-				this.val = `${config.API_URL}/applet?complanyId=${this.complanyId}=${this.carId}=${this.payment}`;
+				this.val = `${config.API_URL}/applet?complanyId=${this.complanyId}=${this.carId}=${
+					this.payment
+				}`;
 			});
 		},
 		changeStrongEndTime(e) {
@@ -616,9 +824,85 @@ export default {
 				case 4:
 					this.showQrCode();
 					break;
+				case 5:
+					this.verbCar();
+					break;
 				default:
 					break;
 			}
+		},
+		async returnShuntCar(){
+			const res = await api.returnShuntCar({
+				carId: this.carId,
+				evaluate: this.evaluate ?? '暂无评论',
+				evaluateLevel: this.evaluateLevel ?? 5,
+				shuntId: this.shuntId,
+				status: false,
+			});
+			uni.showModal({
+				title: '提示',
+				content: res?.msg,
+				showCancel:false,
+				success: ()=>{
+					uni.$emit('orders');
+					uni.$emit('returnCar');
+					uni.$emit('car');
+					uni.navigateBack();
+				}
+			})
+		},
+		verbCar() {
+			if(this.shuntId){
+				this.show = true;
+			}else{
+				if (!this.upper) {
+					plus.nativeUI.prompt(
+						'调车单价： ',
+						e => {
+							if (e.index === 0 && e.value) {
+								api.verbCar({ id: this.carId, price: e.value }).then(() => {
+									this.getCarInfo(this.carId);
+									uni.showModal({
+										title: '提示',
+										content: '设置成功',
+										showCancel: false
+									});
+								});
+							} else {
+								uni.showModal({
+									title: '提示',
+									content: '请填写调车单价',
+									showCancel: false
+								});
+							}
+						},
+						'是否将车辆设为可调用车辆?',
+						'请输入调车单价',
+						['确认', '取消']
+					);
+				} else {
+					uni.showModal({
+						title: '可调车辆',
+						content: '是否将车辆设为不可调用车辆',
+						cancelText: '取消',
+						success: e => {
+							if (e.confirm) {
+								api.verbCar({ id: this.carId }).then((res) => {
+									this.getCarInfo(this.carId);
+									if(res?.code === 200){
+										uni.showModal({
+											title: '提示',
+											content: '设置成功',
+											showCancel: false
+										});
+									}
+								});
+							}
+						}
+					});
+				}
+			}
+			
 		},
 		getGpsList() {
 			api.gpsList().then((res = {}) => {
@@ -640,6 +924,7 @@ export default {
 				let { data } = res;
 				if (data) {
 					let files = data.carPhotos?.split(',');
+					let complany = uni.getStorageSync('complanyId');
 					let carsPhotos = [];
 					files?.forEach((item, index) => {
 						carsPhotos.push(formattingPhoto(item));
@@ -650,6 +935,7 @@ export default {
 					this.source = data.source;
 					this.complanyName = data.complany.complanyName;
 					this.carId = data.id;
+					this.upper = data?.upper ?? 0;
 					this.formData.carPhotos = carsPhotos;
 					this.formData.licenseFrontUrl = [formattingPhoto(data.licenseFrontUrl)];
 					this.licenseFrontUrl = data.licenseFrontUrl;
@@ -683,7 +969,22 @@ export default {
 					this.formData.maxMileage = data.maxMileage;
 					this.formData.maxMileagePrice = data.maxMileagePrice;
 					this.formData.remark = data.remark;
-					this.val = `${config.API_URL}/applet?complanyId=${data.complany.id}=${data.id}=${this.payment}`;
+					this.shuntId = data?.shuntId;
+					this.val = `${config.API_URL}/applet?complanyId=${this.complanyId}=${data.id}=${this.payment}`;
+					if(data?.shuntId){
+						this.content.push({
+								iconPath: '../../../static/img/verb.png',
+								selectedIconPath: '',
+								text: '归还车辆'
+							});
+					}else{
+						this.content.push({
+								iconPath: '../../../static/img/verb.png',
+								selectedIconPath: '',
+								text: '调车开关'
+							});
+					}
+					this.content = this._.uniqBy(this.content, 'text')
 				}
 			});
 		},
@@ -817,5 +1118,24 @@ export default {
 	background-color: #ffffff;
 	border-radius: 10px;
 	padding: 5px;
+}
+.line {
+	height: 1px;
+	width: 100%;
+	background-color: #cdcdcd;
+}
+.popup_box {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	padding: 10px;
+	width: 80vw;
+	height: 30vh;
+}
+.popup_box_title {
+	font-size: 16px;
+	font-family: Microsoft YaHei;
+	font-weight: 400;
+	color: #333333;
 }
 </style>

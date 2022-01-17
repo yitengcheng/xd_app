@@ -34,6 +34,7 @@
 						: `减少${carInfo.unitPrice * 1 - formOrderData.unitPrice * 1}元`
 				}}
 			</view>
+			<text>【租车总价】{{ formOrderData.unitPrice * formOrderData.rentCarDays}} 元</text>
 		</view>
 		<view class="info_box">
 			<view class="info_title">
@@ -556,8 +557,9 @@ export default {
 								newCarId: this.oldCarId
 							};
 						}
+						const customer = this._.find(this.candidates, item => item.idcard === this.formData.idcard);
 						api.insertUserInfo({
-							customerId: this.customerId,
+							customerId: customer?.id ?? '',
 							name: this.formData.name,
 							idcard: this.formData.idcard,
 							phoneNumber: this.formData.phone,

@@ -80,6 +80,9 @@ export function toChinese(num) {
 };
 
 // 拼接照片地址
-export function verbUrl(url){
+export function togetherUrl(url){
 	return `${config.IMG_URL}${url}`;
 }
+
+// 保留指定小数点
+export const toFixed = (number,fixed) => ~~(Math.pow(10, fixed) * number) / Math.pow(10, fixed);

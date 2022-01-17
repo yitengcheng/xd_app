@@ -1,6 +1,6 @@
 import request from '../../common/request.js';
 
-const regionalManage = {
+const car = {
 	carList:(data)=>{
 		return request.globalRequest('/system/car/list', 'get', data);
 	},
@@ -33,8 +33,11 @@ const regionalManage = {
 	},
 	returnHistoryList: (data) => {
 		return request.globalRequest(`/system/car/return/list`, 'get', data);
-	}
+	},
+	waitCarList: (data) => {
+		return request.globalRequest(`/system/car/waitcar`, 'post', data);
+	},
 }
 
 
-export default regionalManage
+export default car

@@ -165,7 +165,6 @@
 										mask: true,
 										title: '合同上传中'
 									});
-									let tmp = [];
 									res.tempFiles.forEach(file => {
 										uni.uploadFile({
 											url: `${config.API_URL}/tool/oss/upload`,

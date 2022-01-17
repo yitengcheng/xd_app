@@ -177,7 +177,7 @@ import IdCardOcr from '../../../components/ocr/IdCardOcr.vue';
 import FormInput from '../../../components/form/FormInput.vue';
 import FormRadio from '../../../components/form/FormRadio.vue';
 import { card15, card18, phoneRegex } from '../../../common/regex.js';
-import { verbUrl } from '../../../common/utils.js';
+import { togetherUrl } from '../../../common/utils.js';
 export default {
 	components: {
 		IdCardOcr,
@@ -210,7 +210,7 @@ export default {
 			this.hasRelet = e;
 		},
 		newUrl(url) {
-			return verbUrl(url);
+			return togetherUrl(url);
 		},
 		tomove(e) {
 			let delX = e.touches[0].clientX - this.touchStartX;

@@ -1,7 +1,7 @@
 <template>
 	<view class="content" style="align-items: center;">
 		<view class="page_top">
-			<u-image width="106rpx" height="106rpx" src="/static/img/head.png"></u-image>
+			<u-image width="106rpx" height="106rpx" :src="avatar" shape="circle"></u-image>
 			<view class="page_top_info">
 				<text class="name">
 					{{ complanyName }}
@@ -75,12 +75,14 @@ export default {
 			complanyName: '',
 			show: false,
 			showQR: false,
-			val: ''
+			val: '',
+			avatar: '',
 		};
 	},
 	mounted() {
 		this.initComplany();
 		this.initMenuList();
+		this.avatar = this?.user?.user?.avatar ? `${config.IMG_URL}${(this.user.user || {}).avatar}` : '/static/img/head.png'
 	},
 	methods: {
 		initMenuList() {
@@ -154,7 +156,7 @@ export default {
 			if (complany) {
 				complany.forEach(o => {
 					this.complanys.push({
-						text: o.complanyName,
+						text: o?.complanyName,
 						value: o.id,
 						data: o
 					});
@@ -163,7 +165,7 @@ export default {
 				this.complanyId = uni.getStorageSync('complanyId');
 				this.complanyName = this._.find(complany, o => {
 					return o.id === uni.getStorageSync('complanyId');
-				}).complanyName;
+				})?.complanyName ?? '未知名称';
 			}
 		},
 		selectComplany(e) {
@@ -205,6 +207,7 @@ export default {
 			uni.setStorageSync('userName', userName);
 			uni.setStorageSync('password', password);
 			uni.setStorageSync('privacyFlag', privacyFlag);
+			uni.setStorageSync('autoLogin', '');
 			this.$store.dispatch('CLOSE_SOCKET');
 			uni.reLaunch({ url: '/pages/model/login/Login' });
 		},
