@@ -123,7 +123,7 @@
 				<u-switch
 					v-model="hasRelet"
 					@change="changeRelet"
-					active-color="#FFD101"
+					active-color="#1B90D1"
 				></u-switch>
 			</view>
 			<u-input
@@ -485,7 +485,7 @@ export default {
 .adorn {
 	width: 3px;
 	height: 60%;
-	background-color: #ffd101;
+	background-color: #1B90D1;
 	margin-right: 5px;
 }
 .info_title {

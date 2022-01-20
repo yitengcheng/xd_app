@@ -116,7 +116,7 @@ export default {
 	width: 40px;
 	height: 40px;
 	border-radius: 50%;
-	background-color: #ffd101;
+	background-color: #1B90D1;
 }
 .row_item_info {
 	display: flex;
@@ -137,7 +137,7 @@ export default {
 	color: #333333;
 }
 .row_item_info_status {
-	background: #ffd101;
+	background: #1B90D1;
 	border-radius: 25px;
 	padding: 3px 18px;
 	font-size: 10px;

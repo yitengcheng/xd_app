@@ -7,14 +7,14 @@
 			</view>
 			<view class="item_row" style="justify-content: flex-start;">
 				<view class="payment_box">
-					<view class="big_round" :style="{borderColor:(item.payMethod ? '#CCCCCC':'#FFD101')}">
-						<view class="small_round" :style="{background:(item.payMethod ? '#CCCCCC':'#FFD101')}"></view>
+					<view class="big_round" :style="{borderColor:(item.payMethod ? '#CCCCCC':'#1B90D1')}">
+						<view class="small_round" :style="{background:(item.payMethod ? '#CCCCCC':'#1B90D1')}"></view>
 					</view>
 					<view class="payment_text" :style="{color:(item.payMethod ? '#CCCCCC':'#333333')}">购买</view>
 				</view>
 				<view class="payment_box">
-					<view class="big_round" :style="{borderColor:(!item.payMethod ? '#CCCCCC':'#FFD101')}">
-						<view class="small_round" :style="{background:(!item.payMethod ? '#CCCCCC':'#FFD101')}"></view>
+					<view class="big_round" :style="{borderColor:(!item.payMethod ? '#CCCCCC':'#1B90D1')}">
+						<view class="small_round" :style="{background:(!item.payMethod ? '#CCCCCC':'#1B90D1')}"></view>
 					</view>
 					<view class="payment_text" :style="{color:(!item.payMethod ? '#CCCCCC':'#333333')}">租赁</view>
 				</view>

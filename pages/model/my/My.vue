@@ -37,7 +37,7 @@
 			<text class="privacy_text">|</text>
 			<text class="privacy_text" @click="goWeb('https://xd.qiantur.com/policy')">隐私政策</text>
 		</view>
-		<text class="complany">贵州瑞普普瑞有限公司 版权所有</text>
+		<text class="complany">贵州瑞普友信科技有限公司 版权所有</text>
 		<u-popup :show="show" mode="bottom" :overlay="true" :closeOnClickOverlay="true" @close="() => (show = false)">
 			<view class="popup_box">
 				<view class="popup_box_title">公司切换</view>
@@ -238,7 +238,7 @@ export default {
 <style lang="scss" scoped>
 .page_top {
 	width: 100%;
-	background-color: #ffd101;
+	background-color: #1B90D1;
 	border-radius: 0px 0px 60px 60px;
 	display: flex;
 	flex-direction: row;
@@ -314,7 +314,7 @@ export default {
 	align-items: center;
 	justify-content: center;
 	width: 66px;
-	background: #ffd101;
+	background: #1B90D1;
 	border-radius: 4px;
 	font-size: 12px;
 	font-family: Microsoft YaHei;

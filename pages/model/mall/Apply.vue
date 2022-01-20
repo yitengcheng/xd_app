@@ -185,7 +185,7 @@
 .form_adorn {
 	width: 3px;
 	height: 40%;
-	background-color: #FFD101;
+	background-color: #1B90D1;
 	margin-right: 10px;
 }
 .line {

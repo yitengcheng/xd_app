@@ -19,7 +19,7 @@
 			<text>【调车单价】￥{{car.upperPrice || 0}} 元/天</text>
 			<view style="display: flex;flex-direction: row;">
 				<text>【车辆星级】{{car.leave || 0}}</text>
-				<u-icon name="star-fill" size="16" color="#FFD101"></u-icon>
+				<u-icon name="star-fill" size="16" color="#1B90D1"></u-icon>
 			</view>
 			<text>【所属公司地址】{{(car.complany || {}).businessAddress || (car.complany || {}).complanyAddress}}</text>
 		</view>
@@ -29,7 +29,7 @@
 					<view class="adorn"></view>
 					<text>评价</text>
 				</view>
-				<view style="font-size: 12px;color: #FFD101;" @click="toEvaLuateList">查看全部</view>
+				<view style="font-size: 12px;color: #1B90D1" @click="toEvaLuateList">查看全部</view>
 			</view>
 			<view class="line"></view>
 			<view v-if="car.info.length > 0" v-for="(item ,index) in car.info" :key="index">
@@ -132,13 +132,8 @@ export default {
 		async initShuntCar(carId) {
 			const res = await api.shuntCarDetail(carId);
 			if (res?.car) {
-				const { leave, complany, ...car } = res;
-				let files = car.carPhotos?.split(',');
-				let carsPhotos = [];
-				files?.forEach((item, index) => {
-					carsPhotos.push(formattingPhoto(item));
-				});
-				this.photo = carsPhotos;
+				const { leave, complany, car } = res;
+				this.photo = this._.map(car?.carPhotos?.split(','), item => formattingPhoto(item));
 				this.car = {...car,leave, complany};
 			}
 		},
@@ -225,7 +220,7 @@ export default {
 .adorn {
 	width: 3px;
 	height: 25.2rpx;
-	background-color: #ffd101;
+	background-color: #1B90D1
 	margin-right: 5px;
 }
 .evaluate_info {

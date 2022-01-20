@@ -388,7 +388,7 @@ export default {
 	.decoration {
 		width: 3px;
 		height: 50%;
-		background-color: #FFD101;
+		background-color: #1B90D1;
 		margin-right: 5px;
 	}
 .uni-forms-item {

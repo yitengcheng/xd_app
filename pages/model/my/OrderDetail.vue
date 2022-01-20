@@ -15,11 +15,11 @@
 			<text>【预计还车时间】{{ dayjs(orderInfo.estimateReturnTime).format('YYYY-MM-DD HH:mm:ss') }}</text>
 			<view style="display: flex;flex-direction: row;align-items: center;">
 				<text>【交车地点】{{ orderInfo.address }}</text>
-				<u-icon name="map" color="#FFD101" @click="showMap(orderInfo.latitude, orderInfo.address)" />
+				<u-icon name="map" color="#1B90D1" @click="showMap(orderInfo.latitude, orderInfo.address)" />
 			</view>
 			<view style="display: flex;flex-direction: row;align-items: center;">
 				<text>【还车地点】{{ orderInfo.returnAddress }}</text>
-				<u-icon name="map" color="#FFD101" @click="showMap(orderInfo.returnLatitude, orderInfo.returnAddress)" />
+				<u-icon name="map" color="#1B90D1" @click="showMap(orderInfo.returnLatitude, orderInfo.returnAddress)" />
 			</view>
 		</view>
 		<view class="info_box" v-if="orderInfo.customer">
@@ -255,7 +255,7 @@ export default {
 .adorn {
 	width: 3px;
 	height: 60%;
-	background-color: #ffd101;
+	background-color: #1B90D1;
 	margin-right: 5px;
 }
 .info_title {

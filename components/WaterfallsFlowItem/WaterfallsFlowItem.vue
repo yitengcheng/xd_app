@@ -8,7 +8,7 @@
 					<view class="info_complany_name">{{(item || {}).complanyName}}</view>
 					<view class="info_star_box">
 						<view class="info_star_num">{{(item || {}).leave}}</view>
-						<u-icon name="star-fill" size="10" color="#FFD101"></u-icon>
+						<u-icon name="star-fill" size="10" color="#1B90D1"></u-icon>
 					</view>
 				</view>
 				<view class="info_top">
@@ -102,7 +102,7 @@ export default {
 	color: #999999;
 }
 .info-plate {
-	background-color: #FFD101;
+	background-color: #1B90D1;
 	border-radius: 2px;
 	padding: 3px;
 	color: #333333;

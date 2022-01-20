@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="step_box">
-			<u-steps :current="active" direction="column" activeColor="#FFD101" dot>
+			<u-steps :current="active" direction="column" activeColor="#1B90D1" dot>
 				<u-steps-item v-for="(item,index) in options" :key="index" :title="item.name" :desc="item.desc" :error="item.error"/>
 			</u-steps>
 		</view>
@@ -303,7 +303,7 @@
 	.slot-icon {
 		width: 21px;
 		height: 21px;
-		background-color: #FFD101;
+		background-color: #1B90D1;
 		border-radius: 100px;
 		font-size: 12px;
 		color: #333333;

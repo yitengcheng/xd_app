@@ -29,7 +29,7 @@
 				</view>
 				<view style="display: flex;flex-direction: row;">
 					<text>{{ detail.complany.leave || 0 }}</text>
-					<u-icon name="star-fill" size="16" color="#FFD101"></u-icon>
+					<u-icon name="star-fill" size="16" color="#1B90D1"></u-icon>
 				</view>
 			</view>
 			<view class="line"></view>
@@ -121,7 +121,7 @@
 			<view class="popup_box">
 				<view class="popup_box_title">归还车辆</view>
 				<view class="line"></view>
-				<uni-rate value="evaluateLevel" activeColor="#ffd101" :margin="5"></uni-rate>
+				<uni-rate value="evaluateLevel" activeColor="#1B90D1" :margin="5"></uni-rate>
 				<uni-easyinput
 					type="textarea"
 					v-model="evaluate"
@@ -381,7 +381,7 @@ export default {
 .adorn {
 	width: 3px;
 	height: 25.2rpx;
-	background-color: #ffd101;
+	background-color: #1B90D1;
 	margin-right: 5px;
 }
 .btn_box {

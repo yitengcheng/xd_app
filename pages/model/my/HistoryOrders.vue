@@ -106,7 +106,7 @@
 	width: 60px;
 	height: 60px;
 	border-radius: 50%;
-	background-color: #FFD101;
+	background-color: #1B90D1;
 }
 .row_item_info {
 	display: flex;
@@ -127,7 +127,7 @@
 	color: #333333;
 }
 .row_item_info_status {
-	background: #FFD101;
+	background: #1B90D1;
 	border-radius: 25px;
 	padding: 3px 18px;
 	font-size: 10px;

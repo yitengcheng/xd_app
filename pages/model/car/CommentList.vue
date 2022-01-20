@@ -12,7 +12,7 @@
 						<view class="comment_user_name">{{item.complany_name}}</view>
 						<view style="display: flex;flex-direction: row;align-items: center;">
 							<text class="comment_user_star">{{item.evaluate_level}}</text>
-							<u-icon name="star-fill" size="16" color="#FFD101"></u-icon>
+							<u-icon name="star-fill" size="16" color="#1B90D1"></u-icon>
 						</view>
 					</view>
 					<view style="color: #666666;font-size: 12px;">{{dayjs(item.handle_time).format('YYYY年MM月DD日') }}</view>

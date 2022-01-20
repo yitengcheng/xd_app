@@ -136,7 +136,7 @@
 	width: 40px;
 	height: 40px;
 	border-radius: 50%;
-	background-color: #FFD101;
+	background-color: #1B90D1;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -164,7 +164,7 @@
 .toDo_btn {
 	width: 50px;
 	height: 20px;
-	background: #FFD101;
+	background: #1B90D1;
 	border-radius: 25px;
 	font-size: 12px;
 	font-family: Microsoft YaHei;

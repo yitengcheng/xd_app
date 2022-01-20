@@ -5,8 +5,8 @@
 				:current="current"
 				:list="items"
 				@click="onClickItem"
-				lineColor="#FFD101"
-				:activeStyle="{ color: '#FFD101' }"
+				lineColor="#1B90D1"
+				:activeStyle="{ color: '#1B90D1' }"
 				:is-scroll="false"
 			></u-tabs>
 			<view style="border-top: #F3F3F3 1px solid;">
@@ -29,13 +29,13 @@
 				<view class="info_row">
 					<view style="font-size: 16px; font-weight: bold;">{{ item.car.carNum }}</view>
 					<view style="font-size: 14px;">￥{{ item.car.upperPrice || 0 }} 元/日</view>
-					<view style="font-size: 14px;color:#FFD101;">{{status[item.status]}}</view>
+					<view style="font-size: 14px;color:#1B90D1">{{status[item.status]}}</view>
 				</view>
 				<view class="info_row">
 					<view style="font-size: 14px;">{{ item.complanyName }}</view>
 					<view style="display: flex;flex-direction: row;align-items: center;">
 						<text style="font-size: 14px;">{{ item.leave }}</text>
-						<u-icon name="star-fill" color="#FFD101"></u-icon>
+						<u-icon name="star-fill" color="#1B90D1"></u-icon>
 					</view>
 				</view>
 				<view class="info_row">

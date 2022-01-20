@@ -1,7 +1,7 @@
 <template>
 	<view class="content" style="align-items: center;">
 		<view class="search_box">
-			<uni-easyinput v-model="keyword" placeholder="请输入车牌号搜索" prefixIcon="search" :inputBorder="false" style="background-color: #FFD101;border-radius: 20px;border: 1px solid #FFD101;margin-right: 20px;"/>
+			<uni-easyinput v-model="keyword" placeholder="请输入车牌号搜索" prefixIcon="search" :inputBorder="false" style="background-color: #1B90D1;border-radius: 20px;border: 1px solid #1B90D1;margin-right: 20px;"/>
 			<view @click="getData(1)" class="search_text">搜索</view>
 		</view>
 		<u-image src="/static/img/empty_data.png" v-if="data.length === 0"></u-image>
@@ -121,7 +121,7 @@ export default {
 		color: #333333;
 	}
 	.car_box_info_plate {
-		background-color: #FFD101;
+		background-color: #1B90D1;
 		border-radius: 2px;
 		font-size: 10px;
 		font-family: Microsoft YaHei;

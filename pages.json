@@ -20,7 +20,7 @@
 			"path": "pages/model/my/My",
 			"style": {
 				"navigationBarTitleText": "管理中心",
-				"navigationBarBackgroundColor": "#FFD101",
+				"navigationBarBackgroundColor": "#1B90D1",
 				"enablePullDownRefresh": false
 			}
 		}, {
@@ -57,7 +57,7 @@
 			"path": "pages/model/car/Car",
 			"style": {
 				"navigationBarTitleText": "车辆",
-				"navigationBarBackgroundColor": "#FFD101",
+				"navigationBarBackgroundColor": "#1B90D1",
 				"enablePullDownRefresh": true,
 				"app-plus": {
 					"titleNView": {
@@ -97,7 +97,7 @@
 			"path": "pages/model/returnCar/index",
 			"style": {
 				"navigationBarTitleText": "待还车辆",
-				"navigationBarBackgroundColor": "#FFD101",
+				"navigationBarBackgroundColor": "#1B90D1",
 				"enablePullDownRefresh": true
 			}
 		}, {
@@ -110,7 +110,7 @@
 			"path": "pages/model/returnCar/AbnormalReturnCar",
 			"style": {
 				"navigationBarTitleText": "异常还车",
-				"navigationBarBackgroundColor": "#FFD101",
+				"navigationBarBackgroundColor": "#1B90D1",
 				"enablePullDownRefresh": false
 			}
 		}, {
@@ -123,7 +123,7 @@
 			"path": "pages/model/my/Orders",
 			"style": {
 				"navigationBarTitleText": "订单",
-				"navigationBarBackgroundColor": "#FFD101",
+				"navigationBarBackgroundColor": "#1B90D1",
 				"enablePullDownRefresh": true
 			}
 		}, {
@@ -148,7 +148,7 @@
 			"path": "pages/model/mall/Apply",
 			"style": {
 				"navigationBarTitleText": "租赁/购买",
-				"navigationBarBackgroundColor": "#FFD101",
+				"navigationBarBackgroundColor": "#1B90D1",
 				"enablePullDownRefresh": false
 			}
 		}, {
@@ -173,7 +173,7 @@
 			"path": "pages/model/mall/Mall",
 			"style": {
 				"navigationBarTitleText": "商城",
-				"navigationBarBackgroundColor": "#FFD101",
+				"navigationBarBackgroundColor": "#1B90D1",
 				"enablePullDownRefresh": true
 			}
 		}, {

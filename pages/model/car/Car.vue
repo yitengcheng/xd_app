@@ -5,8 +5,8 @@
 				:current="current"
 				:list="items"
 				@click="onClickItem"
-				lineColor="#FFD101"
-				:activeStyle="{ color: '#FFD101' }"
+				lineColor="#1B90D1"
+				:activeStyle="{ color: '#1B90D1' }"
 				:is-scroll="false"
 			></u-tabs>
 			<u-input placeholder="请输入车牌或车型进行搜索" border="surround" v-model="keywords" style="border-top: #F3F3F3 1px solid;">

@@ -759,7 +759,7 @@ export default {
 .adorn {
 	width: 3px;
 	height: 60%;
-	background-color: #ffd101;
+	background-color: #1B90D1;
 	margin-right: 5px;
 }
 
