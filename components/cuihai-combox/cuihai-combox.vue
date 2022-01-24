@@ -66,7 +66,7 @@
 			},
 			emptyTips: {
 				type: String,
-				default: '无匹配项'
+				default: '无数据'
 			},
 			value: {
 				type: String,

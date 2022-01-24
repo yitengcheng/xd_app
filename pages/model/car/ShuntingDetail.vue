@@ -220,7 +220,7 @@ export default {
 .adorn {
 	width: 3px;
 	height: 25.2rpx;
-	background-color: #1B90D1
+	background-color: #1B90D1;
 	margin-right: 5px;
 }
 .evaluate_info {

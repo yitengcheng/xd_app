@@ -20,7 +20,7 @@ const order = {
 		return request.globalRequest(`/tool/idcard`, 'post', data);
 	},
 	reletCar: (data) => {
-		return request.globalRequest(`/system/wxorder/renewal`, 'post', data);
+		return request.globalRequest(`/system/swap/renewal`, 'post', data);
 	},
 	finishCar: (data) => {
 		return request.globalRequest(`/system/wxorder/uploadContract`, 'post', data);

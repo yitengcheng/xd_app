@@ -2,7 +2,7 @@
 	<view class="content" style="align-items: center;background-color: #FFFFFF;">
 		<view class="page_title">
 			<text class="page_title_text">您好，</text>
-			<text class="page_title_text">欢迎来到优行小滴</text>
+			<text class="page_title_text">欢迎来到瑞普租车</text>
 		</view>
 		<uni-forms border v-model="formData" class="form" ref="form">
 			<FormInput :formData="formData" name="userName" label="" :inputBorder="false" :required="false" placeholder="请输入手机号/账号" />

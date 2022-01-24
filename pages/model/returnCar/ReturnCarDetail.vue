@@ -122,10 +122,46 @@
 				<text>【是否续租】</text>
 				<u-switch
 					v-model="hasRelet"
-					@change="changeRelet"
+					@change="(e)=> {hasRelet = e; hasChangeCar=false}"
 					active-color="#1B90D1"
 				></u-switch>
 			</view>
+			<view class="margin_box">
+				<text>【是否换车】</text>
+				<u-switch
+					v-model="hasChangeCar"
+					@change="(e)=> {hasChangeCar = e; hasRelet=false}"
+					active-color="#1B90D1"
+				></u-switch>
+			</view>
+			<Combox v-if="hasChangeCar" placeholder="请选择待换车辆" :value="carId" :candidates="carList" :isJSON="true" keyName="text" @getValue="getCarValue"></Combox>
+			<u-input
+				v-if="hasChangeCar"
+				v-model="unitPrice"
+				placeholder="请输入租金"
+				type="number"
+				border="bottom"
+				shape="circle"
+				inputAlign="right"
+			></u-input>
+			<u-input
+				v-if="hasChangeCar"
+				v-model="violationBondMoney"
+				placeholder="请输入违章保证金"
+				type="number"
+				border="bottom"
+				shape="circle"
+				inputAlign="right"
+			></u-input>
+			<u-input
+				v-if="hasChangeCar"
+				v-model="bondMoney"
+				placeholder="请输入车辆保证金"
+				type="number"
+				border="bottom"
+				shape="circle"
+				inputAlign="right"
+			></u-input>
 			<u-input
 				v-if="hasRelet"
 				v-model="makeUpRent"
@@ -144,7 +180,7 @@
 				shape="circle"
 				inputAlign="right"
 			></u-input>
-			<view v-if="!hasRelet" class="margin_box">
+			<view v-if="!hasRelet && !hasChangeCar" class="margin_box">
 				<text>【已扣除租车保证金】</text>
 				<u-input
 					v-model="deductBondMoney"
@@ -157,7 +193,7 @@
 				<text>元</text>
 			</view>
 		</view>
-		<view class="btn_box" v-if="!hasRelet">
+		<view class="btn_box" v-if="!hasRelet && !hasChangeCar">
 			<u-button class="btn" type="primary" @click="normalReturnCar">正常一键还车</u-button>
 			<u-button class="btn" @click="abnormalReturnCar">异常还车</u-button>
 			<u-button v-show="!!(carInfo.wxOrder || {}).contract" @click="pact" class="btn">
@@ -165,7 +201,10 @@
 			</u-button>
 		</view>
 		<view class="btn_box" v-if="hasRelet">
-			<u-button class="btn" type="primary" @click="reletCar">确认续租</u-button>
+			<u-button class="btn" type="primary" @click="reletCar(1)">确认续租</u-button>
+		</view>
+		<view class="btn_box" v-if="hasChangeCar">
+			<u-button class="btn" type="primary" @click="reletCar(2)">确认换车</u-button>
 		</view>
 	</view>
 </template>
@@ -178,11 +217,13 @@ import FormInput from '../../../components/form/FormInput.vue';
 import FormRadio from '../../../components/form/FormRadio.vue';
 import { card15, card18, phoneRegex } from '../../../common/regex.js';
 import { togetherUrl } from '../../../common/utils.js';
+import Combox from '../../../components/cuihai-combox/cuihai-combox.vue';
 export default {
 	components: {
 		IdCardOcr,
 		FormInput,
-		FormRadio
+		FormRadio,
+		Combox,
 	},
 	data() {
 		return {
@@ -199,16 +240,30 @@ export default {
 			renewalDay: '',
 			touchStartX: 0,
 			touchStartY: 0,
-			isMove: false
+			isMove: false,
+			hasChangeCar: false,
+			carList: [],
+			carId:'',
+			unitPrice: '',
+			violationBondMoney: '',
+			bondMoney: '',
 		};
 	},
 	onLoad(option) {
 		this.getCarInfo(option.id);
+		api.getChangeCarList().then(res => {
+			if (res.data) {
+				let { data } = res;
+				data.forEach(car => {
+					this.carList.push({
+						value: car.id,
+						text: car.carNum
+					});
+				});
+			}
+		});
 	},
 	methods: {
-		changeRelet(e) {
-			this.hasRelet = e;
-		},
 		newUrl(url) {
 			return togetherUrl(url);
 		},
@@ -257,6 +312,9 @@ export default {
 					}
 				});
 			}
+		},
+		getCarValue(e){
+			this.carId = this.carList[e]?.text ?? '';
 		},
 		pact() {
 			uni.showActionSheet({
@@ -326,20 +384,101 @@ export default {
 				}
 			});
 		},
-		reletCar() {
-			if (this.makeUpRent < 0) {
+		reletCar(type) {
+			if (this.makeUpRent * 1 < 0) {
 				uni.showModal({
 					content: '租金不能为负数',
 					showCancel: false
 				});
 				return;
 			}
+			if (this.unitPrice * 1 < 0) {
+				uni.showModal({
+					content: '租金不能为负数',
+					showCancel: false
+				});
+				return;
+			}
+			if (this.violationBondMoney * 1 < 0) {
+				uni.showModal({
+					content: '违章保证金不能为负数',
+					showCancel: false
+				});
+				return;
+			}
+			if (this.bondMoney * 1 < 0) {
+				uni.showModal({
+					content: '车辆保证金不能为负数',
+					showCancel: false
+				});
+				return;
+			}
+			if(!this.carId && type === 2){
+				uni.showModal({
+					content: '请选择需要更换的车辆',
+					showCancel: false
+				});
+				return;
+			}
+			uni.showModal({
+				content: '是否上传纸质合同',
+				cancelText: `直接${type === 1 ? '续租' : '换车'}`,
+				confirmText: '上传纸质合同',
+				success: (e) => {
+					if(e.confirm){
+						uni.chooseImage({
+							count: 1,
+							success: (res) => {
+								uni.showLoading({
+									mask: true,
+									title: '合同上传中'
+								});
+								res.tempFiles.forEach(file => {
+									uni.uploadFile({
+										url: `${config.API_URL}/tool/oss/upload`,
+										filePath: file.path,
+										name: 'file',
+										header: {
+											Authorization: 'Bearer ' + uni.getStorageSync('tonken')
+										},
+										success: (res) => {
+											uni.hideLoading();
+											let result = JSON.parse(res.data);
+											this.carOperation(result.data, type)
+										},
+									});
+								});
+							}
+						});
+					} else {
+						this.carOperation('', type);
+					}
+					
+				},
+			})
+			
+		},
+		carOperation(contract, type){
+			let params;
+			let currentCar = this._.find(this.carList, o => {
+				return o.text === this.carId;
+			});
+			type === 1 ? params = {
+				days: this.renewalDay,
+				money: this.makeUpRent ?? 0,
+				carId: this.carInfo.id,
+			} : params = {
+				unitPrice: this.unitPrice,
+				violationBondMoney: this.violationBondMoney,
+				bondMoney: this.bondMoney,
+				carId: currentCar.value,
+			}
 			api.reletCar({
 				orderId: this.carInfo.wxOrder.orderId,
-				carId: this.carInfo.id,
-				renewalDay: this.renewalDay,
-				makeUpRent: this.makeUpRent ?? 0,
-				status: false
+				contract,
+				type,
+				status: false,
+				...params,
 			}).then(res => {
 				if (res.data) {
 					uni.showModal({
@@ -357,10 +496,10 @@ export default {
 							if (e.confirm) {
 								api.reletCar({
 									orderId: this.carInfo.wxOrder.orderId,
-									carId: this.carInfo.id,
-									renewalDay: this.renewalDay,
-									makeUpRent: this.makeUpRent ?? 0,
-									status: true
+									contract,
+									type,
+									status: true,
+									...params,
 								}).then(result => {
 									uni.showModal({
 										content: '续租成功',
