@@ -105,7 +105,7 @@ export default {
 	background-color: #1B90D1;
 	border-radius: 2px;
 	padding: 3px;
-	color: #333333;
+	color: #000;
 	font-size: 10px;
 	width: 60px;
 	text-align: center;
