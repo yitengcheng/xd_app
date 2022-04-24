@@ -2,8 +2,8 @@
     "name" : "优行小滴",
     "appid" : "__UNI__1ECB71E",
     "description" : "",
-    "versionName" : "1.5.4",
-    "versionCode" : 154,
+    "versionName" : "1.5.5",
+    "versionCode" : 155,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -74,7 +74,8 @@
                     "NSContactsUsageDescription" : "该应用需要读取你的通讯录，以便商家与客户联系",
                     "NSLocationAlwaysUsageDescription" : "该应用需要你的地理位置，以便为你提供当前位置信息",
                     "NSCalendarsUsageDescription" : "该应用需要获取你的日历，以便更好的体验",
-                    "NSRemindersUsageDescription" : "为了更好的体验，后面请同意授权选项"
+                    "NSRemindersUsageDescription" : "为了更好的体验，后面请同意授权选项",
+                    "NSUserTrackingUsageDescription" : "是否允许使用您的IDFA信息，以此来优化您的使用体验"
                 }
             },
             /* SDK配置 */

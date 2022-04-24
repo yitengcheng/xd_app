@@ -28,7 +28,9 @@ const order = {
 	newOrders: (data) => {
 		return request.globalRequest(`/main/app/order`, 'post', data);
 	},
-	
+	operationCarList: (data)=>{
+		return request.globalRequest(`/system/wxorder/orderInfo`, 'post', data);
+	}
 }
 
 

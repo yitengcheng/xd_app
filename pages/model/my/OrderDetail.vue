@@ -39,7 +39,8 @@
 		<u-button v-show="type === '1'" @click="orderHandle(2)" class="btn">放弃接单</u-button>
 		<u-button v-show="type === '2'" @click="orderHandle(4)" class="btn" type="primary">交车</u-button>
 		<u-button v-show="type === '2'" @click="orderHandle(3)" class="btn" type="error">{{ orderInfo.payStatus === '到店付款' ? '取消订单' : '确认退款' }}</u-button>
-		<u-button v-show="!!orderInfo.contract" @click="pact" class="btn">合同</u-button>
+		<u-button v-show="!!orderInfo.contract" @click="pact(orderInfo.contract)" class="btn">最新合同</u-button>
+		<u-button v-show="!!orderInfo.contract" @click="allPact" class="btn">全部合同</u-button>
 		<u-popup :show="show" mode="center">
 			<map :longitude="longitude" :latitude="latitude" :markers="marker" :show-location="true" style="width: 750rpx; height: 500rpx;"></map>
 			<u-button type="primary" @click="closeMap" class="close_map">关闭</u-button>
@@ -59,13 +60,15 @@ export default {
 			show: false,
 			longitude: '',
 			latitude: '',
-			marker: []
+			marker: [],
+			pactList: [],
 		};
 	},
 	onLoad(option) {
 		this.type = option?.type ?? '0'; // 0 列表进入 1 新订单确认或取消 2 退款确认 3交车
 		this.handleId = option.handleId ?? '';
 		this.initOrderDetail(option.id);
+		this.operationCarList(option.id);
 	},
 	onBackPress() {
 		uni.switchTab({
@@ -73,6 +76,20 @@ export default {
 		});
 	},
 	methods: {
+		allPact(){
+			const itemList = new Array(this?.pactList?.length).fill('合同');
+			uni.showActionSheet({
+				itemList,
+				success: (res) => {
+					this.pact(this.pactList[res?.tapIndex ?? 0]);
+				}
+			})
+		},
+		operationCarList(orderId){
+			api.operationCarList({orderId}).then(res=>{
+				this.pactList = this._.map(res?.data ?? [], 'contract');
+			});
+		},
 		initOrderDetail(id) {
 			api.orderDetail(id).then((res = {}) => {
 				let { data } = res;
@@ -179,26 +196,26 @@ export default {
 			this.latitude = '';
 			this.marker = [];
 		},
-		pact() {
+		pact(contract) {
 			uni.showActionSheet({
 				itemList: ['查看合同', '下载合同'],
 				success: res => {
 					switch (res.tapIndex) {
 						case 0:
 							uni.navigateTo({
-								url: `/pages/model/my/ContractPreview?id=${this.orderInfo.contract}`
+								url: `/pages/model/my/ContractPreview?id=${contract}`
 							});
 							break;
 						case 1:
 							let url = '';
 							let suffix = '';
 							let method = 'POST';
-							if (this.orderInfo.contract.indexOf('/') === -1) {
-								url = `${config.API_URL}/qys/download/${this.orderInfo.contract}`;
-								suffix = `${this.orderInfo.contract}.PDF`
+							if (contract.indexOf('/') === -1) {
+								url = `${config.API_URL}/qys/download/${contract}`;
+								suffix = `${contract}.PDF`
 							} else {
-								suffix = this.orderInfo.contract?.substring( this.orderInfo.contract?.lastIndexOf( '/' ) + 1 );
-								url = `${config.IMG_URL}${this.orderInfo.contract}`;
+								suffix = contract?.substring( contract?.lastIndexOf( '/' ) + 1 );
+								url = `${config.IMG_URL}${contract}`;
 								method = 'GET';
 							}
 							let dtask = null

@@ -196,9 +196,10 @@
 		<view class="btn_box" v-if="!hasRelet && !hasChangeCar">
 			<u-button class="btn" type="primary" @click="normalReturnCar">正常一键还车</u-button>
 			<u-button class="btn" @click="abnormalReturnCar">异常还车</u-button>
-			<u-button v-show="!!(carInfo.wxOrder || {}).contract" @click="pact" class="btn">
-				合同
+			<u-button v-show="!!(carInfo.wxOrder || {}).contract" @click="pact(carInfo.wxOrder.contract)" class="btn">
+				最新合同
 			</u-button>
+			<u-button v-show="!!(carInfo.wxOrder || {}).contract" @click="allPact" class="btn">全部合同</u-button>
 		</view>
 		<view class="btn_box" v-if="hasRelet">
 			<u-button class="btn" type="primary" @click="reletCar(1)">确认续租</u-button>
@@ -247,6 +248,7 @@ export default {
 			unitPrice: '',
 			violationBondMoney: '',
 			bondMoney: '',
+			pactList: [],
 		};
 	},
 	onLoad(option) {
@@ -264,6 +266,20 @@ export default {
 		});
 	},
 	methods: {
+		allPact(){
+			const itemList = new Array(this?.pactList?.length).fill('合同');
+			uni.showActionSheet({
+				itemList,
+				success: (res) => {
+					this.pact(this.pactList[res?.tapIndex ?? 0]);
+				}
+			})
+		},
+		operationCarList(orderId){
+			api.operationCarList({orderId}).then(res=>{
+				this.pactList = this._.map(res?.data ?? [], 'contract');
+			});
+		},
 		newUrl(url) {
 			return togetherUrl(url);
 		},
@@ -316,32 +332,26 @@ export default {
 		getCarValue(e){
 			this.carId = this.carList[e]?.text ?? '';
 		},
-		pact() {
+		pact(contract) {
 			uni.showActionSheet({
 				itemList: ['查看合同', '下载合同'],
 				success: res => {
 					switch (res.tapIndex) {
 						case 0:
 							uni.navigateTo({
-								url: `/pages/model/my/ContractPreview?id=${
-									this.carInfo.wxOrder.contract
-								}`
+								url: `/pages/model/my/ContractPreview?id=${contract}`
 							});
 							break;
 						case 1:
 							let url = '';
 							let suffix = '';
 							let method = 'POST';
-							if (this.carInfo.wxOrder.contract.indexOf('/') === -1) {
-								url = `${config.API_URL}/qys/download/${
-									this.carInfo.wxOrder.contract
-								}`;
-								suffix = `${this.carInfo.wxOrder.contract}.PDF`;
+							if (contract.indexOf('/') === -1) {
+								url = `${config.API_URL}/qys/download/${contract}`;
+								suffix = `${contract}.PDF`;
 							} else {
-								let name = this.carInfo.wxOrder.contract?.substring(
-									this.carInfo.wxOrder.contract?.lastIndexOf('/') + 1
-								);
-								url = `${config.IMG_URL}${this.carInfo.wxOrder.contract}`;
+								let name =contract?.substring(contract?.lastIndexOf('/') + 1);
+								url = `${config.IMG_URL}${contract}`;
 								suffix = `${name}`;
 								method = 'GET';
 							}
@@ -545,6 +555,7 @@ export default {
 						...data
 					};
 					this.driverUser = data.driverUser || {};
+					this.operationCarList(data.wxOrder.orderId);
 				}
 			});
 		},
